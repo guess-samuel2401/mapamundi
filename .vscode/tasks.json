@@ -10,6 +10,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Empaquetar e instalar (Windows)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\empaquetado\\empaquetar.ps1 -Instalar",
+      "problemMatcher": []
+    },
+    {
       "label": "Pruebas",
       "type": "shell",
       "command": "./mvnw test",

@@ -48,6 +48,23 @@ En **VS Code** (con el *Extension Pack for Java*):
 
 Pruebas: `.\mvnw.cmd test` (o la tarea **Pruebas**).
 
+## Programa de escritorio (Windows)
+
+```bash
+.\empaquetado\empaquetar.ps1 -Instalar
+```
+
+1. Compila el juego y reúne sus librerías en `target\programa`.
+2. Con **jpackage** (incluido en el JDK) crea `target\instalador\Mapamundi\Mapamundi.exe`, con su propio Java
+   recortado a los módulos que usa (~89 MB): funciona en equipos sin Java instalado.
+3. Con `-Instalar`, lo copia a `%LOCALAPPDATA%\Programs\Mapamundi` (no necesita permisos de administrador)
+   y crea accesos directos en el Escritorio y en el menú Inicio.
+
+Para llevarlo a otro equipo basta con copiar la carpeta `target\instalador\Mapamundi` entera.
+Para desinstalarlo: borrar esa carpeta de Programs y los dos accesos directos (los puntajes están en `%USERPROFILE%\.mapamundi`).
+
+El icono (`empaquetado/mapamundi.ico`) se genera con `python -I herramientas/crear_icono.py`.
+
 ## Estructura
 
 ```

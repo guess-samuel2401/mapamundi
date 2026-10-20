@@ -40,7 +40,9 @@ public final class Ventana {
         escenario.setMaximized(!cabe);
         escena.getStylesheets().add(Objects.requireNonNull(Ventana.class.getResource("/com/mapamundi/estilos.css")).toExternalForm());
         escenario.setTitle("Mapamundi");
-        escenario.getIcons().add(new Image(Objects.requireNonNull(Ventana.class.getResourceAsStream("/com/mapamundi/icono.png"))));
+        for (String icono : new String[]{"icono-32.png", "icono.png", "icono-256.png"}) {
+            escenario.getIcons().add(new Image(Objects.requireNonNull(Ventana.class.getResourceAsStream("/com/mapamundi/" + icono))));
+        }
         escenario.setMinWidth(Math.min(980, pantalla.getWidth()));
         escenario.setMinHeight(Math.min(660, pantalla.getHeight()));
         escenario.setScene(escena);

@@ -53,6 +53,41 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.6.0</version>
       </plugin>
+      <!-- mvn package -> target/programa/: el jar del juego y sus librerías, listo para jpackage -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <outputDirectory>${project.build.directory}/programa</outputDirectory>
+          <finalName>mapamundi</finalName>
+          <archive>
+            <manifest>
+              <!-- Lanzador no extiende Application: así arranca con JavaFX en el classpath -->
+              <mainClass>com.mapamundi.Lanzador</mainClass>
+              <addClasspath>true</addClasspath>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.11.0</version>
+        <executions>
+          <execution>
+            <id>copiar-librerias</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/programa</outputDirectory>
+              <includeScope>runtime</includeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!-- mvn javafx:run  -> abre el juego -->
       <plugin>
         <groupId>org.openjfx</groupId>
