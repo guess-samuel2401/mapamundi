@@ -6,6 +6,7 @@
     -salmon: #ffa980;
     -salmon-claro: #ffd2bb;
     -rojo: #e0001b;
+    -rojo-oscuro: #a10016;
     -tinta: #14213d;
     -amarillo: #ffe600;
     -verde: #1f9d55;
@@ -34,9 +35,10 @@
 .titulo-portada { -fx-font-family: "Arial Black"; -fx-font-size: 64px; -fx-text-fill: -rojo;
     -fx-effect: dropshadow(one-pass-box, black, 3, 1, 2, 2); }
 
-.subtitulo-rojo { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 14px; }
-.pista-tipo { -fx-text-fill: derive(-tinta, 40%); -fx-font-size: 11px; -fx-font-weight: bold; }
-.texto-suave { -fx-text-fill: derive(-tinta, 45%); -fx-font-size: 12px; }
+/* Rojo oscuro para texto pequeño: el rojo vivo sobre salmón no llega al contraste AA. */
+.subtitulo-rojo { -fx-text-fill: -rojo-oscuro; -fx-font-weight: bold; -fx-font-size: 14px; }
+.pista-tipo { -fx-text-fill: derive(-tinta, 30%); -fx-font-size: 11px; -fx-font-weight: bold; }
+.texto-suave { -fx-text-fill: derive(-tinta, 25%); -fx-font-size: 12px; }
 .negrita { -fx-font-weight: bold; }
 
 /* Paneles salmón con relieve. */
@@ -126,6 +128,97 @@
 .capa-pausa { -fx-background-color: rgba(47, 120, 120, 0.75); }
 .cartel-nivel { -fx-background-color: -tinta, -salmon-claro; -fx-background-insets: 0, 3; -fx-background-radius: 16;
     -fx-padding: 12 30 12 30; }
+
+/* ------------------------------------------------------------- menú principal */
+
+.lema { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -tinta; }
+.insignia { -fx-background-color: -tinta; -fx-text-fill: -amarillo; -fx-font-family: "Arial Black"; -fx-font-size: 16px;
+    -fx-padding: 2 10 2 10; -fx-background-radius: 10; -fx-rotate: -8; }
+.marco-mapa {
+    -fx-background-color: -tinta, -agua;
+    -fx-background-insets: 0, 4;
+    -fx-background-radius: 20, 17;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 6);
+}
+.boton-jugar { -fx-font-family: "Arial Black"; -fx-font-size: 26px; -fx-padding: 12 28 12 28; -fx-background-radius: 16;
+    -fx-border-radius: 16; -fx-border-width: 3; }
+.boton-fantasma {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-insets: 0;
+    -fx-border-color: -tinta;
+    -fx-text-fill: -tinta;
+    -fx-font-size: 14px;
+    -fx-padding: 14 16 14 16;
+}
+.boton-fantasma:hover { -fx-background-color: rgba(255, 255, 255, 0.5); }
+.boton-fantasma:pressed { -fx-translate-y: 2; -fx-background-insets: 0; }
+.resumen-partida { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: -tinta;
+    -fx-background-color: rgba(255, 255, 255, 0.35); -fx-background-radius: 8; -fx-padding: 4 10 4 10; }
+
+.titulo-config { -fx-font-family: "Arial Black"; -fx-font-size: 20px; -fx-text-fill: -tinta; }
+.titulo-seccion { -fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: -rojo-oscuro; }
+
+/* Fichas de nivel: el recuadro amarillo del original marca la elegida. */
+.ficha-nivel {
+    -fx-background-color: #fff8f3;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(20, 33, 61, 0.35);
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 5 8 5 5;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+}
+.ficha-nivel:hover { -fx-border-color: -agua-oscuro; }
+.ficha-nivel:selected { -fx-background-color: #fff7c2; -fx-border-color: -amarillo; -fx-border-width: 3;
+    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.35), 6, 0, 0, 2); }
+.ficha-nivel:focused { -fx-border-color: -agua-oscuro; }
+.ficha-nivel:selected:focused { -fx-border-color: -amarillo; }
+.ficha-nivel-nombre { -fx-font-weight: bold; -fx-font-size: 14px; }
+.ficha-nivel-detalle { -fx-font-size: 11px; -fx-text-fill: derive(-tinta, 25%); }
+.caja-continentes { -fx-background-color: rgba(255, 255, 255, 0.55); -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
+
+/* Velocidad: control segmentado azul marino, distinto del botón Jugar. */
+.segmento {
+    -fx-background-color: white;
+    -fx-border-color: -tinta;
+    -fx-border-width: 2;
+    -fx-padding: 6 8 6 8;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+.segmento-izq { -fx-background-radius: 12 0 0 12; -fx-border-radius: 12 0 0 12; }
+.segmento-centro { -fx-border-width: 2 0 2 0; }
+.segmento-der { -fx-background-radius: 0 12 12 0; -fx-border-radius: 0 12 12 0; }
+.segmento:hover { -fx-background-color: #eef7f7; }
+.segmento:selected { -fx-background-color: -tinta; }
+.segmento:selected .label { -fx-text-fill: white; }
+.segmento-titulo { -fx-font-weight: bold; -fx-font-size: 14px; }
+.segmento-detalle { -fx-font-size: 11px; }
+.segmento .label { -fx-alignment: center; }
+
+.combo-box {
+    -fx-background-color: -tinta, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 12;
+    -fx-padding: 4 6 4 6;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.combo-box .list-cell { -fx-text-fill: -tinta; -fx-padding: 4 8 4 8; }
+.combo-box-popup .list-view { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; }
+.combo-box-popup .list-cell:filled:selected, .combo-box-popup .list-cell:filled:hover {
+    -fx-background-color: -amarillo; -fx-text-fill: -tinta; }
+
+.caja-record { -fx-background-color: -tinta, #fff7c2; -fx-background-insets: 0, 2; -fx-background-radius: 14, 12;
+    -fx-padding: 10 14 10 14; }
+.trofeo { -fx-font-size: 30px; }
+.record-puntos { -fx-font-family: "Arial Black"; -fx-font-size: 18px; -fx-text-fill: -tinta; }
+
+.capa-dialogo { -fx-background-color: rgba(20, 33, 61, 0.55); }
+.numero-paso { -fx-background-color: -rojo; -fx-text-fill: white; -fx-font-family: "Arial Black"; -fx-font-size: 14px;
+    -fx-background-radius: 15; }
 
 .tabla-puntajes .fila-par { -fx-background-color: rgba(255, 255, 255, 0.35); }
 .tabla-puntajes .fila-nueva { -fx-background-color: rgba(255, 230, 0, 0.7); }

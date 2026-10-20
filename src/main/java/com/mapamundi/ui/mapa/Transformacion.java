@@ -17,6 +17,12 @@ public record Transformacion(double centroU, double centroV, double escala, doub
         return new Transformacion(region.centroU(), region.centroV(), escala, ancho, alto);
     }
 
+    /** La región llenando todo ancho × alto; lo que no cabe queda fuera (como background-size: cover). */
+    public static Transformacion cubriendo(Region region, double ancho, double alto) {
+        double escala = Math.max(ancho / region.ancho(), alto / region.alto());
+        return new Transformacion(region.centroU(), region.centroV(), escala, ancho, alto);
+    }
+
     public double x(double u) {
         return (u - centroU) * escala + ancho / 2;
     }

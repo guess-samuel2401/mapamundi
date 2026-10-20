@@ -8,6 +8,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.function.Predicate;
+
 /** Dibujos estáticos: el mapa de cada continente en colores y la silueta de un país. */
 public final class Miniatura {
 
@@ -21,6 +23,18 @@ public final class Miniatura {
         Transformacion t = Transformacion.ajustada(vista, ancho, alto);
         Pintor.mapa(canvas.getGraphicsContext2D(), t, atlas,
                 p -> p.continente() == c ? Pintor.colorDe(p) : Color.web("#cfd8d8"), 0.5);
+        return canvas;
+    }
+
+    /**
+     * Una región del mapa que llena todo el recuadro (recortando lo que sobre), con los países
+     * que cumplen {@code resaltar} en colores y el resto en gris. Para las fichas de nivel del menú.
+     */
+    public static Canvas region(Atlas atlas, Region region, Predicate<Pais> resaltar, double ancho, double alto) {
+        Canvas canvas = new Canvas(ancho, alto);
+        Transformacion t = Transformacion.cubriendo(region, ancho, alto);
+        Pintor.mapa(canvas.getGraphicsContext2D(), t, atlas,
+                p -> resaltar.test(p) ? Pintor.colorDe(p) : Color.web("#d5dede"), 0.35);
         return canvas;
     }
 

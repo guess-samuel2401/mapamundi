@@ -36,11 +36,11 @@ Las 10 mejores puntuaciones se guardan en `%USERPROFILE%\.mapamundi\puntajes.jso
 Requiere un JDK 25 (el proyecto trae Maven Wrapper, no hace falta instalar Maven).
 
 ```bash
-.\mvnw.cmd compile javafx:run
+.\mvnw.cmd clean compile javafx:run
 ```
 
-(`javafx:run` por sí solo no compila: si `target/classes` está desactualizado, falla con
-"no se ha encontrado la clase principal".)
+(`javafx:run` por sí solo no compila. Y si VS Code y Maven compilan a la vez en `target/classes`
+puede quedar una clase corrupta — "Extra bytes at the end of class file" —, por eso conviene el `clean`.)
 
 En **VS Code** (con el *Extension Pack for Java*):
 - Pestaña *Ejecutar y depurar* → **Jugar Mapamundi**, o
