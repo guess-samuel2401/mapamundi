@@ -28,7 +28,8 @@ public final class Pintor {
     public static final Color ROJO = Color.web("#e3263b");
     public static final Color SOL = Color.web("#ffd23f");
     public static final Color CORAL = Color.web("#ff8f6b");
-    public static final Color FONDO_OSCURO = Color.web("#2c7779");
+    public static final Color FONDO_OSCURO = Color.web("#2a2150");
+    public static final Color CONTORNO_LOGO = Color.web("#1a1433");
 
     /**
      * Paleta de atlas: siete tonos suaves y cálidos (coral, arena, salvia, rosa, lavanda, albaricoque, caqui).

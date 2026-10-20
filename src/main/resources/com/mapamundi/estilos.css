@@ -9,8 +9,10 @@
  * JavaFX solo combina Regular/Bold en una familia: SemiBold y ExtraBold son familias aparte.
  */
 .root {
-    -fondo: #3e9c9c;
-    -fondo-oscuro: #2c7779;
+    /* Fondo "uva": morado profundo, para que el mar verde agua del mapa resalte. */
+    -fondo: #3a2f66;
+    -fondo-oscuro: #2a2150;
+    -contorno-logo: #1a1433;
     -mar: #74bebc;
     -papel: #fff7ec;
     -papel-2: #ffffff;
@@ -37,11 +39,11 @@
 
 /* ------------------------------------------------------------- tipografía */
 
-/* Logotipo: crema con contorno azul marino y sombra coral (el efecto doble se pone en Logotipo.java). */
+/* Logotipo: coral con contorno oscuro y sombra amarilla (el efecto doble se pone en Logotipo.java). */
 .titulo-portada {
     -fx-font-family: "Baloo 2 ExtraBold";
     -fx-font-size: 64px;
-    -fx-text-fill: -crema;
+    -fx-text-fill: -coral;
 }
 /* El logotipo pequeño del panel superior, sobre papel. */
 .titulo-hud { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -tinta; }
@@ -155,7 +157,7 @@
 .text-field { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; -fx-background-radius: 12;
     -fx-padding: 8 12 8 12; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 15px; }
 
-.capa-pausa { -fx-background-color: rgba(44, 119, 121, 0.82); }
+.capa-pausa { -fx-background-color: rgba(42, 33, 80, 0.85); }
 .cartel-nivel { -fx-background-color: -tinta, -papel; -fx-background-insets: 0, 3; -fx-background-radius: 18;
     -fx-padding: 12 30 12 30; }
 
@@ -218,7 +220,7 @@
 .segmento-izq { -fx-background-radius: 12 0 0 12; -fx-border-radius: 12 0 0 12; }
 .segmento-centro { -fx-border-width: 2 0 2 0; }
 .segmento-der { -fx-background-radius: 0 12 12 0; -fx-border-radius: 0 12 12 0; }
-.segmento:hover { -fx-background-color: #eaf5f4; }
+.segmento:hover { -fx-background-color: #f1edf9; }
 .segmento:selected { -fx-background-color: -tinta; }
 .segmento:selected .label { -fx-text-fill: white; }
 .segmento-titulo { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }

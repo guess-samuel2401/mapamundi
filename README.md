@@ -101,13 +101,15 @@ python -I herramientas/construir_datos.py "D:\Fuente Globalizacion\mapamundi\pai
 
 | Uso | Color |
 |---|---|
-| Fondo de la app / mar del mapa | `#3E9C9C` / `#74BEBC` |
+| Fondo de la app ("uva") / mar del mapa | `#3A2F66` / `#74BEBC` |
 | Paneles (papel) | `#FFF7EC` |
 | Texto / texto secundario | `#1D2B4F` / `#4A5878` |
-| Logotipo | crema `#FFF7EC`, contorno `#1D2B4F`, sombra `#FF8F6B` |
+| Logotipo | coral `#FF8F6B`, contorno `#1A1433`, sombra `#FFD23F` |
 | Títulos / rojo para texto pequeño | `#E3263B` / `#B3132A` |
 | Acción principal y selección | `#FFD23F` (claro `#FFF1B8`) |
 | Acento (botones secundarios, panel superior) | `#FF8F6B` |
 | Países (atlas, sin celestes para no confundirse con el mar) | `#F4A99B` `#F3D27A` `#A9D38C` `#EDA7C9` `#C4B0E6` `#F6B878` `#D2BF94` |
 
 Escala tipográfica: 12 · 14 · 16 · 20 · 28 · 40 · 64 px.
+
+`docs/opciones-de-color.png` muestra las cuatro combinaciones de fondo y título que se compararon (se eligió la C, "Uva").
