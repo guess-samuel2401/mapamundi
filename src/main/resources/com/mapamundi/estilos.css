@@ -289,7 +289,8 @@
 .consejo { -fx-background-color: -tinta; -fx-background-radius: 16; -fx-padding: 12 14 12 16;
     -fx-effect: dropshadow(gaussian, rgba(10, 6, 30, 0.5), 18, 0, 0, 6); }
 .consejo-texto { -fx-text-fill: white; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 14px; }
-.consejo-icono { -fx-font-size: 22px; }
+.consejo-icono { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 18px; -fx-text-fill: -tinta;
+    -fx-background-color: -sol; -fx-background-radius: 15; }
 
 /* ------------------------------------------------------------- modo daltónico */
 /* Verde/rojo cambian a azul/naranja (pareja de Okabe-Ito que se distingue con daltonismo rojo-verde). */

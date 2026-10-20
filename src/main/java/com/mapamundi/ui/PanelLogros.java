@@ -2,7 +2,9 @@ package com.mapamundi.ui;
 
 import com.mapamundi.juego.Logros;
 import com.mapamundi.juego.Logros.Logro;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
@@ -30,6 +32,13 @@ final class PanelLogros extends VBox {
         GridPane rejilla = new GridPane();
         rejilla.setHgap(10);
         rejilla.setVgap(10);
+        rejilla.setPadding(new Insets(0, 4, 0, 0));
+        for (int c = 0; c < COLUMNAS; c++) {
+            ColumnConstraints columna = new ColumnConstraints();
+            columna.setPercentWidth(100.0 / COLUMNAS);
+            columna.setHgrow(Priority.ALWAYS);
+            rejilla.getColumnConstraints().add(columna);
+        }
         int i = 0;
         for (Logro l : Logro.values()) {
             rejilla.add(tarjeta(logros, l), i % COLUMNAS, i / COLUMNAS);
@@ -65,7 +74,8 @@ final class PanelLogros extends VBox {
         HBox h = new HBox(12, new Insignia(l, conseguida, 24), texto);
         h.setAlignment(Pos.CENTER_LEFT);
         h.getStyleClass().addAll("tarjeta-logro", conseguida ? "conseguida" : "bloqueada");
-        h.setPrefWidth(300);
+        h.setMaxWidth(Double.MAX_VALUE);
+        h.setMaxHeight(Double.MAX_VALUE);
         return h;
     }
 }

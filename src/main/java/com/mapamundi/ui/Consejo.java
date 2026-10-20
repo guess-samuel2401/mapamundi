@@ -17,7 +17,10 @@ final class Consejo extends HBox {
 
     private Consejo(String texto, Runnable alCerrar) {
         super(12);
-        Label icono = FichaPais.etiqueta("💡", "consejo-icono");
+        // Los emoji en color no existen en las fuentes de JavaFX: una "i" en un círculo amarillo.
+        Label icono = FichaPais.etiqueta("i", "consejo-icono");
+        icono.setMinSize(30, 30);
+        icono.setAlignment(Pos.CENTER);
         Label mensaje = FichaPais.etiqueta(texto, "consejo-texto");
         mensaje.setWrapText(true);
         mensaje.setMaxWidth(560);

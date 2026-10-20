@@ -30,8 +30,10 @@ CONTINENTES = {'Africa': 'AFRICA', 'Europe': 'EUROPA', 'Asia': 'ASIA', 'Oceania'
 MAR_ABIERTO = {'Maldives': 'ASIA', 'Mauritius': 'AFRICA', 'Seychelles': 'AFRICA'}
 
 # Nombres a mostrar cuando el de Natural Earth no es el habitual en español.
-NOMBRES = {'Republic of China': 'Taiwán', 'Taiwan': 'Taiwán', 'eSwatini': 'Esuatini', 'Myanmar': 'Myanmar (Birmania)',
-           'Czechia': 'Chequia', 'Timor-Leste': 'Timor Oriental'}
+NOMBRES = {'Republic of China': 'Taiwán', 'Taiwan': 'Taiwán', 'eSwatini': 'Esuatini', 'Eswatini': 'Esuatini',
+           'Suazilandia': 'Esuatini', 'Myanmar': 'Myanmar (Birmania)', 'Czechia': 'Chequia', 'Timor-Leste': 'Timor Oriental'}
+# Monedas que Wikidata nombra de forma ambigua ("Peso") y no estaban en el juego original.
+MONEDAS = {'MX': 'Peso mexicano', 'CU': 'Peso cubano'}
 
 # Nombre en el juego original -> nombre de Natural Earth (NAME_ES).
 ALIAS_ORIGINAL = {
@@ -193,7 +195,12 @@ def main():
         elif texto('SUPERFICIE'):
             superficie = texto('SUPERFICIE').replace('km2', 'km²')
         else:
-            superficie = f'≈ {formatear_km2(area)}'
+            superficie = f'aprox. {formatear_km2(area)}'
+        # Wikidata a veces da solo "Peso" o "Dólar": si el original dice "Peso Colombiano", se usa ese.
+        moneda = actual.get('moneda') or texto('MONEDA')
+        if ' ' not in moneda and norm(texto('MONEDA')).startswith(norm(moneda) + ' '):
+            moneda = texto('MONEDA')
+        moneda = MONEDAS.get(iso, moneda)
         paises.append({
             'iso': iso,
             'nombre': nombre,
@@ -203,7 +210,7 @@ def main():
             'poblacion': actual.get('poblacion') or f"{miles(p['POP_EST'])} habs. ({p['POP_YEAR']})",
             'superficie': superficie,
             'idioma': actual.get('idioma') or texto('IDIOMA'),
-            'moneda': actual.get('moneda') or texto('MONEDA'),
+            'moneda': moneda,
             'pibPerCapita': actual.get('pibPerCapita') or (f"{texto('PERCAPITA')} (2003)" if texto('PERCAPITA') else ''),
             # Wikidata no tiene estos dos completos: se conservan del original, marcados como de 2003.
             'religion': texto('RELIGION'),

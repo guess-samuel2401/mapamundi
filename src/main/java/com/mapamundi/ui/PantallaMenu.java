@@ -131,7 +131,7 @@ final class PantallaMenu extends StackPane {
         records.getStyleClass().add("boton-fantasma");
         records.setOnAction(e -> Dialogo.mostrar(this, "Puntuaciones más altas", tablaPuntajes()));
         Animaciones.alPasar(records, 1.08, 3);
-        Button logros = new Button("🏅  Logros");
+        Button logros = new Button("★  Logros");
         logros.getStyleClass().add("boton-fantasma");
         logros.setOnAction(e -> Dialogo.mostrar(this, "Logros e insignias", new PanelLogros(ctx.logros()), 720, null));
         Animaciones.alPasar(logros, 1.08, 3);

@@ -144,7 +144,7 @@ def main():
             f = mas_reciente(usd)
             anio = (valor(f, 'fecha') or '')[:4]
             por_persona = float(valor(f, 'v')) / habitantes
-            r['pibPerCapita'] = f'≈ {miles(round(por_persona, -1))} USD' + (f' ({anio})' if anio else '')
+            r['pibPerCapita'] = f'aprox. {miles(round(por_persona, -1))} USD' + (f' ({anio})' if anio else '')
         resultado[iso] = {k: v for k, v in r.items() if v}
 
     salida = {'fuente': 'Wikidata (CC0)', 'consultado': datetime.date.today().isoformat(), 'paises': resultado}

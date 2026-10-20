@@ -21,7 +21,7 @@ final class Tramas {
         GraphicsContext gc = c.getGraphicsContext2D();
         gc.setFill(fondo);
         gc.fillRect(0, 0, LADO, LADO);
-        gc.setStroke(fondo.deriveColor(0, 1.1, 0.55, 0.75));
+        gc.setStroke(fondo.deriveColor(0, 1.1, 0.55, 0.5));
         gc.setFill(gc.getStroke());
         gc.setLineWidth(1.3);
         switch (indice % 7) {

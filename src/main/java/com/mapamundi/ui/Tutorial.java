@@ -233,7 +233,7 @@ final class Tutorial {
         HBox fila = new HBox(18,
                 new Insignia(Logro.PRIMER_PAIS, true, 34),
                 new Insignia(Logro.PUNTERIA, true, 34),
-                new Insignia(Logro.RACHA_10, true, 34),
+                new Insignia(Logro.RACHA_20, true, 34),
                 new Insignia(Logro.DUENO_DEL_MUNDO, false, 34));
         fila.setAlignment(Pos.CENTER);
         VBox v = new VBox(14, fila, FichaPais.etiqueta("Bronce · Plata · Oro", "texto-suave"));
