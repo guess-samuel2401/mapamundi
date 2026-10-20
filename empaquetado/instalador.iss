@@ -3,7 +3,7 @@
 ; Se instala por usuario, sin permisos de administrador.
 
 #ifndef Version
-  #define Version "2.0.0"
+  #define Version "2.1.0"
 #endif
 
 [Setup]
