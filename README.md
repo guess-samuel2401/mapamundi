@@ -31,7 +31,7 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
    - Teclado: flechas (1 px), Shift + flechas (8 px), Enter para confirmar.
    - Cruceta en pantalla (mantener pulsado repite).
 3. La distancia se mide **en km reales** entre la pieza y su lugar. Dentro del margen: +500 y un bonus por
-   los segundos sobrantes. Si fallas o se acaba el tiempo, pierdes una vida ★. Con 5 vidas perdidas termina la partida.
+   los segundos sobrantes. Si fallas o se acaba el tiempo, pierdes un corazón ♥ (se rompe en el panel superior). Con los 5 corazones perdidos termina la partida.
 4. Tras cada ronda se ve tu posición (●), la real (★) y los datos del país.
 5. **F5**, P o Esc: pausa.
 

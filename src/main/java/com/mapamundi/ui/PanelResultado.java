@@ -37,8 +37,8 @@ final class PanelResultado extends VBox {
             getChildren().add(FichaPais.etiqueta("+" + r.puntos() + " ubicación · +" + r.bonus() + " bonus tiempo = +"
                     + (r.puntos() + r.bonus()), "negrita"));
         } else {
-            getChildren().add(FichaPais.etiqueta(finPartida ? "¡Sin vidas! Fin de la partida."
-                    : "Pierdes una vida. Te quedan " + partida.vidas() + ".", ""));
+            getChildren().add(FichaPais.etiqueta(finPartida ? "¡Sin corazones! Fin de la partida."
+                    : "Pierdes un corazón ♥. Te quedan " + partida.vidas() + ".", ""));
             if (r.tieneDistancia()) getChildren().add(FichaPais.etiqueta("● tu posición · ★ posición real", "texto-suave"));
         }
 

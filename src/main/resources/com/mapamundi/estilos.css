@@ -87,7 +87,6 @@
 }
 .hud-valor { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 16px; }
 .hud-puntaje { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -fondo-oscuro; }
-.estrellas { -fx-font-size: 18px; -fx-text-fill: #e8a800; }
 
 .barra-tiempo .bar { -fx-background-color: -verde; -fx-background-radius: 6; -fx-background-insets: 0; }
 .barra-tiempo.poco .bar { -fx-background-color: -rojo; }

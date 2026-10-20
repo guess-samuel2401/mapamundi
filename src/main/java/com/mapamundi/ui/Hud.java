@@ -3,6 +3,7 @@ package com.mapamundi.ui;
 import com.mapamundi.juego.Partida;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -18,7 +19,7 @@ final class Hud extends VBox {
     private final Label avance = valor("hud-valor");
     private final Label puntaje = valor("hud-puntaje");
     private final Label errores = valor("hud-valor");
-    private final Label vidas = valor("estrellas");
+    private final Corazones vidas = new Corazones(Partida.VIDAS);
     private final Label modo = valor("texto-suave");
     private final Label reloj = valor("hud-puntaje");
     private final ProgressBar tiempo = new ProgressBar(1);
@@ -57,7 +58,7 @@ final class Hud extends VBox {
         puntaje.setText(String.format("%04d", p.puntaje()));
         errores.setText(p.erroresContinente() + "/" + Partida.INTENTOS_CONTINENTE);
         errores.setStyle(p.erroresContinente() >= Partida.INTENTOS_CONTINENTE - 1 ? "-fx-text-fill: -rojo;" : "");
-        vidas.setText("★".repeat(Math.max(0, p.vidas())) + "☆".repeat(Partida.VIDAS - Math.max(0, p.vidas())));
+        vidas.mostrar(p.vidas());
         modo.setText(p.ajustes().modo().nombre() + " · " + p.ajustes().velocidad().nombre());
         sonido.setText(silencio ? "🔇" : "🔊");
 
@@ -70,9 +71,10 @@ final class Hud extends VBox {
         reloj.setText(enMapa ? String.format("00:%02d", p.segundos()) : "--:--");
     }
 
-    private static HBox par(String clave, Label valor) {
+    private static HBox par(String clave, Node valor) {
         HBox h = new HBox(5, FichaPais.etiqueta(clave.toUpperCase(), "hud-clave"), valor);
-        h.setAlignment(Pos.BASELINE_LEFT);
+        // Los corazones no tienen línea base de texto: se centran con su etiqueta.
+        h.setAlignment(valor instanceof Label ? Pos.BASELINE_LEFT : Pos.CENTER_LEFT);
         return h;
     }
 

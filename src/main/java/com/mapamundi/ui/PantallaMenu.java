@@ -315,7 +315,7 @@ final class PantallaMenu extends StackPane {
         VBox pasos = new VBox(12,
                 paso("1", "Elige el continente", "Aparece un país. Elige su continente con las flechas + Enter, las teclas 1–5 o un clic. Tienes 5 intentos: +100 puntos."),
                 paso("2", "Coloca el país", "Arrástralo con el ratón (o usa las flechas; con Shift va más rápido) y pulsa Enter o Confirmar. La rueda del ratón hace zoom."),
-                paso("3", "Suma puntos", "Si queda dentro del margen (en km reales): +500 y un bonus por los segundos que sobran. Si fallas o se acaba el tiempo, pierdes una vida ★."),
+                paso("3", "Suma puntos", "Si queda dentro del margen (en km reales): +500 y un bonus por los segundos que sobran. Si fallas o se acaba el tiempo, pierdes un corazón ♥ (tienes 5)."),
                 paso("4", "Pausa", "F5, P o Esc detienen el cronómetro."));
         Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos: Mapamundi original (2003) y Natural Earth.", "texto-suave");
         creditos.setWrapText(true);
