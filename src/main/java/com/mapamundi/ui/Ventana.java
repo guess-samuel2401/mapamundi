@@ -31,6 +31,7 @@ public final class Ventana {
 
     public Ventana(Stage escenario) {
         this.escenario = escenario;
+        FichaPais.fechaDatos(atlas.datosActualizados());
     }
 
     public void mostrar() {

@@ -140,6 +140,7 @@
 .ficha { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 10; }
 .ficha-clave { -fx-text-fill: -rojo-texto; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; }
 .ficha-valor { -fx-font-size: 13px; }
+.ficha-fuente { -fx-font-size: 11px; -fx-text-fill: -tinta-suave; -fx-font-style: italic; }
 
 .acierto { -fx-text-fill: -verde; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; }
 .fallo { -fx-text-fill: -rojo-texto; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; }

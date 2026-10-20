@@ -3,8 +3,8 @@ package com.mapamundi.modelo;
 import com.mapamundi.geo.Forma;
 
 /**
- * Un país jugable. Las fronteras vienen de Natural Earth; idioma, religión, moneda y
- * exportaciones vienen del Mapamundi original (datos de 2003) cuando el país existía allí.
+ * Un país jugable. Las fronteras vienen de Natural Earth; capital, población, superficie, idioma,
+ * moneda y PIB per cápita, de Wikidata; religión y exportaciones, del Mapamundi original (2003).
  *
  * @param color índice 1-7 para colorear el mapa sin que dos vecinos coincidan (MAPCOLOR7)
  */
@@ -17,8 +17,9 @@ public record Pais(
         String poblacion,
         String superficie,
         String idioma,
-        String religion,
         String moneda,
+        String pibPerCapita,
+        String religion,
         String exporta,
         boolean datosOriginales,
         int color,

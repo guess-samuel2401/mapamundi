@@ -133,16 +133,21 @@ Necesita Python 3. Descarga las fronteras de Natural Earth en `herramientas/fuen
 y ejecuta (la ruta es la tabla del juego original):
 
 ```bash
+python -I herramientas/actualizar_datos.py      # datos actuales de Wikidata -> herramientas/datos_wikidata.json
 python -I herramientas/construir_datos.py "D:\Fuente Globalizacion\mapamundi\paises.DBF"
 ```
+
+`actualizar_datos.py` consulta Wikidata (licencia CC0) y guarda capital, población, superficie, idiomas oficiales,
+moneda y PIB nominal (el PIB per cápita se calcula con la población). Si a un país le falta un dato, se usa el del
+juego original. La religión y las exportaciones siguen siendo las del juego de 2003 y la ficha lo indica.
 
 `herramientas/adpcm_a_pcm.py` convierte sonidos MS-ADPCM (como `FinTiempo.wav`) a PCM, que es lo que reproduce JavaFX.
 
 ## Créditos
 
 - Fronteras: [Natural Earth](https://www.naturalearthdata.com/) 1:50m, dominio público.
-- Idioma, religión, moneda, exportaciones e imágenes de referencia: Mapamundi original (2000–2003).
-- Población: estimaciones de Natural Earth (2019).
+- Capital, población, superficie, idiomas, moneda y PIB: [Wikidata](https://www.wikidata.org/) (CC0).
+- Religión, exportaciones e imágenes de referencia: Mapamundi original (2000–2003).
 - Tipografías: [Baloo 2](https://github.com/EkType/Baloo2) (títulos y números) y
   [Nunito](https://github.com/googlefonts/nunito) (texto), licencia SIL Open Font License 1.1
   (`src/main/resources/com/mapamundi/fuentes/OFL-*.txt`). Los archivos estáticos vienen de Fontsource y

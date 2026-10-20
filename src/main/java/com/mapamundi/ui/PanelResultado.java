@@ -44,7 +44,7 @@ final class PanelResultado extends VBox {
 
         boolean mostrarDatos = partida.ajustes().mostrarDatos();
         if (mostrarDatos) {
-            ScrollPane datos = new ScrollPane(FichaPais.datos(p, true, true));
+            ScrollPane datos = new ScrollPane(FichaPais.datos(p, true));
             datos.setFitToWidth(true);
             datos.setPrefViewportHeight(230);
             getChildren().add(datos);

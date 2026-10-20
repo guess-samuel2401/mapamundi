@@ -24,7 +24,7 @@ public final class FichaPais {
         VBox caja = new VBox(2);
         caja.getStyleClass().add("pista");
         if (modo == Modo.DATOS) {
-            caja.getChildren().addAll(etiqueta("¿Qué país es?", "subtitulo-rojo"), datos(p, false, datosMinimos(p)));
+            caja.getChildren().addAll(etiqueta("¿Qué país es?", "subtitulo-rojo"), datos(p, false));
             return caja;
         }
         Label tipo = etiqueta(modo.porCapital() ? "País cuya capital es" : "País", "pista-tipo");
@@ -34,21 +34,30 @@ public final class FichaPais {
         return caja;
     }
 
-    /** En modo datos, si el país no venía en el juego original, se añade la capital para que haya pistas suficientes. */
-    private static boolean datosMinimos(Pais p) {
-        return !p.datosOriginales();
+    /** Fecha de la consulta a Wikidata (la pone la ventana al cargar el atlas), para citar la fuente. */
+    private static String fechaDatos;
+
+    static void fechaDatos(String fecha) {
+        fechaDatos = fecha;
     }
 
-    public static GridPane datos(Pais p, boolean conNombre, boolean conCapital) {
+    /**
+     * Ficha del país. Capital, superficie, población, idioma, moneda y PIB son actuales (Wikidata);
+     * religión y exportaciones vienen del juego original y se marcan con su año.
+     */
+    public static GridPane datos(Pais p, boolean conNombreYCapital) {
         List<String[]> filas = new ArrayList<>();
-        if (conNombre) filas.add(new String[]{"País", p.nombre()});
-        if (conNombre || conCapital) filas.add(new String[]{"Capital", p.capital()});
+        if (conNombreYCapital) {
+            filas.add(new String[]{"País", p.nombre()});
+            filas.add(new String[]{"Capital", p.capital()});
+        }
         filas.add(new String[]{"Superficie", p.superficie()});
         filas.add(new String[]{"Población", p.poblacion()});
         filas.add(new String[]{"Idioma", p.idioma()});
-        filas.add(new String[]{"Religión", p.religion()});
         filas.add(new String[]{"Moneda", p.moneda()});
-        filas.add(new String[]{"Exporta", p.exporta()});
+        filas.add(new String[]{"PIB per cápita", p.pibPerCapita()});
+        filas.add(new String[]{"Religión (2003)", p.religion()});
+        filas.add(new String[]{"Exporta (2003)", p.exporta()});
         GridPane g = new GridPane();
         g.getStyleClass().add("ficha");
         g.setHgap(6);
@@ -63,6 +72,12 @@ public final class FichaPais {
             valor.setWrapText(true);
             GridPane.setValignment(clave, VPos.TOP);
             g.addRow(fila++, clave, valor);
+        }
+        if (fechaDatos != null) {
+            Label fuente = etiqueta("Datos: Wikidata (" + fechaDatos + ") y Mapamundi original (2003).", "ficha-fuente");
+            fuente.setWrapText(true);
+            g.add(fuente, 0, fila, 2, 1);
+            GridPane.setMargin(fuente, new javafx.geometry.Insets(4, 0, 0, 0));
         }
         return g;
     }

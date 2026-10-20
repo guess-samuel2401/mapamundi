@@ -2,7 +2,9 @@
 
 Combina:
   - Fronteras de Natural Earth 1:50m (dominio público): herramientas/fuentes/ne_50m_admin_0_countries.geojson
-  - Datos del Mapamundi original (2000-2003): paises.DBF/FPT (idioma, religión, moneda, exportaciones…)
+  - Datos actuales de Wikidata (CC0): herramientas/datos_wikidata.json, generado por actualizar_datos.py
+    (capital, población, superficie, idioma, moneda, PIB per cápita)
+  - Datos del Mapamundi original (2000-2003): paises.DBF/FPT (religión y exportaciones, y lo que falte en Wikidata)
 
 Uso: python -I herramientas/construir_datos.py "D:\\Fuente Globalizacion\\mapamundi\\paises.DBF"
 """
@@ -13,6 +15,7 @@ sys.path.insert(0, AQUI)
 from lector_dbf import read_dbf  # noqa: E402
 
 PAISES_NE = os.path.join(AQUI, 'fuentes', 'ne_50m_admin_0_countries.geojson')
+WIKIDATA = os.path.join(AQUI, 'datos_wikidata.json')
 SALIDA = os.path.join(AQUI, '..', 'src', 'main', 'resources', 'com', 'mapamundi', 'datos', 'paises.json')
 
 # Territorios que se dibujan como tierra pero no se juegan.
@@ -132,6 +135,10 @@ def miles(n):
     return f'{int(round(n)):,}'.replace(',', '.')
 
 
+def formatear_km2(km2):
+    return f'{miles(km2)} km²' if km2 >= 10 else f'{km2:.2f} km²'.replace('.', ',')
+
+
 def main():
     ne = json.load(open(PAISES_NE, encoding='utf-8'))['features']
     _, originales = read_dbf(sys.argv[1])
@@ -149,6 +156,13 @@ def main():
         if p['ADMIN'] in FUSIONAR:
             fusiones.setdefault(FUSIONAR[p['ADMIN']], []).append(f['geometry'])
 
+    wikidata, consultado = {}, None
+    if os.path.exists(WIKIDATA):
+        contenido = json.load(open(WIKIDATA, encoding='utf-8'))
+        wikidata, consultado = contenido['paises'], contenido['consultado']
+    else:
+        print('Aviso: falta herramientas/datos_wikidata.json (python -I herramientas/actualizar_datos.py)')
+
     paises, otras, sin_datos = [], [], []
     for f in ne:
         p = f['properties']
@@ -164,24 +178,35 @@ def main():
 
         nombre_ne = p['NAME_ES']
         nombre = NOMBRES.get(p['NAME_EN'], NOMBRES.get(nombre_ne, nombre_ne))
+        iso = p['ISO_A2_EH'] if p['ISO_A2_EH'] != '-99' else p['ADM0_A3']
         original = por_nombre.get(norm(nombre_ne))
+        actual = wikidata.get(iso, {})
         continente = MAR_ABIERTO.get(admin) or CONTINENTES[p['CONTINENT']]
-        capital = CAPITALES.get(nombre_ne) or (original['CAPITAL'].strip() if original else '')
+        texto = lambda campo: original[campo].strip() if original else ''
+        # Datos actuales de Wikidata; si falta alguno, el del juego original (2003).
+        capital = actual.get('capital') or CAPITALES.get(nombre_ne) or texto('CAPITAL')
         if not capital:
             sin_datos.append(nombre)
-        superficie = original['SUPERFICIE'].strip() if original and original['SUPERFICIE'].strip() else f'≈ {miles(area_km2(rings))} km2'
-        texto = lambda campo: original[campo].strip() if original else ''
+        area = area_km2(rings)
+        if actual.get('superficies'):
+            superficie = formatear_km2(min(actual['superficies'], key=lambda c: abs(math.log(max(c, 0.01) / area))))
+        elif texto('SUPERFICIE'):
+            superficie = texto('SUPERFICIE').replace('km2', 'km²')
+        else:
+            superficie = f'≈ {formatear_km2(area)}'
         paises.append({
-            'iso': p['ISO_A2_EH'] if p['ISO_A2_EH'] != '-99' else p['ADM0_A3'],
+            'iso': iso,
             'nombre': nombre,
             'continente': continente,
             'sudamerica': p['CONTINENT'] == 'South America',
             'capital': capital,
-            'poblacion': f"{miles(p['POP_EST'])} habs. ({p['POP_YEAR']})",
-            'superficie': superficie.replace('km2', 'km²'),
-            'idioma': texto('IDIOMA'),
+            'poblacion': actual.get('poblacion') or f"{miles(p['POP_EST'])} habs. ({p['POP_YEAR']})",
+            'superficie': superficie,
+            'idioma': actual.get('idioma') or texto('IDIOMA'),
+            'moneda': actual.get('moneda') or texto('MONEDA'),
+            'pibPerCapita': actual.get('pibPerCapita') or (f"{texto('PERCAPITA')} (2003)" if texto('PERCAPITA') else ''),
+            # Wikidata no tiene estos dos completos: se conservan del original, marcados como de 2003.
             'religion': texto('RELIGION'),
-            'moneda': texto('MONEDA'),
             'exporta': texto('EXPORTA'),
             'datosOriginales': original is not None,
             'color': p['MAPCOLOR7'],
@@ -191,7 +216,8 @@ def main():
     paises.sort(key=lambda x: norm(x['nombre']))
     os.makedirs(os.path.dirname(SALIDA), exist_ok=True)
     with open(SALIDA, 'w', encoding='utf-8') as fh:
-        json.dump({'fuente': 'Natural Earth 1:50m (dominio público) + Mapamundi 2000', 'paises': paises, 'otrasTierras': otras},
+        json.dump({'fuente': 'Natural Earth 1:50m (dominio público) + Wikidata (CC0) + Mapamundi 2000',
+                   'datosActualizados': consultado, 'paises': paises, 'otrasTierras': otras},
                   fh, ensure_ascii=False, separators=(',', ':'))
 
     usados = {id(r) for r in por_nombre.values()}

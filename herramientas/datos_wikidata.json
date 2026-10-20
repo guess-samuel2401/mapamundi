@@ -1,0 +1,2009 @@
+{
+ "consultado": "2026-10-20",
+ "fuente": "Wikidata (CC0)",
+ "paises": {
+  "AD": {
+   "capital": "Andorra la Vieja",
+   "idioma": "Catalán",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 37.350 USD (2022)",
+   "poblacion": "89.752 habs. (2026)",
+   "superficies": [
+    468.0
+   ]
+  },
+  "AE": {
+   "capital": "Abu Dhabi",
+   "idioma": "Árabe",
+   "moneda": "Dírham de los Emiratos Árabes Unidos",
+   "pibPerCapita": "≈ 50.250 USD (2022)",
+   "poblacion": "10.100.000 habs. (2026)",
+   "superficies": [
+    83600.0
+   ]
+  },
+  "AF": {
+   "capital": "Kabul",
+   "idioma": "Uzbeko, Turcomano, Árabe, Baluchi, Pashayi, Pastún, Lenguas nuristaníes, Dari y Lenguas pamir",
+   "moneda": "Afgani afgano",
+   "pibPerCapita": "≈ 430 USD (2024)",
+   "poblacion": "41.454.761 habs. (2023)",
+   "superficies": [
+    652230.0
+   ]
+  },
+  "AG": {
+   "capital": "Saint John",
+   "idioma": "Español y Inglés",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 17.320 USD (2022)",
+   "poblacion": "101.489 habs. (2023)",
+   "superficies": [
+    440.29
+   ]
+  },
+  "AL": {
+   "capital": "Tirana",
+   "idioma": "Albanés",
+   "moneda": "Lek albanés",
+   "pibPerCapita": "≈ 8.370 USD (2023)",
+   "poblacion": "2.811.655 habs. (2023)",
+   "superficies": [
+    28748.0
+   ]
+  },
+  "AM": {
+   "capital": "Ereván",
+   "idioma": "Armenio",
+   "moneda": "Dram armenio",
+   "pibPerCapita": "≈ 6.660 USD (2022)",
+   "poblacion": "2.930.450 habs. (2017)",
+   "superficies": [
+    29743.42
+   ]
+  },
+  "AO": {
+   "capital": "Luanda",
+   "idioma": "Portugués",
+   "moneda": "Kwanza angoleño",
+   "poblacion": "36.749.906 habs. (2023)",
+   "superficies": [
+    1246700.0
+   ]
+  },
+  "AR": {
+   "capital": "Buenos Aires",
+   "idioma": "Español",
+   "moneda": "Peso argentino convertible",
+   "pibPerCapita": "≈ 13.370 USD (2022)",
+   "poblacion": "47.327.407 habs. (2022)",
+   "superficies": [
+    2780400.0
+   ]
+  },
+  "AT": {
+   "capital": "Viena",
+   "idioma": "Alemán y Lengua austríaca de signos",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 56.980 USD (2023)",
+   "poblacion": "8.979.894 habs. (2022)",
+   "superficies": [
+    83878.99
+   ]
+  },
+  "AU": {
+   "capital": "Canberra",
+   "idioma": "Inglés",
+   "moneda": "Dólar australiano",
+   "pibPerCapita": "≈ 63.630 USD (2024)",
+   "poblacion": "27.614.411 habs. (2025)",
+   "superficies": [
+    410977.0,
+    7659861.0,
+    7692024.0,
+    8148250.0
+   ]
+  },
+  "AZ": {
+   "capital": "Bakú",
+   "idioma": "Azerí y Lengua de signos azerbaiyana",
+   "moneda": "Manat azerbaiyano",
+   "pibPerCapita": "≈ 7.110 USD (2023)",
+   "poblacion": "10.180.770 habs. (2023)",
+   "superficies": [
+    86600.0
+   ]
+  },
+  "BA": {
+   "capital": "Sarajevo",
+   "idioma": "Croata, Serbio y Bosnio",
+   "moneda": "Marco bosnioherzegovino y Dinar bosnioherzegovino",
+   "pibPerCapita": "≈ 6.430 USD (2022)",
+   "poblacion": "3.816.459 habs. (2022)",
+   "superficies": [
+    10.0,
+    51187.0,
+    51209.2
+   ]
+  },
+  "BB": {
+   "capital": "Bridgetown",
+   "idioma": "Inglés y Bajan Creole",
+   "moneda": "Dólar de Barbados",
+   "pibPerCapita": "≈ 18.580 USD (2022)",
+   "poblacion": "303.431 habs. (2023)",
+   "superficies": [
+    439.0
+   ]
+  },
+  "BD": {
+   "capital": "Daca",
+   "idioma": "Bengalí",
+   "moneda": "Taka bangladesí",
+   "pibPerCapita": "≈ 2.600 USD (2025)",
+   "poblacion": "175.686.899 habs. (2025)",
+   "superficies": [
+    147570.0
+   ]
+  },
+  "BE": {
+   "capital": "Bruselas",
+   "idioma": "Francés, Alemán y Neerlandés",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 54.520 USD (2023)",
+   "poblacion": "11.825.551 habs. (2025)",
+   "superficies": [
+    30528.0,
+    30688.0
+   ]
+  },
+  "BF": {
+   "capital": "Uagadugú",
+   "idioma": "Diula, Bissa y Mossi",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 820 USD (2022)",
+   "poblacion": "23.025.776 habs. (2023)",
+   "superficies": [
+    274200.0
+   ]
+  },
+  "BG": {
+   "capital": "Sofía",
+   "idioma": "Búlgaro",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 15.940 USD (2023)",
+   "poblacion": "6.423.207 habs. (2025)",
+   "superficies": [
+    110993.6
+   ]
+  },
+  "BH": {
+   "capital": "Manama",
+   "idioma": "Árabe",
+   "moneda": "Dinar bareiní",
+   "pibPerCapita": "≈ 16.440 USD (2022)",
+   "poblacion": "2.700.000 habs. (2026)",
+   "superficies": [
+    786.5
+   ]
+  },
+  "BI": {
+   "capital": "Guitega",
+   "idioma": "Francés, Inglés y Kirundi",
+   "moneda": "Franco burundés",
+   "pibPerCapita": "≈ 190 USD (2023)",
+   "poblacion": "13.689.450 habs. (2023)",
+   "superficies": [
+    27834.0
+   ]
+  },
+  "BJ": {
+   "capital": "Porto Novo",
+   "idioma": "Francés",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 1.230 USD (2022)",
+   "poblacion": "14.111.034 habs. (2023)",
+   "superficies": [
+    114763.0
+   ]
+  },
+  "BN": {
+   "capital": "Bandar Seri Begawan",
+   "idioma": "Inglés británico y Malayo",
+   "moneda": "Dólar de Brunéi",
+   "pibPerCapita": "≈ 36.350 USD (2022)",
+   "poblacion": "458.949 habs. (2023)",
+   "superficies": [
+    5765.31
+   ]
+  },
+  "BO": {
+   "capital": "La Paz y Sucre",
+   "idioma": "Español, Aymara, Lenguas quechuas y Guaraní",
+   "moneda": "Boliviano",
+   "pibPerCapita": "≈ 3.520 USD (2022)",
+   "poblacion": "12.244.159 habs. (2023)",
+   "superficies": [
+    1098581.0
+   ]
+  },
+  "BR": {
+   "capital": "Brasilia",
+   "idioma": "Portugués",
+   "moneda": "Real brasileño",
+   "pibPerCapita": "≈ 8.960 USD (2022)",
+   "poblacion": "214.211.951 habs. (2026)",
+   "superficies": [
+    8515767.0
+   ]
+  },
+  "BS": {
+   "capital": "Nasáu",
+   "idioma": "Inglés",
+   "moneda": "Dólar bahameño",
+   "pibPerCapita": "≈ 32.290 USD (2022)",
+   "poblacion": "399.440 habs. (2023)",
+   "superficies": [
+    13878.0
+   ]
+  },
+  "BT": {
+   "capital": "Timbu",
+   "idioma": "Idioma dzongkha",
+   "moneda": "Ngultrum butanés",
+   "pibPerCapita": "≈ 3.190 USD (2021)",
+   "poblacion": "796.682 habs. (2025)",
+   "superficies": [
+    38394.0
+   ]
+  },
+  "BW": {
+   "capital": "Gaborone",
+   "idioma": "Inglés",
+   "moneda": "Pula",
+   "pibPerCapita": "≈ 8.210 USD (2022)",
+   "poblacion": "2.480.244 habs. (2023)",
+   "superficies": [
+    581737.0
+   ]
+  },
+  "BY": {
+   "capital": "Minsk",
+   "idioma": "Ruso y Bielorruso",
+   "moneda": "Rublo bierlorruso",
+   "pibPerCapita": "≈ 7.930 USD (2023)",
+   "poblacion": "9.056.080 habs. (2026)",
+   "superficies": [
+    207596.76,
+    207600.5
+   ]
+  },
+  "BZ": {
+   "capital": "Belmopán",
+   "idioma": "Inglés",
+   "moneda": "Dólar beliceño",
+   "pibPerCapita": "≈ 6.870 USD (2022)",
+   "poblacion": "411.106 habs. (2023)",
+   "superficies": [
+    22966.0
+   ]
+  },
+  "CA": {
+   "capital": "Ottawa",
+   "idioma": "Francés y Inglés",
+   "moneda": "Dólar canadiense",
+   "poblacion": "40.000.000 habs. (2023)",
+   "superficies": [
+    9984670.0
+   ]
+  },
+  "CD": {
+   "capital": "Kinsasa",
+   "idioma": "Francés",
+   "moneda": "Franco congoleño",
+   "pibPerCapita": "≈ 550 USD (2022)",
+   "poblacion": "105.789.731 habs. (2023)",
+   "superficies": [
+    2344858.0
+   ]
+  },
+  "CF": {
+   "capital": "Bangui",
+   "idioma": "Francés y Idioma sango",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 460 USD (2022)",
+   "poblacion": "5.152.421 habs. (2023)",
+   "superficies": [
+    622984.0
+   ]
+  },
+  "CG": {
+   "capital": "Brazzaville",
+   "idioma": "Francés",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 2.330 USD (2022)",
+   "poblacion": "6.278.845 habs. (2024)",
+   "superficies": [
+    342000.0
+   ]
+  },
+  "CH": {
+   "capital": "Berna",
+   "idioma": "Francés, Alemán, Italiano y Romanche",
+   "moneda": "Franco suizo",
+   "pibPerCapita": "≈ 88.720 USD (2022)",
+   "poblacion": "9.104.063 habs. (2025)",
+   "superficies": [
+    41291.0
+   ]
+  },
+  "CI": {
+   "capital": "Yamusukro",
+   "idioma": "Francés",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 2.250 USD (2022)",
+   "poblacion": "31.165.654 habs. (2023)",
+   "superficies": [
+    322463.0
+   ]
+  },
+  "CL": {
+   "capital": "Santiago de Chile",
+   "idioma": "Español",
+   "moneda": "Peso",
+   "pibPerCapita": "≈ 15.470 USD (2022)",
+   "poblacion": "19.458.000 habs. (2021)",
+   "superficies": [
+    756102.0
+   ]
+  },
+  "CM": {
+   "capital": "Yaundé",
+   "idioma": "Francés y Inglés",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 1.560 USD (2022)",
+   "poblacion": "28.372.687 habs. (2023)",
+   "superficies": [
+    475442.0
+   ]
+  },
+  "CN": {
+   "capital": "Pekín",
+   "idioma": "Putonghua",
+   "moneda": "Yuan chino",
+   "pibPerCapita": "≈ 12.790 USD (2022)",
+   "poblacion": "1.404.890.000 habs. (2025)",
+   "superficies": [
+    9596961.0
+   ]
+  },
+  "CO": {
+   "capital": "Bogotá",
+   "idioma": "Español",
+   "moneda": "Peso",
+   "pibPerCapita": "≈ 6.570 USD (2022)",
+   "poblacion": "52.321.152 habs. (2023)",
+   "superficies": [
+    1141748.0
+   ]
+  },
+  "CR": {
+   "capital": "San José",
+   "idioma": "Español",
+   "moneda": "Colón costarricense",
+   "pibPerCapita": "≈ 12.990 USD (2022)",
+   "poblacion": "5.265.575 habs. (2024)",
+   "superficies": [
+    51179.92
+   ]
+  },
+  "CU": {
+   "capital": "La Habana",
+   "idioma": "Español",
+   "moneda": "Peso",
+   "poblacion": "10.985.974 habs. (2023)",
+   "superficies": [
+    109884.0
+   ]
+  },
+  "CV": {
+   "capital": "Praia",
+   "idioma": "Portugués y Criollo caboverdiano",
+   "moneda": "Escudo caboverdiano",
+   "pibPerCapita": "≈ 4.160 USD (2022)",
+   "poblacion": "555.988 habs. (2020)",
+   "superficies": [
+    4033.0
+   ]
+  },
+  "CY": {
+   "capital": "Nicosia",
+   "idioma": "Turco y Griego",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 21.140 USD (2022)",
+   "poblacion": "1.344.976 habs. (2023)",
+   "superficies": [
+    9234.0,
+    9242.45
+   ]
+  },
+  "CZ": {
+   "capital": "Praga",
+   "idioma": "Checo",
+   "moneda": "Corona checa",
+   "pibPerCapita": "≈ 22.980 USD (2019)",
+   "poblacion": "10.909.500 habs. (2025)",
+   "superficies": [
+    78871.0
+   ]
+  },
+  "DE": {
+   "capital": "Berlín",
+   "idioma": "Alemán",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 48.790 USD (2022)",
+   "poblacion": "83.467.117 habs. (2025)",
+   "superficies": [
+    349390.0,
+    357170.0,
+    357587.77
+   ]
+  },
+  "DJ": {
+   "capital": "Ciudad de Yibuti",
+   "idioma": "Francés y Árabe",
+   "moneda": "Franco yibutiano",
+   "pibPerCapita": "≈ 3.520 USD (2022)",
+   "poblacion": "1.000.000 habs. (2026)",
+   "superficies": [
+    23200.0
+   ]
+  },
+  "DK": {
+   "capital": "Copenhague",
+   "idioma": "Danés",
+   "moneda": "Corona danesa",
+   "pibPerCapita": "≈ 67.910 USD (2022)",
+   "poblacion": "5.822.863 habs. (2020)",
+   "superficies": [
+    42925.46
+   ]
+  },
+  "DM": {
+   "capital": "Roseau",
+   "idioma": "Inglés",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 8.200 USD (2022)",
+   "poblacion": "74.656 habs. (2023)",
+   "superficies": [
+    751.1
+   ]
+  },
+  "DO": {
+   "capital": "Santo Domingo",
+   "idioma": "Español",
+   "moneda": "Peso dominicano",
+   "pibPerCapita": "≈ 10.560 USD (2022)",
+   "poblacion": "10.760.028 habs. (2022)",
+   "superficies": [
+    48670.82
+   ]
+  },
+  "DZ": {
+   "capital": "Argel",
+   "idioma": "Árabe y Standard Algerian Berber",
+   "moneda": "Dinar argelino",
+   "pibPerCapita": "≈ 4.210 USD (2022)",
+   "poblacion": "45.600.000 habs. (2026)",
+   "superficies": [
+    2381741.0
+   ]
+  },
+  "EC": {
+   "capital": "Quito",
+   "idioma": "Español, Shuar y Quichua norteño",
+   "moneda": "Dólar estadounidense",
+   "pibPerCapita": "≈ 6.790 USD (2022)",
+   "poblacion": "16.938.986 habs. (2022)",
+   "superficies": [
+    255586.91,
+    257204.27
+   ]
+  },
+  "EE": {
+   "capital": "Tallin",
+   "idioma": "Estonio",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 27.810 USD (2022)",
+   "poblacion": "1.369.995 habs. (2025)",
+   "superficies": [
+    45335.0,
+    45339.0
+   ]
+  },
+  "EG": {
+   "capital": "El Cairo",
+   "idioma": "Árabe",
+   "moneda": "Libra egipcia",
+   "pibPerCapita": "≈ 4.160 USD (2022)",
+   "poblacion": "114.500.000 habs. (2026)",
+   "superficies": [
+    1010407.87
+   ]
+  },
+  "ER": {
+   "capital": "Asmara",
+   "idioma": "Inglés, Árabe y Idioma tigriña",
+   "moneda": "Nakfa",
+   "poblacion": "3.497.000 habs. (2019)",
+   "superficies": [
+    117600.0
+   ]
+  },
+  "ES": {
+   "capital": "Madrid",
+   "idioma": "Español",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 28.760 USD (2022)",
+   "poblacion": "48.592.909 habs. (2024)",
+   "superficies": [
+    505990.0
+   ]
+  },
+  "ET": {
+   "capital": "Adís Abeba",
+   "idioma": "Amhárico",
+   "moneda": "Bir etíope",
+   "pibPerCapita": "≈ 990 USD (2022)",
+   "poblacion": "128.691.692 habs. (2023)",
+   "superficies": [
+    1104300.0
+   ]
+  },
+  "FI": {
+   "capital": "Helsinki",
+   "idioma": "Finés y Sueco",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 49.680 USD (2022)",
+   "poblacion": "5.652.881 habs. (2025)",
+   "superficies": [
+    34515.06,
+    52427.08,
+    303947.0,
+    303963.28,
+    338145.0,
+    338478.34,
+    390905.42
+   ]
+  },
+  "FJ": {
+   "capital": "Suva",
+   "idioma": "Inglés, Fiyiano y Hindi de Fiyi",
+   "moneda": "Dólar fiyiano",
+   "pibPerCapita": "≈ 5.340 USD (2022)",
+   "poblacion": "926.276 habs. (2018)",
+   "superficies": [
+    18274.0
+   ]
+  },
+  "FM": {
+   "capital": "Palikir",
+   "idioma": "Inglés",
+   "moneda": "Dólar estadounidense",
+   "pibPerCapita": "≈ 5.630 USD (2022)",
+   "poblacion": "75.817 habs. (2023)",
+   "superficies": [
+    702.0
+   ]
+  },
+  "FR": {
+   "capital": "París",
+   "idioma": "Francés",
+   "moneda": "Euro y Franco CFP",
+   "pibPerCapita": "≈ 40.560 USD (2022)",
+   "poblacion": "68.605.616 habs. (2025)",
+   "superficies": [
+    643801.0
+   ]
+  },
+  "GA": {
+   "capital": "Libreville",
+   "idioma": "Francés",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 2.090 USD (2003)",
+   "poblacion": "2.300.000 habs. (2023)",
+   "superficies": [
+    267667.0
+   ]
+  },
+  "GB": {
+   "capital": "Londres",
+   "idioma": "Inglés",
+   "moneda": "Libra esterlina",
+   "pibPerCapita": "≈ 45.610 USD (2022)",
+   "poblacion": "67.326.569 habs. (2021)",
+   "superficies": [
+    242495.0
+   ]
+  },
+  "GD": {
+   "capital": "Saint George",
+   "idioma": "Inglés y Inglés criollo granadino",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 10.990 USD (2022)",
+   "poblacion": "114.299 habs. (2023)",
+   "superficies": [
+    348.5
+   ]
+  },
+  "GE": {
+   "capital": "Tiflis",
+   "idioma": "Georgiano",
+   "moneda": "Lari georgiano",
+   "pibPerCapita": "≈ 6.260 USD (2022)",
+   "poblacion": "3.929.581 habs. (2024)",
+   "superficies": [
+    69700.0
+   ]
+  },
+  "GH": {
+   "capital": "Acra",
+   "idioma": "Inglés",
+   "moneda": "Cedi",
+   "pibPerCapita": "≈ 2.220 USD (2022)",
+   "poblacion": "32.833.031 habs. (2021)",
+   "superficies": [
+    238535.0
+   ]
+  },
+  "GM": {
+   "capital": "Banjul",
+   "idioma": "Inglés",
+   "moneda": "Dalasi",
+   "pibPerCapita": "≈ 910 USD (2023)",
+   "poblacion": "2.639.916 habs. (2021)",
+   "superficies": [
+    11300.0
+   ]
+  },
+  "GN": {
+   "capital": "Conakri",
+   "idioma": "Francés y Languages of Guinea",
+   "moneda": "Franco guineano",
+   "pibPerCapita": "≈ 1.460 USD (2025)",
+   "poblacion": "17.521.167 habs. (2025)",
+   "superficies": [
+    245857.0
+   ]
+  },
+  "GQ": {
+   "capital": "Ciudad de la Paz",
+   "idioma": "Francés, Español y Portugués",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 6.390 USD (2022)",
+   "poblacion": "1.847.549 habs. (2023)",
+   "superficies": [
+    28051.0
+   ]
+  },
+  "GR": {
+   "capital": "Atenas",
+   "idioma": "Griego",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 20.730 USD (2022)",
+   "poblacion": "10.566.531 habs. (2022)",
+   "superficies": [
+    131957.0
+   ]
+  },
+  "GT": {
+   "capital": "Ciudad de Guatemala",
+   "idioma": "Español",
+   "moneda": "Quetzal",
+   "pibPerCapita": "≈ 5.500 USD (2022)",
+   "poblacion": "17.263.239 habs. (2018)",
+   "superficies": [
+    108889.0
+   ]
+  },
+  "GW": {
+   "capital": "Bisáu",
+   "idioma": "Portugués",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 880 USD (2022)",
+   "poblacion": "1.861.283 habs. (2017)",
+   "superficies": [
+    36125.0
+   ]
+  },
+  "GY": {
+   "capital": "Georgetown",
+   "idioma": "Inglés",
+   "moneda": "Dólar guyanés",
+   "pibPerCapita": "≈ 17.480 USD (2022)",
+   "poblacion": "878.674 habs. (2022)",
+   "superficies": [
+    214970.0
+   ]
+  },
+  "HN": {
+   "capital": "Tegucigalpa",
+   "idioma": "Español",
+   "moneda": "Lempira",
+   "pibPerCapita": "≈ 2.880 USD (2022)",
+   "poblacion": "11.002.356 habs. (2025)",
+   "superficies": [
+    112492.0
+   ]
+  },
+  "HR": {
+   "capital": "Zagreb",
+   "idioma": "Croata",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 18.330 USD (2022)",
+   "poblacion": "3.871.833 habs. (2021)",
+   "superficies": [
+    56594.0
+   ]
+  },
+  "HT": {
+   "capital": "Puerto Príncipe",
+   "idioma": "Francés y Criollo haitiano",
+   "moneda": "Gourde",
+   "pibPerCapita": "≈ 1.840 USD (2022)",
+   "poblacion": "10.981.229 habs. (2017)",
+   "superficies": [
+    27750.0
+   ]
+  },
+  "HU": {
+   "capital": "Budapest",
+   "idioma": "Húngaro",
+   "moneda": "Forinto húngaro",
+   "pibPerCapita": "≈ 19.160 USD (2021)",
+   "poblacion": "9.489.000 habs. (2025)",
+   "superficies": [
+    93011.4,
+    93030.0
+   ]
+  },
+  "ID": {
+   "capital": "Yakarta",
+   "idioma": "Indonesio",
+   "moneda": "Rupia indonesia",
+   "pibPerCapita": "≈ 4.790 USD (2022)",
+   "poblacion": "275.439.000 habs. (2021)",
+   "superficies": [
+    1904570.0
+   ]
+  },
+  "IE": {
+   "capital": "Dublín",
+   "idioma": "Inglés y Irlandés",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 102.780 USD (2022)",
+   "poblacion": "5.149.139 habs. (2022)",
+   "superficies": [
+    69797.0
+   ]
+  },
+  "IL": {
+   "capital": "Jerusalén",
+   "idioma": "Hebreo",
+   "moneda": "Nuevo séquel",
+   "pibPerCapita": "≈ 52.920 USD (2022)",
+   "poblacion": "9.840.000 habs. (2023)",
+   "superficies": [
+    20770.0
+   ]
+  },
+  "IN": {
+   "capital": "Nueva Delhi",
+   "idioma": "Hindi y Inglés",
+   "moneda": "Rupia india",
+   "pibPerCapita": "≈ 2.550 USD (2022)",
+   "poblacion": "1.326.093.247 habs. (2020)",
+   "superficies": [
+    3287263.0
+   ]
+  },
+  "IQ": {
+   "capital": "Bagdad",
+   "idioma": "Árabe y Kurdo",
+   "moneda": "Dinar iraquí",
+   "pibPerCapita": "≈ 6.070 USD (2022)",
+   "poblacion": "43.500.000 habs. (2026)",
+   "superficies": [
+    437072.0
+   ]
+  },
+  "IR": {
+   "capital": "Teherán",
+   "idioma": "Persa",
+   "moneda": "Rial iraní",
+   "pibPerCapita": "≈ 4.200 USD (2022)",
+   "poblacion": "92.417.700 habs. (2025)",
+   "superficies": [
+    1648195.0
+   ]
+  },
+  "IS": {
+   "capital": "Reikiavik",
+   "idioma": "Islandés",
+   "moneda": "Corona islandesa",
+   "pibPerCapita": "≈ 74.000 USD (2022)",
+   "poblacion": "376.248 habs. (2022)",
+   "superficies": [
+    103004.0
+   ]
+  },
+  "IT": {
+   "capital": "Roma",
+   "idioma": "Italiano",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 34.160 USD (2022)",
+   "poblacion": "58.850.717 habs. (2023)",
+   "superficies": [
+    302068.0
+   ]
+  },
+  "JM": {
+   "capital": "Kingston",
+   "idioma": "Inglés y Criollo jamaicano",
+   "moneda": "Dólar jamaiquino",
+   "pibPerCapita": "≈ 6.250 USD (2022)",
+   "poblacion": "2.734.093 habs. (2019)",
+   "superficies": [
+    10991.91
+   ]
+  },
+  "JO": {
+   "capital": "Amán",
+   "idioma": "Árabe",
+   "moneda": "Dinar jordano",
+   "pibPerCapita": "≈ 4.200 USD (2022)",
+   "poblacion": "11.300.000 habs. (2026)",
+   "superficies": [
+    89341.0
+   ]
+  },
+  "JP": {
+   "capital": "Tokio",
+   "idioma": "Japonés",
+   "moneda": "Yen",
+   "pibPerCapita": "≈ 34.180 USD (2022)",
+   "poblacion": "123.802.000 habs. (2024)",
+   "superficies": [
+    377972.28,
+    377973.68
+   ]
+  },
+  "KE": {
+   "capital": "Nairobi",
+   "idioma": "Inglés y Suajili",
+   "moneda": "Chelín keniano",
+   "pibPerCapita": "≈ 2.380 USD (2022)",
+   "poblacion": "47.564.296 habs. (2019)",
+   "superficies": [
+    581309.0
+   ]
+  },
+  "KG": {
+   "capital": "Biskek",
+   "idioma": "Kirguís",
+   "moneda": "Som kirguís",
+   "pibPerCapita": "≈ 1.500 USD (2022)",
+   "poblacion": "7.281.800 habs. (2025)",
+   "superficies": [
+    199951.0
+   ]
+  },
+  "KH": {
+   "capital": "Nom Pen",
+   "idioma": "Camboyano",
+   "moneda": "Riel camboyano",
+   "pibPerCapita": "≈ 1.720 USD (2022)",
+   "poblacion": "17.423.880 habs. (2023)",
+   "superficies": [
+    181035.0
+   ]
+  },
+  "KI": {
+   "capital": "Tarawa Sur",
+   "idioma": "Inglés y Gilbertino",
+   "moneda": "Dólar australiano y Dólar de Kiribati",
+   "pibPerCapita": "≈ 1.660 USD (2022)",
+   "poblacion": "134.518 habs. (2024)",
+   "superficies": [
+    811.0
+   ]
+  },
+  "KM": {
+   "capital": "Moroni",
+   "idioma": "Francés, Árabe y Comorense",
+   "moneda": "Franco comorense",
+   "pibPerCapita": "≈ 1.380 USD (2022)",
+   "poblacion": "900.000 habs. (2026)",
+   "superficies": [
+    2034.0
+   ]
+  },
+  "KN": {
+   "capital": "Basseterre",
+   "idioma": "Inglés",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 20.490 USD (2022)",
+   "poblacion": "46.922 habs. (2025)",
+   "superficies": [
+    269.36
+   ]
+  },
+  "KP": {
+   "capital": "Pionyang",
+   "idioma": "Coreano y Norcoreano estándar",
+   "moneda": "Wŏn norcoreano",
+   "poblacion": "26.418.204 habs. (2023)",
+   "superficies": [
+    120540.0
+   ]
+  },
+  "KR": {
+   "capital": "Seúl",
+   "idioma": "Coreano y Lengua de señas coreana",
+   "moneda": "Won surcoreano y Mun coreano",
+   "pibPerCapita": "≈ 32.250 USD (2022)",
+   "poblacion": "51.628.117 habs. (2022)",
+   "superficies": [
+    100295.0
+   ]
+  },
+  "KW": {
+   "capital": "Ciudad de Kuwait",
+   "idioma": "Árabe",
+   "moneda": "Dinar kuwaití",
+   "pibPerCapita": "≈ 42.920 USD (2022)",
+   "poblacion": "4.300.000 habs. (2026)",
+   "superficies": [
+    17818.0
+   ]
+  },
+  "KZ": {
+   "capital": "Astaná",
+   "idioma": "Ruso y Kazajo",
+   "moneda": "Tenge kazajo",
+   "pibPerCapita": "≈ 10.950 USD (2022)",
+   "poblacion": "20.139.914 habs. (2024)",
+   "superficies": [
+    2724900.0
+   ]
+  },
+  "LA": {
+   "capital": "Vientián",
+   "idioma": "Lao",
+   "moneda": "Kip laosiano",
+   "pibPerCapita": "≈ 2.290 USD (2022)",
+   "poblacion": "6.858.160 habs. (2017)",
+   "superficies": [
+    236800.0
+   ]
+  },
+  "LB": {
+   "capital": "Beirut",
+   "idioma": "Árabe",
+   "moneda": "Libra libanesa",
+   "pibPerCapita": "≈ 4.360 USD (2021)",
+   "poblacion": "5.300.000 habs. (2026)",
+   "superficies": [
+    10452.0
+   ]
+  },
+  "LC": {
+   "capital": "Castries",
+   "idioma": "Inglés",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 12.320 USD (2022)",
+   "poblacion": "167.591 habs. (2023)",
+   "superficies": [
+    617.01
+   ]
+  },
+  "LI": {
+   "capital": "Vaduz",
+   "idioma": "Alemán",
+   "moneda": "Franco suizo",
+   "pibPerCapita": "≈ 189.020 USD (2021)",
+   "poblacion": "38.020 habs. (2019)",
+   "superficies": [
+    160.0
+   ]
+  },
+  "LK": {
+   "capital": "Colombo y Sri Jayawardenapura Kotte",
+   "idioma": "Tamil y Cingalés",
+   "moneda": "Rupia esrilanquesa",
+   "pibPerCapita": "≈ 3.380 USD (2022)",
+   "poblacion": "22.037.000 habs. (2023)",
+   "superficies": [
+    65610.0
+   ]
+  },
+  "LR": {
+   "capital": "Monrovia",
+   "idioma": "Inglés",
+   "moneda": "Dólar liberiano",
+   "pibPerCapita": "≈ 770 USD (2022)",
+   "poblacion": "5.214.030 habs. (2021)",
+   "superficies": [
+    111369.0
+   ]
+  },
+  "LS": {
+   "capital": "Maseru",
+   "idioma": "Inglés y Sesotho",
+   "moneda": "Rand sudafricano y Loti",
+   "pibPerCapita": "≈ 1.140 USD (2022)",
+   "poblacion": "2.233.339 habs. (2017)",
+   "superficies": [
+    30355.0
+   ]
+  },
+  "LT": {
+   "capital": "Vilna",
+   "idioma": "Lituano",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 24.590 USD (2022)",
+   "poblacion": "2.860.002 habs. (2023)",
+   "superficies": [
+    65300.0
+   ]
+  },
+  "LU": {
+   "capital": "Luxemburgo",
+   "idioma": "Francés, Alemán y Luxemburgués",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 119.070 USD (2022)",
+   "poblacion": "690.959 habs. (2026)",
+   "superficies": [
+    2586.36,
+    2593.05
+   ]
+  },
+  "LV": {
+   "capital": "Riga",
+   "idioma": "Letón",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 22.300 USD (2022)",
+   "poblacion": "1.845.096 habs. (2026)",
+   "superficies": [
+    61760.39,
+    62226.85,
+    62226.92,
+    64593.76,
+    64593.77,
+    64593.79
+   ]
+  },
+  "LY": {
+   "capital": "Trípoli",
+   "idioma": "Árabe",
+   "moneda": "Dinar libio",
+   "pibPerCapita": "≈ 6.440 USD (2022)",
+   "poblacion": "7.100.000 habs. (2026)",
+   "superficies": [
+    1759541.0
+   ]
+  },
+  "MA": {
+   "capital": "Rabat",
+   "idioma": "Árabe y Amazig estándar marroquí",
+   "moneda": "Dírham marroquí",
+   "pibPerCapita": "≈ 3.500 USD (2022)",
+   "poblacion": "38.300.000 habs. (2026)",
+   "superficies": [
+    446550.0
+   ]
+  },
+  "MC": {
+   "capital": "Mónaco",
+   "idioma": "Francés",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 221.230 USD (2021)",
+   "poblacion": "38.857 habs. (2025)",
+   "superficies": [
+    2.08
+   ]
+  },
+  "MD": {
+   "capital": "Chisináu",
+   "idioma": "Rumano",
+   "moneda": "Leu moldavo",
+   "pibPerCapita": "≈ 5.990 USD (2022)",
+   "poblacion": "2.409.207 habs. (2024)",
+   "superficies": [
+    33843.5
+   ]
+  },
+  "ME": {
+   "capital": "Podgorica",
+   "idioma": "Montenegrino",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 9.880 USD (2022)",
+   "poblacion": "617.213 habs. (2022)",
+   "superficies": [
+    13883.0
+   ]
+  },
+  "MG": {
+   "capital": "Antananarivo",
+   "idioma": "Francés y Malgache",
+   "moneda": "Ariary",
+   "pibPerCapita": "≈ 470 USD (2022)",
+   "poblacion": "31.964.956 habs. (2024)",
+   "superficies": [
+    587295.0
+   ]
+  },
+  "MH": {
+   "capital": "Majuro",
+   "idioma": "Inglés y Marshalés",
+   "moneda": "Dólar estadounidense y SOV",
+   "pibPerCapita": "≈ 5.140 USD (2022)",
+   "poblacion": "54.366 habs. (2023)",
+   "superficies": [
+    181.43
+   ]
+  },
+  "MK": {
+   "capital": "Skopie",
+   "idioma": "Albanés y Macedonio",
+   "moneda": "Denar macedonio",
+   "pibPerCapita": "≈ 7.380 USD (2022)",
+   "poblacion": "1.836.713 habs. (2021)",
+   "superficies": [
+    25713.0
+   ]
+  },
+  "ML": {
+   "capital": "Bamako",
+   "idioma": "Bambara, Fula, Lenguas senufo, Bozo, Maninka, Minyanka, Idioma soninké, Kassonke, Hassanía, Lenguas songhay, Lenguas dogón, Idioma tamashek y Bobo",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 840 USD (2022)",
+   "poblacion": "22.395.489 habs. (2022)",
+   "superficies": [
+    1240192.0
+   ]
+  },
+  "MM": {
+   "capital": "Naipyidó",
+   "idioma": "Idioma birmano",
+   "moneda": "Kyat birmano",
+   "pibPerCapita": "≈ 1.110 USD (2022)",
+   "poblacion": "53.370.609 habs. (2017)",
+   "superficies": [
+    676577.2
+   ]
+  },
+  "MN": {
+   "capital": "Ulán Bator",
+   "idioma": "Mongol",
+   "moneda": "Tugrik mongol",
+   "pibPerCapita": "≈ 4.930 USD (2022)",
+   "poblacion": "3.409.939 habs. (2021)",
+   "superficies": [
+    1564116.0
+   ]
+  },
+  "MR": {
+   "capital": "Nuakchot",
+   "idioma": "Francés y Árabe",
+   "moneda": "Uguiya",
+   "pibPerCapita": "≈ 2.120 USD (2022)",
+   "poblacion": "4.900.000 habs. (2026)",
+   "superficies": [
+    1030700.0
+   ]
+  },
+  "MT": {
+   "capital": "La Valeta",
+   "idioma": "Inglés y Maltés",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 32.110 USD (2022)",
+   "poblacion": "553.214 habs. (2023)",
+   "superficies": [
+    316.0
+   ]
+  },
+  "MU": {
+   "capital": "Port Louis",
+   "idioma": "Francés y Inglés",
+   "moneda": "Rupia mauricia",
+   "pibPerCapita": "≈ 10.200 USD (2022)",
+   "poblacion": "1.264.613 habs. (2017)",
+   "superficies": [
+    2040.0
+   ]
+  },
+  "MV": {
+   "capital": "Malé",
+   "idioma": "Maldivo",
+   "moneda": "Rupia maldiva",
+   "pibPerCapita": "≈ 14.190 USD (2022)",
+   "poblacion": "436.330 habs. (2017)",
+   "superficies": [
+    298.0
+   ]
+  },
+  "MW": {
+   "capital": "Lilongüe",
+   "idioma": "Inglés, Chichewa y Idioma tumbuka",
+   "moneda": "Kuacha malauí",
+   "pibPerCapita": "≈ 750 USD (2022)",
+   "poblacion": "17.563.749 habs. (2018)",
+   "superficies": [
+    118484.0
+   ]
+  },
+  "MX": {
+   "capital": "Ciudad de México",
+   "idioma": "Español, Náhuatl y Maya",
+   "moneda": "Peso",
+   "pibPerCapita": "≈ 10.690 USD (2022)",
+   "poblacion": "132.274.416 habs. (2024)",
+   "superficies": [
+    1964375.0,
+    1972550.0
+   ]
+  },
+  "MY": {
+   "capital": "Kuala Lumpur",
+   "idioma": "Malayo",
+   "moneda": "Ringgit",
+   "pibPerCapita": "≈ 11.870 USD (2022)",
+   "poblacion": "34.231.700 habs. (2025)",
+   "superficies": [
+    330803.0
+   ]
+  },
+  "MZ": {
+   "capital": "Maputo",
+   "idioma": "Portugués",
+   "moneda": "Metical mozambiqueño",
+   "pibPerCapita": "≈ 600 USD (2022)",
+   "poblacion": "29.668.834 habs. (2017)",
+   "superficies": [
+    801590.0
+   ]
+  },
+  "NA": {
+   "capital": "Windhoek",
+   "idioma": "Inglés",
+   "moneda": "Rand sudafricano y Dólar namibio",
+   "pibPerCapita": "≈ 4.980 USD (2022)",
+   "poblacion": "2.533.794 habs. (2017)",
+   "superficies": [
+    825615.0
+   ]
+  },
+  "NE": {
+   "capital": "Niamey",
+   "idioma": "Hausa",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 650 USD (2022)",
+   "poblacion": "21.477.348 habs. (2017)",
+   "superficies": [
+    1267000.0
+   ]
+  },
+  "NG": {
+   "capital": "Abuya",
+   "idioma": "Inglés",
+   "moneda": "Naira",
+   "pibPerCapita": "≈ 2.260 USD (2022)",
+   "poblacion": "211.400.708 habs. (2021)",
+   "superficies": [
+    923768.0
+   ]
+  },
+  "NI": {
+   "capital": "Managua",
+   "idioma": "Español",
+   "moneda": "Córdoba",
+   "pibPerCapita": "≈ 2.240 USD (2022)",
+   "poblacion": "7.005.764 habs. (2025)",
+   "superficies": [
+    120340.0
+   ]
+  },
+  "NL": {
+   "capital": "Ámsterdam",
+   "idioma": "Neerlandés",
+   "moneda": "Euro, Dólar estadounidense, Florín arubeño y Florín caribeño",
+   "pibPerCapita": "≈ 48.570 USD (2017)",
+   "poblacion": "17.100.715 habs. (2013)",
+   "superficies": [
+    42201.0
+   ]
+  },
+  "NO": {
+   "capital": "Oslo",
+   "idioma": "Noruego, Nynorsk, Bokmål y Lenguas sami",
+   "moneda": "Corona noruega",
+   "pibPerCapita": "≈ 102.940 USD (2022)",
+   "poblacion": "5.627.400 habs. (2026)",
+   "superficies": [
+    365.4,
+    1210.0,
+    2674.8,
+    9648.0,
+    18488.0,
+    18905.0,
+    126384.0,
+    144848.0,
+    240014.0,
+    323808.0,
+    385207.0
+   ]
+  },
+  "NP": {
+   "capital": "Katmandú",
+   "idioma": "Nepalí",
+   "moneda": "Rupia nepalí",
+   "pibPerCapita": "≈ 1.400 USD (2022)",
+   "poblacion": "29.164.578 habs. (2021)",
+   "superficies": [
+    147181.25
+   ]
+  },
+  "NR": {
+   "capital": "Yaren",
+   "idioma": "Inglés y Nauruano",
+   "moneda": "Dólar australiano",
+   "pibPerCapita": "≈ 11.060 USD (2022)",
+   "poblacion": "13.650 habs. (2017)",
+   "superficies": [
+    21.0
+   ]
+  },
+  "NZ": {
+   "capital": "Wellington",
+   "idioma": "Inglés, Lengua de señas neozelandesa y Maorí",
+   "moneda": "Dólar neozelandés",
+   "pibPerCapita": "≈ 46.580 USD (2022)",
+   "poblacion": "5.307.800 habs. (2024)",
+   "superficies": [
+    268021.0
+   ]
+  },
+  "OM": {
+   "capital": "Mascate",
+   "idioma": "Árabe",
+   "moneda": "Rial omaní",
+   "pibPerCapita": "≈ 22.480 USD (2022)",
+   "poblacion": "5.100.000 habs. (2026)",
+   "superficies": [
+    309500.0
+   ]
+  },
+  "PA": {
+   "capital": "Ciudad de Panamá",
+   "idioma": "Español",
+   "moneda": "Dólar estadounidense y Balboa",
+   "pibPerCapita": "≈ 16.740 USD (2022)",
+   "poblacion": "4.570.133 habs. (2025)",
+   "superficies": [
+    74177.3
+   ]
+  },
+  "PE": {
+   "capital": "Lima",
+   "idioma": "Español, Aymara y Lenguas quechuas",
+   "moneda": "Sol",
+   "pibPerCapita": "≈ 7.100 USD (2022)",
+   "poblacion": "34.157.732 habs. (2025)",
+   "superficies": [
+    1285216.0
+   ]
+  },
+  "PG": {
+   "capital": "Puerto Moresby",
+   "idioma": "Inglés, Hiri motu, Tok pisin y Lengua de signos de Papúa Nueva Guinea",
+   "moneda": "Kina",
+   "pibPerCapita": "≈ 3.430 USD (2022)",
+   "poblacion": "8.935.000 habs. (2020)",
+   "superficies": [
+    462840.0
+   ]
+  },
+  "PH": {
+   "capital": "Manila",
+   "idioma": "Inglés, Idioma filipino y Taglish",
+   "moneda": "Peso filipino",
+   "pibPerCapita": "≈ 3.590 USD (2022)",
+   "poblacion": "112.729.484 habs. (2024)",
+   "superficies": [
+    343448.0
+   ]
+  },
+  "PK": {
+   "capital": "Islamabad",
+   "idioma": "Urdu y Inglés",
+   "moneda": "Rupia pakistaní",
+   "pibPerCapita": "≈ 1.680 USD (2022)",
+   "poblacion": "223.773.700 habs. (2021)",
+   "superficies": [
+    881913.0
+   ]
+  },
+  "PL": {
+   "capital": "Varsovia",
+   "idioma": "Polaco",
+   "moneda": "Złoty",
+   "pibPerCapita": "≈ 18.320 USD (2022)",
+   "poblacion": "37.563.071 habs. (2024)",
+   "superficies": [
+    312683.0
+   ]
+  },
+  "PS": {
+   "capital": "Ramala y Jerusalén Este",
+   "idioma": "Árabe",
+   "moneda": "Nuevo séquel",
+   "pibPerCapita": "≈ 3.540 USD (2022)",
+   "poblacion": "5.400.000 habs. (2026)",
+   "superficies": [
+    6020.0
+   ]
+  },
+  "PT": {
+   "capital": "Lisboa",
+   "idioma": "Portugués",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 24.350 USD (2022)",
+   "poblacion": "10.347.892 habs. (2021)",
+   "superficies": [
+    92225.0
+   ]
+  },
+  "PW": {
+   "capital": "Ngerulmud",
+   "idioma": "Inglés, Japonés y Palauano",
+   "moneda": "Dólar estadounidense",
+   "pibPerCapita": "≈ 10.020 USD (2021)",
+   "poblacion": "21.729 habs. (2017)",
+   "superficies": [
+    465.55
+   ]
+  },
+  "PY": {
+   "capital": "Asunción",
+   "idioma": "Español y Guaraní",
+   "moneda": "Guaraní",
+   "pibPerCapita": "≈ 6.130 USD (2022)",
+   "poblacion": "6.811.297 habs. (2017)",
+   "superficies": [
+    406756.0
+   ]
+  },
+  "QA": {
+   "capital": "Doha",
+   "idioma": "Árabe",
+   "moneda": "Riyal catarí",
+   "pibPerCapita": "≈ 89.910 USD (2022)",
+   "poblacion": "2.639.211 habs. (2017)",
+   "superficies": [
+    11437.0
+   ]
+  },
+  "RO": {
+   "capital": "Bucarest",
+   "idioma": "Rumano",
+   "moneda": "Leu rumano",
+   "pibPerCapita": "≈ 15.810 USD (2022)",
+   "poblacion": "19.053.815 habs. (2022)",
+   "superficies": [
+    238397.0
+   ]
+  },
+  "RS": {
+   "capital": "Belgrado",
+   "idioma": "Serbio",
+   "moneda": "Dinar serbio",
+   "pibPerCapita": "≈ 9.610 USD (2022)",
+   "poblacion": "6.605.168 habs. (2024)",
+   "superficies": [
+    88361.0,
+    88499.0
+   ]
+  },
+  "RU": {
+   "capital": "Moscú",
+   "idioma": "Ruso",
+   "moneda": "Rublo ruso",
+   "pibPerCapita": "≈ 15.330 USD (2022)",
+   "poblacion": "146.119.928 habs. (2025)",
+   "superficies": [
+    17075400.0
+   ]
+  },
+  "RW": {
+   "capital": "Kigali",
+   "idioma": "Francés, Inglés, Suajili y Kiñaruanda",
+   "moneda": "Franco ruandés",
+   "pibPerCapita": "≈ 980 USD (2024)",
+   "poblacion": "14.569.341 habs. (2025)",
+   "superficies": [
+    26338.0
+   ]
+  },
+  "SA": {
+   "capital": "Riad",
+   "idioma": "Árabe",
+   "moneda": "Riyal saudí",
+   "pibPerCapita": "≈ 33.580 USD (2022)",
+   "poblacion": "33.000.000 habs. (2018)",
+   "superficies": [
+    2250000.0
+   ]
+  },
+  "SB": {
+   "capital": "Honiara",
+   "idioma": "Inglés",
+   "moneda": "Dólar de las Islas Salomón",
+   "pibPerCapita": "≈ 2.610 USD (2022)",
+   "poblacion": "611.343 habs. (2017)",
+   "superficies": [
+    28400.0
+   ]
+  },
+  "SC": {
+   "capital": "Victoria",
+   "idioma": "Francés, Inglés y Criollo seychelense",
+   "moneda": "Rupia seychelense",
+   "pibPerCapita": "≈ 13.260 USD (2022)",
+   "poblacion": "119.773 habs. (2023)",
+   "superficies": [
+    459.0
+   ]
+  },
+  "SD": {
+   "capital": "Jartum",
+   "idioma": "Inglés y Árabe",
+   "moneda": "Libra sudanesa",
+   "pibPerCapita": "≈ 1.060 USD (2022)",
+   "poblacion": "48.945.000 habs. (2025)",
+   "superficies": [
+    1840687.0,
+    1886068.0
+   ]
+  },
+  "SE": {
+   "capital": "Estocolmo",
+   "idioma": "Sueco",
+   "moneda": "Corona sueca",
+   "pibPerCapita": "≈ 55.230 USD (2022)",
+   "poblacion": "10.609.460 habs. (2025)",
+   "superficies": [
+    122577.5,
+    407283.59,
+    447425.16,
+    528861.06
+   ]
+  },
+  "SG": {
+   "capital": "Singapur",
+   "idioma": "Inglés, Tamil, Malayo y Mandarín estándar",
+   "moneda": "Dólar de Singapur",
+   "pibPerCapita": "≈ 79.570 USD (2022)",
+   "poblacion": "5.866.139 habs. (2021)",
+   "superficies": [
+    719.1
+   ]
+  },
+  "SI": {
+   "capital": "Liubliana",
+   "idioma": "Esloveno",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 29.340 USD (2022)",
+   "poblacion": "2.116.972 habs. (2022)",
+   "superficies": [
+    20271.0
+   ]
+  },
+  "SK": {
+   "capital": "Bratislava",
+   "idioma": "Eslovaco",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 21.350 USD (2022)",
+   "poblacion": "5.409.407 habs. (2025)",
+   "superficies": [
+    49033.72,
+    49034.0,
+    49035.0
+   ]
+  },
+  "SL": {
+   "capital": "Freetown",
+   "idioma": "Inglés y Criollo sierraleonés",
+   "moneda": "Leone",
+   "pibPerCapita": "≈ 530 USD (2022)",
+   "poblacion": "7.557.212 habs. (2017)",
+   "superficies": [
+    71740.0
+   ]
+  },
+  "SM": {
+   "capital": "San Marino",
+   "idioma": "Italiano",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 54.300 USD (2021)",
+   "poblacion": "34.167 habs. (2026)",
+   "superficies": [
+    61.2
+   ]
+  },
+  "SN": {
+   "capital": "Dakar",
+   "idioma": "Francés, Wólof, Lenguaje Balanta y Badyara",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 1.530 USD (2022)",
+   "poblacion": "18.100.000 habs. (2026)",
+   "superficies": [
+    196722.0
+   ]
+  },
+  "SO": {
+   "capital": "Mogadiscio",
+   "idioma": "Somalí y Árabe",
+   "moneda": "Chelín somalí",
+   "pibPerCapita": "≈ 450 USD (2022)",
+   "poblacion": "18.100.000 habs. (2026)",
+   "superficies": [
+    637657.0
+   ]
+  },
+  "SR": {
+   "capital": "Paramaribo",
+   "idioma": "Neerlandés",
+   "moneda": "Dólar surinamés",
+   "pibPerCapita": "≈ 6.430 USD (2022)",
+   "poblacion": "563.402 habs. (2017)",
+   "superficies": [
+    163270.0
+   ]
+  },
+  "SS": {
+   "capital": "Yuba",
+   "idioma": "Inglés",
+   "moneda": "Libra sursudanesa",
+   "poblacion": "12.575.714 habs. (2017)",
+   "superficies": [
+    644329.0
+   ]
+  },
+  "ST": {
+   "capital": "Santo Tomé",
+   "idioma": "Portugués",
+   "moneda": "Dobra santotomense",
+   "pibPerCapita": "≈ 2.680 USD (2022)",
+   "poblacion": "204.327 habs. (2017)",
+   "superficies": [
+    1001.0
+   ]
+  },
+  "SV": {
+   "capital": "San Salvador",
+   "idioma": "Español",
+   "moneda": "Dólar estadounidense y Bitcoin",
+   "pibPerCapita": "≈ 5.390 USD (2022)",
+   "poblacion": "6.029.976 habs. (2024)",
+   "superficies": [
+    21041.0
+   ]
+  },
+  "SY": {
+   "capital": "Damasco",
+   "idioma": "Árabe",
+   "moneda": "Libra siria",
+   "poblacion": "23.000.000 habs. (2026)",
+   "superficies": [
+    185180.0
+   ]
+  },
+  "SZ": {
+   "capital": "Mbabane y Lobamba",
+   "idioma": "Inglés y Suazi",
+   "moneda": "Lilangeni",
+   "pibPerCapita": "≈ 3.940 USD (2022)",
+   "poblacion": "1.230.506 habs. (2023)",
+   "superficies": [
+    17364.0
+   ]
+  },
+  "TD": {
+   "capital": "Yamena",
+   "idioma": "Francés y Árabe",
+   "moneda": "Franco CFA de África Central",
+   "pibPerCapita": "≈ 660 USD (2022)",
+   "poblacion": "19.319.064 habs. (2023)",
+   "superficies": [
+    1284000.0
+   ]
+  },
+  "TG": {
+   "capital": "Lomé",
+   "idioma": "Francés",
+   "moneda": "Franco CFA de África Occidental",
+   "pibPerCapita": "≈ 800 USD (2024)",
+   "poblacion": "12.400.000 habs. (2026)",
+   "superficies": [
+    56785.0
+   ]
+  },
+  "TH": {
+   "capital": "Bangkok",
+   "idioma": "Tailandés",
+   "moneda": "Baht tailandés",
+   "pibPerCapita": "≈ 7.480 USD (2022)",
+   "poblacion": "66.188.503 habs. (2017)",
+   "superficies": [
+    513119.5
+   ]
+  },
+  "TJ": {
+   "capital": "Dusambé",
+   "idioma": "Tayiko",
+   "moneda": "Somoni tayiko",
+   "pibPerCapita": "≈ 1.100 USD (2022)",
+   "poblacion": "9.504.000 habs. (2021)",
+   "superficies": [
+    143100.0
+   ]
+  },
+  "TL": {
+   "capital": "Dili",
+   "idioma": "Portugués y Idioma tetun",
+   "moneda": "Dólar estadounidense y Centavo de dólar de Timor Oriental",
+   "pibPerCapita": "≈ 2.260 USD (2022)",
+   "poblacion": "1.400.638 habs. (2024)",
+   "superficies": [
+    14918.72
+   ]
+  },
+  "TM": {
+   "capital": "Asjabad",
+   "idioma": "Turcomano",
+   "moneda": "Manat turkmeno",
+   "poblacion": "6.117.933 habs. (2021)",
+   "superficies": [
+    491210.0
+   ]
+  },
+  "TN": {
+   "capital": "Túnez",
+   "idioma": "Árabe",
+   "moneda": "Dinar tunecino",
+   "pibPerCapita": "≈ 1.260 USD (2022)",
+   "poblacion": "37.100.000 habs. (2026)",
+   "superficies": [
+    163610.0
+   ]
+  },
+  "TO": {
+   "capital": "Nukualofa",
+   "idioma": "Inglés y Tongano",
+   "moneda": "Pa'anga",
+   "pibPerCapita": "≈ 4.440 USD (2021)",
+   "poblacion": "105.697 habs. (2020)",
+   "superficies": [
+    748.51
+   ]
+  },
+  "TR": {
+   "capital": "Ankara",
+   "idioma": "Turco",
+   "moneda": "Lira turca",
+   "pibPerCapita": "≈ 10.610 USD (2022)",
+   "poblacion": "85.372.377 habs. (2023)",
+   "superficies": [
+    783356.0,
+    783562.0,
+    783562.05
+   ]
+  },
+  "TT": {
+   "capital": "Puerto España",
+   "idioma": "Inglés",
+   "moneda": "Dólar trinitense",
+   "pibPerCapita": "≈ 20.380 USD (2022)",
+   "poblacion": "1.369.125 habs. (2017)",
+   "superficies": [
+    5128.0
+   ]
+  },
+  "TV": {
+   "capital": "Funafuti",
+   "idioma": "Inglés y Tuvaluano",
+   "moneda": "Dólar tuvaluano y Dólar australiano",
+   "pibPerCapita": "≈ 5.670 USD (2022)",
+   "poblacion": "10.643 habs. (2022)",
+   "superficies": [
+    25.14
+   ]
+  },
+  "TW": {
+   "capital": "Taipéi",
+   "idioma": "Lengua de señas taiwanesa, Idioma amis, Taiwanés, Rukai, Idioma bunun, Idioma kanakanabu, Mandarín taiwanés, Idioma paiwan, Lengua yami, Lengua atayal, Idioma saaroa, Idioma kavalan, Idioma tsou, Idioma seediq, Idioma puyuma, Idioma saisiyat, Idioma sakizaya, Hakka taiwanés, Truku, Matsu dialect, Kinmen dialect y Wuqiu dialect",
+   "moneda": "Nuevo dólar taiwanés",
+   "poblacion": "23.262.544 habs. (2026)",
+   "superficies": [
+    36193.0
+   ]
+  },
+  "TZ": {
+   "capital": "Dodoma",
+   "idioma": "Inglés y Suajili",
+   "moneda": "Chelín tanzano",
+   "pibPerCapita": "≈ 1.230 USD (2022)",
+   "poblacion": "61.741.120 habs. (2022)",
+   "superficies": [
+    947303.0
+   ]
+  },
+  "UA": {
+   "capital": "Kiev",
+   "idioma": "Ucraniano",
+   "moneda": "Grivna",
+   "pibPerCapita": "≈ 3.900 USD (2022)",
+   "poblacion": "41.167.335 habs. (2022)",
+   "superficies": [
+    603550.0
+   ]
+  },
+  "UG": {
+   "capital": "Kampala",
+   "idioma": "Inglés y Suajili",
+   "moneda": "Chelín ugandés",
+   "pibPerCapita": "≈ 970 USD (2022)",
+   "poblacion": "47.123.531 habs. (2021)",
+   "superficies": [
+    241038.0
+   ]
+  },
+  "US": {
+   "capital": "Washington D. C.",
+   "idioma": "Español, Carolinio, Idioma chamorro, Hawaiano y Samoano",
+   "moneda": "Dólar estadounidense",
+   "pibPerCapita": "≈ 84.530 USD (2024)",
+   "poblacion": "340.110.988 habs. (2024)",
+   "superficies": [
+    9826675.0
+   ]
+  },
+  "UY": {
+   "capital": "Montevideo",
+   "moneda": "Peso uruguayo",
+   "pibPerCapita": "≈ 20.670 USD (2022)",
+   "poblacion": "3.444.263 habs. (2023)",
+   "superficies": [
+    176215.0
+   ]
+  },
+  "UZ": {
+   "capital": "Taskent",
+   "idioma": "Uzbeko",
+   "moneda": "Som",
+   "pibPerCapita": "≈ 1.980 USD (2021)",
+   "poblacion": "34.915.100 habs. (2021)",
+   "superficies": [
+    448978.0
+   ]
+  },
+  "VA": {
+   "capital": "Ciudad del Vaticano",
+   "idioma": "Latín y Italiano",
+   "moneda": "Euro",
+   "poblacion": "882 habs. (2024)",
+   "superficies": [
+    0.49
+   ]
+  },
+  "VC": {
+   "capital": "Kingstown",
+   "idioma": "Inglés",
+   "moneda": "Dólar del Caribe Oriental",
+   "pibPerCapita": "≈ 8.680 USD (2022)",
+   "poblacion": "109.296 habs. (2023)",
+   "superficies": [
+    389.0
+   ]
+  },
+  "VE": {
+   "capital": "Caracas",
+   "idioma": "Español y Lengua de señas venezolana",
+   "moneda": "Bolívar soberano",
+   "poblacion": "31.250.306 habs. (2024)",
+   "superficies": [
+    912050.0
+   ]
+  },
+  "VN": {
+   "capital": "Hanói",
+   "idioma": "Vietnamita",
+   "moneda": "Đồng vietnamita",
+   "pibPerCapita": "≈ 4.250 USD (2022)",
+   "poblacion": "96.208.984 habs. (2019)",
+   "superficies": [
+    331690.0
+   ]
+  },
+  "VU": {
+   "capital": "Port Vila",
+   "idioma": "Francés, Inglés y Bislama",
+   "moneda": "Vatu",
+   "pibPerCapita": "≈ 3.280 USD (2022)",
+   "poblacion": "300.019 habs. (2020)",
+   "superficies": [
+    12190.0
+   ]
+  },
+  "WS": {
+   "capital": "Apia",
+   "idioma": "Inglés y Samoano",
+   "moneda": "Tālā",
+   "pibPerCapita": "≈ 4.160 USD (2022)",
+   "poblacion": "200.010 habs. (2021)",
+   "superficies": [
+    2842.0
+   ]
+  },
+  "XK": {
+   "capital": "Pristina",
+   "idioma": "Albanés y Serbio",
+   "moneda": "Euro",
+   "pibPerCapita": "≈ 5.940 USD (2022)",
+   "poblacion": "1.586.659 habs. (2024)",
+   "superficies": [
+    10909.0
+   ]
+  },
+  "YE": {
+   "capital": "Saná y Adén",
+   "idioma": "Árabe",
+   "moneda": "Rial yemení",
+   "poblacion": "34.400.000 habs. (2026)",
+   "superficies": [
+    455503.0
+   ]
+  },
+  "ZA": {
+   "capital": "Pretoria, Ciudad del Cabo y Bloemfontein",
+   "idioma": "Inglés, Zulú, Xhosa, Afrikáans, Venda, Idioma sotho septentrional, Suazi, Setsuana, Tsonga, Sesotho, Ndebele del Sur y Lenguaje de Signos Sudafricano",
+   "moneda": "Rand sudafricano",
+   "pibPerCapita": "≈ 6.540 USD (2022)",
+   "poblacion": "62.027.503 habs. (2022)",
+   "superficies": [
+    1221037.0
+   ]
+  },
+  "ZM": {
+   "capital": "Lusaka",
+   "idioma": "Inglés",
+   "moneda": "Kuacha zambiano",
+   "pibPerCapita": "≈ 1.520 USD (2022)",
+   "poblacion": "19.610.769 habs. (2022)",
+   "superficies": [
+    752618.0
+   ]
+  },
+  "ZW": {
+   "capital": "Harare",
+   "idioma": "Inglés, Xhosa, Ndau, Venda, Chichewa, Lenguas joisanas, Kalanga, Shona, Chitonga, Setsuana, Tsonga, Sesotho, Ndebele del norte, Nambya, Zimbabwe Sign Language y Barwe",
+   "moneda": "Euro, Dólar estadounidense, Yen, Libra esterlina, Yuan chino, Rupia india, Rand sudafricano, Dólar zimbabuense, Dólar australiano y Oro de Zimbabue",
+   "pibPerCapita": "≈ 1.360 USD (2022)",
+   "poblacion": "15.178.979 habs. (2022)",
+   "superficies": [
+    390757.0
+   ]
+  }
+ }
+}
