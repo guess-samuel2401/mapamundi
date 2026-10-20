@@ -31,7 +31,13 @@ public final class Puntajes {
         this.archivo = archivo;
     }
 
+    /**
+     * La tabla del usuario. La variable de entorno MAPAMUNDI_PUNTAJES permite usar otro archivo
+     * (por ejemplo, para probar con datos ficticios sin tocar los récords reales).
+     */
     public static Puntajes delUsuario() {
+        String otro = System.getenv("MAPAMUNDI_PUNTAJES");
+        if (otro != null && !otro.isBlank()) return new Puntajes(Path.of(otro));
         return new Puntajes(Path.of(System.getProperty("user.home"), ".mapamundi", "puntajes.json"));
     }
 

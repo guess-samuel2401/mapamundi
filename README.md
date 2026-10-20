@@ -66,6 +66,13 @@ En **VS Code** (con el *Extension Pack for Java*):
 
 Pruebas: `.\mvnw.cmd test` (o la tarea **Pruebas**).
 
+Para probar la tabla de récords con datos ficticios sin tocar los reales, apunta la variable de entorno
+`MAPAMUNDI_PUNTAJES` a otro archivo JSON antes de abrir el juego:
+
+```bash
+$env:MAPAMUNDI_PUNTAJES = "C:\ruta\puntajes-de-prueba.json"; .\mvnw.cmd compile javafx:run
+```
+
 ## Programa de escritorio (Windows)
 
 ```bash

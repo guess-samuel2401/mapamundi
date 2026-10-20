@@ -251,5 +251,19 @@
 .numero-paso { -fx-background-color: -rojo; -fx-text-fill: white; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 16px;
     -fx-background-radius: 15; }
 
+.tabla-puntajes .celda-puntaje { -fx-padding: 4 8 4 8; -fx-alignment: center-left; }
 .tabla-puntajes .fila-par { -fx-background-color: rgba(29, 43, 79, 0.05); }
 .tabla-puntajes .fila-nueva { -fx-background-color: -sol-claro; }
+.numero-puesto { -fx-font-family: "Nunito ExtraBold"; -fx-text-fill: -tinta-suave; }
+.tabla-puntajes .numero-puesto, .tabla-puntajes .medalla { -fx-alignment: center; }
+
+/* Podio: medalla y nombre en oro, plata y cobre (degradado: brillo arriba, tono profundo abajo). */
+.cifra-medalla { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 14px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.5), 2, 0.6, 0, 1); }
+.nombre-oro, .nombre-plata, .nombre-cobre { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 16px; }
+.nombre-oro { -fx-text-fill: linear-gradient(to bottom, #e0a800, #8a6508); }
+.nombre-plata { -fx-text-fill: linear-gradient(to bottom, #8d96a3, #4f5763); }
+.nombre-cobre { -fx-text-fill: linear-gradient(to bottom, #c9743a, #7a3f17); }
+.tabla-puntajes .fila-oro { -fx-background-color: rgba(255, 210, 63, 0.22); }
+.tabla-puntajes .fila-plata { -fx-background-color: rgba(163, 170, 181, 0.18); }
+.tabla-puntajes .fila-cobre { -fx-background-color: rgba(181, 101, 45, 0.13); }

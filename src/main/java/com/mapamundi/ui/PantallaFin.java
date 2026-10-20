@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 final class PantallaFin extends VBox {
 
     PantallaFin(Partida partida, Puntajes puntajes, Runnable menu, Runnable otraVez) {
-        super(16);
-        setPadding(new Insets(32));
+        super(14);
+        setPadding(new Insets(20, 32, 24, 32));
         setAlignment(Pos.TOP_CENTER);
         setMaxWidth(720);
 

@@ -6,7 +6,9 @@ import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Puntajes;
 import com.mapamundi.modelo.Atlas;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -62,7 +64,12 @@ public final class Ventana {
     }
 
     private void fin(Partida partida) {
-        cambiarA(new PantallaFin(partida, puntajes, this::menu, () -> jugar(ajustes)));
+        // Con la tabla de récords llena no cabe en pantallas bajas: se puede desplazar.
+        StackPane centrada = new StackPane(new PantallaFin(partida, puntajes, this::menu, () -> jugar(ajustes)));
+        centrada.setAlignment(Pos.TOP_CENTER);
+        ScrollPane desplazable = new ScrollPane(centrada);
+        desplazable.setFitToWidth(true);
+        cambiarA(desplazable);
     }
 
     private void cambiarA(Parent pantalla) {
