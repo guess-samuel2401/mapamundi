@@ -16,6 +16,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Crear instalador y ZIP para publicar",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .\\empaquetado\\empaquetar.ps1 -Publicar",
+      "problemMatcher": []
+    },
+    {
       "label": "Pruebas",
       "type": "shell",
       "command": "./mvnw test",

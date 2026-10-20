@@ -4,6 +4,24 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 **Java 25 + JavaFX**, con un **mapa propio dibujado a partir de las fronteras reales** de Natural Earth
 (sin internet y sin nombres que delaten la respuesta) y los **197 países actuales**.
 
+![Menú principal](docs/captura-menu.jpg)
+
+## Descargar e instalar (Windows 10/11, 64 bits)
+
+1. Entra en **[Descargas (Releases)](https://github.com/guess-samuel2401/mapamundi/releases/latest)**.
+2. Descarga una de las dos opciones:
+   - **`Mapamundi-2.0.0-instalador.exe`** (recomendado): ábrelo y sigue el asistente. Crea accesos directos
+     en el menú Inicio (y, si quieres, en el Escritorio) y se puede desinstalar desde
+     *Configuración → Aplicaciones*. No pide permisos de administrador.
+   - **`Mapamundi-2.0.0-windows-portable.zip`**: descomprímelo donde quieras y abre `Mapamundi\Mapamundi.exe`.
+     No instala nada.
+3. No hace falta tener Java: el programa lo lleva incluido. Tampoco necesita internet para jugar.
+
+> **Aviso de Windows SmartScreen.** Como el programa no está firmado con un certificado comercial, Windows
+> puede mostrar *"Windows protegió su PC"*. Pulsa **Más información → Ejecutar de todas formas**.
+
+![Partida en curso](docs/captura-juego.jpg)
+
 ## Cómo se juega
 
 1. **Continente:** aparece un país (nombre + silueta). Elige su continente con las flechas + Enter,
@@ -61,6 +79,15 @@ Pruebas: `.\mvnw.cmd test` (o la tarea **Pruebas**).
    y crea accesos directos en el Escritorio y en el menú Inicio.
 
 Para llevarlo a otro equipo basta con copiar la carpeta `target\instalador\Mapamundi` entera.
+
+Para publicar una versión nueva (requiere [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
+
+```bash
+.\empaquetado\empaquetar.ps1 -Publicar
+gh release create v2.0.0 target\publicar\* --title "Mapamundi 2.0.0"
+```
+
+`-Publicar` deja en `target\publicar` el instalador (`empaquetado/instalador.iss`) y el ZIP portable.
 Para desinstalarlo: borrar esa carpeta de Programs y los dos accesos directos (los puntajes están en `%USERPROFILE%\.mapamundi`).
 
 El icono (`empaquetado/mapamundi.ico`) se genera con `python -I herramientas/crear_icono.py`.

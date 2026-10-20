@@ -3,11 +3,15 @@
     Convierte Mapamundi en un programa de Windows (Mapamundi.exe con su propio Java incluido)
     y, con -Instalar, lo copia a la carpeta de programas del usuario con accesos directos.
 
+    Con -Publicar genera además, en target\publicar, el instalador (Inno Setup) y un ZIP portable
+    para subirlos a GitHub Releases.
+
 .EXAMPLE
     .\empaquetado\empaquetar.ps1            # solo genera target\instalador\Mapamundi
     .\empaquetado\empaquetar.ps1 -Instalar  # además lo instala en %LOCALAPPDATA%\Programs\Mapamundi
+    .\empaquetado\empaquetar.ps1 -Publicar  # instalador .exe + ZIP portable en target\publicar
 #>
-param([switch]$Instalar)
+param([switch]$Instalar, [switch]$Publicar)
 
 $ErrorActionPreference = 'Stop'
 $raiz = Split-Path -Parent $PSScriptRoot
@@ -55,7 +59,23 @@ $app = Join-Path $destino 'Mapamundi'
 $mb = [math]::Round((Get-ChildItem $app -Recurse -File | Measure-Object Length -Sum).Sum / 1MB, 1)
 Write-Host "     Programa listo en $app ($mb MB)"
 
-if ($Instalar) {
+if ($Publicar) {
+    Write-Host '3/3  Creando el instalador y el ZIP portable...'
+    $salida = Join-Path $raiz 'target\publicar'
+    New-Item -ItemType Directory -Force $salida | Out-Null
+    $iscc = @(
+        (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe'),
+        (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'),
+        (Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe')
+    ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+    if (-not $iscc) { throw 'Falta Inno Setup 6 (winget install JRSoftware.InnoSetup)' }
+    & $iscc /Q "/DVersion=$version" (Join-Path $PSScriptRoot 'instalador.iss')
+    if ($LASTEXITCODE -ne 0) { throw 'Falló Inno Setup' }
+    $zip = Join-Path $salida "Mapamundi-$version-windows-portable.zip"
+    if (Test-Path $zip) { Remove-Item $zip }
+    Compress-Archive -Path $app -DestinationPath $zip -CompressionLevel Optimal
+    Get-ChildItem $salida | ForEach-Object { Write-Host ("     {0}  ({1} MB)" -f $_.Name, [math]::Round($_.Length / 1MB, 1)) }
+} elseif ($Instalar) {
     Write-Host '3/3  Instalando para este usuario...'
     $instalado = Join-Path $env:LOCALAPPDATA 'Programs\Mapamundi'
     Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "$instalado\*" } | Stop-Process -Force
@@ -79,5 +99,5 @@ if ($Instalar) {
     Write-Host "     Instalado en $instalado"
     Write-Host '     Accesos directos en el Escritorio y en el menú Inicio.'
 } else {
-    Write-Host '3/3  (sin instalar; usa -Instalar para copiarlo a Programas y crear accesos directos)'
+    Write-Host '3/3  (sin instalar; usa -Instalar o -Publicar)'
 }
