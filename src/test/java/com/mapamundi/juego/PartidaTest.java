@@ -128,6 +128,106 @@ class PartidaTest {
         assertEquals(Partida.Fase.FIN, p.fase());
     }
 
+    private Partida conReglas(boolean contrarreloj, boolean girada) {
+        Ajustes a = new Ajustes(Velocidad.NORMAL, Modo.MAPA_PAIS, 0, EnumSet.allOf(Continente.class), true,
+                contrarreloj, false, girada);
+        return new Partida(a, Nivel.progresion(atlas), Nivel.personalizado(atlas, a.continentes()), new Random(7));
+    }
+
+    private static void acertar(Partida p) {
+        p.elegirContinente(p.actual().continente());
+        p.colocar(0, 0);
+        if (p.giro() != 0) p.girar(-p.giro() / Partida.PASO_GIRO);
+        p.confirmar();
+    }
+
+    @Test
+    void elCuartoAciertoSeguidoValeElDoble() {
+        Partida p = nueva(0);
+        for (int i = 0; i < 3; i++) {
+            acertar(p);
+            assertEquals(1, p.resultado().multiplicador());
+            p.siguiente();
+        }
+        int antes = p.puntaje();
+        acertar(p);
+        Resultado r = p.resultado();
+        assertEquals(2, r.multiplicador());
+        assertEquals(Partida.PUNTOS_CONTINENTE + (r.puntos() + r.bonus()) * 2, p.puntaje() - antes);
+        assertEquals(3, Partida.multiplicador(8));
+    }
+
+    @Test
+    void lasPistasSeDescuentanDeLaRonda() {
+        Partida p = nueva(0);
+        p.pedirPista(Pista.DESCARTAR);
+        assertEquals(2, p.descartados().size(), "tacha dos continentes");
+        assertEquals(0, p.erroresContinente(), "sin gastar intentos");
+        assertFalse(p.descartados().contains(p.actual().continente()));
+        assertFalse(p.puedePedir(Pista.ZONA), "la zona es para el mapa");
+        p.elegirContinente(p.actual().continente());
+        p.pedirPista(Pista.ZONA);
+        p.pedirPista(Pista.ZONA); // una sola vez por ronda
+        assertEquals(Pista.DESCARTAR.costo() + Pista.ZONA.costo(), p.penalizacion());
+        assertTrue(p.zonaRadio() > 0);
+        double desvio = Math.hypot(p.zonaU() - p.actual().forma().anclaU(), p.zonaV() - p.actual().forma().anclaV());
+        assertTrue(desvio > 0 && desvio < p.zonaRadio(), "el país cae dentro del círculo, pero no en el centro");
+        p.colocar(0, 0);
+        p.confirmar();
+        Resultado r = p.resultado();
+        assertEquals(r.puntos() + r.bonus() - 150, r.total());
+    }
+
+    @Test
+    void enContrarrelojNoSePierdenCorazonesYElTiempoEsDeLaPartida() {
+        Partida p = conReglas(true, false);
+        p.elegirContinente(p.actual().continente());
+        p.confirmar(); // lejos
+        assertFalse(p.resultado().acierto());
+        assertEquals(Partida.VIDAS, p.vidas());
+        assertFalse(p.terminada());
+        p.siguiente();
+        p.tic();
+        assertEquals(Partida.SEGUNDOS_CONTRARRELOJ - 1, p.segundosPartida());
+        acertar(p);
+        assertEquals(0, p.resultado().bonus(), "sin bonus por ronda");
+        assertEquals(Partida.SEGUNDOS_CONTRARRELOJ - 1 + Partida.SEGUNDOS_POR_ACIERTO, p.segundosPartida());
+        p.siguiente();
+        for (int i = 0; i < Partida.SEGUNDOS_CONTRARRELOJ + Partida.SEGUNDOS_POR_ACIERTO; i++) p.tic();
+        assertEquals(Resultado.Motivo.FIN_CONTRARRELOJ, p.resultado().motivo());
+        assertTrue(p.terminada());
+        p.siguiente();
+        assertEquals(Partida.Fase.FIN, p.fase());
+    }
+
+    @Test
+    void laPiezaGiradaHayQueEnderezarla() {
+        Partida p = conReglas(false, true);
+        int giro = p.giro();
+        assertTrue(Math.abs(giro) >= 45 && giro % Partida.PASO_GIRO == 0, "empieza girada: " + giro);
+        p.elegirContinente(p.actual().continente());
+        p.colocar(0, 0);
+        p.confirmar();
+        assertEquals(Resultado.Motivo.GIRADA, p.resultado().motivo(), "bien puesta pero torcida no vale");
+        p.siguiente();
+        acertar(p);
+        assertTrue(p.resultado().acierto());
+        assertEquals(Partida.PUNTOS_UBICACION + Partida.PUNTOS_GIRO, p.resultado().puntos());
+        assertEquals(0, nueva(0).giro(), "sin el modo experto no hay giro");
+    }
+
+    @Test
+    void losVecinosDeEcuadorYDeUnaIsla() {
+        Pais ecuador = atlas.paises().stream().filter(x -> x.iso().equals("EC")).findFirst().orElseThrow();
+        assertEquals(List.of("CO", "PE"), atlas.vecinos(ecuador).stream().map(Pais::iso).sorted().toList());
+        Pais brasil = atlas.paises().stream().filter(x -> x.iso().equals("BR")).findFirst().orElseThrow();
+        // Francia también: la Guayana Francesa tiene frontera con Brasil.
+        assertEquals(List.of("AR", "BO", "CO", "FR", "GY", "PE", "PY", "SR", "UY", "VE"),
+                atlas.vecinos(brasil).stream().map(Pais::iso).sorted().toList());
+        Pais japon = atlas.paises().stream().filter(x -> x.iso().equals("JP")).findFirst().orElseThrow();
+        assertEquals(3, atlas.vecinos(japon).size(), "una isla recibe sus tres países más cercanos");
+    }
+
     @Test
     void oceaniaCruzaElAntimeridianoSinProblemas() {
         Pais tonga = atlas.paises().stream().filter(x -> x.nombre().equals("Tonga")).findFirst().orElseThrow();

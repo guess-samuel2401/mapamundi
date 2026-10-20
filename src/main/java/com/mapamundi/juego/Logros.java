@@ -38,7 +38,9 @@ public final class Logros {
         VELOCISTA("Velocista", "Acierta un país en velocidad Rápida.", "»", Categoria.BRONCE, 1),
         CAPITALES("Experto en capitales", "Acierta 10 países jugando por la capital.", "♛", Categoria.PLATA, 10),
         DETECTIVE("Detective", "Acierta 10 países en el modo «Solo datos».", "?", Categoria.ORO, 10),
-        SIN_RASGUNO("Sin un rasguño", "Supera un nivel sin perder ningún corazón.", "♥", Categoria.PLATA, 1),
+        SIN_RASGUNO("Sin un rasguño", "Supera un nivel sin fallar ningún país.", "♥", Categoria.PLATA, 1),
+        CONTRARRELOJ("Contra el reloj", "Ubica 10 países en una partida contrarreloj.", "◷", Categoria.PLATA, 10),
+        GIROS("Mano maestra", "Acierta 10 países con la pieza girada.", "⟳", Categoria.ORO, 10),
         NIVEL_3("Explorador", "Llega al nivel 3 (Europa).", "3", Categoria.BRONCE, 1),
         NIVEL_MUNDO("Ciudadano del mundo", "Llega al nivel «Todo el mundo».", "7", Categoria.ORO, 1),
         PUNTOS_5000("Gran puntuación", "Consigue 5.000 puntos en una partida.", "5K", Categoria.PLATA, 5000),
@@ -78,6 +80,7 @@ public final class Logros {
         int aciertos;
         int aciertosCapital;
         int aciertosDatos;
+        int aciertosGirados;
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -145,6 +148,7 @@ public final class Logros {
         Modo modo = p.ajustes().modo();
         if (modo.porCapital()) estado.aciertosCapital++;
         if (modo == Modo.DATOS) estado.aciertosDatos++;
+        if (p.ajustes().piezaGirada()) estado.aciertosGirados++;
         Velocidad v = p.ajustes().velocidad();
         double tiempoRestante = r.bonus() / (double) (v.segundos() * v.bonusPorSegundo());
 
@@ -157,6 +161,8 @@ public final class Logros {
         comprobar(Logro.VELOCISTA, v == Velocidad.RAPIDA, nuevos);
         comprobar(Logro.CAPITALES, estado.aciertosCapital >= Logro.CAPITALES.objetivo, nuevos);
         comprobar(Logro.DETECTIVE, estado.aciertosDatos >= Logro.DETECTIVE.objetivo, nuevos);
+        comprobar(Logro.CONTRARRELOJ, p.ajustes().contrarreloj() && p.aciertosPartida() >= Logro.CONTRARRELOJ.objetivo, nuevos);
+        comprobar(Logro.GIROS, estado.aciertosGirados >= Logro.GIROS.objetivo, nuevos);
         comprobar(Logro.VIAJERO, estado.ubicados.size() >= Logro.VIAJERO.objetivo, nuevos);
         comprobar(Logro.TROTAMUNDOS, estado.ubicados.size() >= Logro.TROTAMUNDOS.objetivo, nuevos);
         comprobar(Logro.DUENO_DEL_MUNDO, estado.ubicados.size() >= Logro.DUENO_DEL_MUNDO.objetivo, nuevos);
@@ -190,6 +196,7 @@ public final class Logros {
         return switch (l) {
             case CAPITALES -> new int[]{estado.aciertosCapital, l.objetivo};
             case DETECTIVE -> new int[]{estado.aciertosDatos, l.objetivo};
+            case GIROS -> new int[]{estado.aciertosGirados, l.objetivo};
             case VIAJERO, TROTAMUNDOS, DUENO_DEL_MUNDO -> new int[]{estado.ubicados.size(), l.objetivo};
             case SUDAMERICA, AMERICA, EUROPA, AFRICA, ASIA, OCEANIA -> {
                 Set<String> isos = paisesDeColeccion.get(l);

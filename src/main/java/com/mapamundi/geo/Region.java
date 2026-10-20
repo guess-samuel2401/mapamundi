@@ -35,6 +35,11 @@ public record Region(double uMin, double vMin, double uMax, double vMax) {
         return new Region(uMin - du, Math.max(0, vMin - dv), uMax + du, Math.min(1, vMax + dv));
     }
 
+    /** Ampliada un margen fijo (en unidades Mercator) por cada lado. */
+    public Region ampliadaFija(double margen) {
+        return new Region(uMin - margen, vMin - margen, uMax + margen, vMax + margen);
+    }
+
     public Region desplazada(double du) {
         return new Region(uMin + du, vMin, uMax + du, vMax);
     }

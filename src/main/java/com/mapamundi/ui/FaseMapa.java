@@ -1,6 +1,7 @@
 package com.mapamundi.ui;
 
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Pista;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.ui.mapa.MapaLienzo;
 import javafx.animation.KeyFrame;
@@ -26,6 +27,7 @@ final class FaseMapa extends HBox {
     private final MapaLienzo mapa;
     private final VBox lateral = new VBox(12);
     private final VBox controles;
+    private final BotonesPista pistas;
     private Partida.Fase faseMostrada;
 
     FaseMapa(Partida partida, Atlas atlas) {
@@ -38,6 +40,7 @@ final class FaseMapa extends HBox {
         lateral.setPrefWidth(320);
         lateral.setMinWidth(290);
         lateral.setMaxHeight(USE_PREF_SIZE);
+        pistas = new BotonesPista(partida, Pista.ZONA, Pista.VECINOS);
         controles = construirControles();
         getChildren().addAll(lateral, mapa);
         actualizar();
@@ -62,11 +65,32 @@ final class FaseMapa extends HBox {
         centrar.setFocusTraversable(false);
         centrar.setOnAction(e -> mapa.restablecerZoom());
 
+        boolean girada = partida.ajustes().piezaGirada();
         Label ayuda = FichaPais.etiqueta("Arrastra el país con el ratón. Flechas: 1 px · Shift + flechas: 8 px. "
-                + "Rueda del ratón: zoom · arrastrar el mar: mover el mapa.", "texto-suave");
+                + "Rueda del ratón: zoom · arrastrar el mar: mover el mapa."
+                + (girada ? " Q / E o clic derecho: girar." : ""), "texto-suave");
         ayuda.setWrapText(true);
-        VBox v = new VBox(10, FichaPais.pista(p, partida.ajustes().modo(), false), continente, margen, acciones, centrar, ayuda);
+        VBox v = new VBox(9, FichaPais.pista(p, partida.ajustes().modo(), false), continente, margen, acciones);
+        if (girada) v.getChildren().add(controlesGiro());
+        v.getChildren().addAll(centrar, pistas, ayuda);
         return v;
+    }
+
+    /** Modo experto: botones para enderezar la pieza, de 15° en 15°. */
+    private HBox controlesGiro() {
+        Button izquierda = new Button("⟲  Q");
+        Button derecha = new Button("E  ⟳");
+        for (Button b : new Button[]{izquierda, derecha}) {
+            b.setFocusTraversable(false);
+            b.getStyleClass().add("boton-pista");
+            b.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(b, Priority.ALWAYS);
+        }
+        izquierda.setOnAction(e -> partida.girar(-1));
+        derecha.setOnAction(e -> partida.girar(1));
+        HBox h = new HBox(6, FichaPais.etiqueta("Girar", "negrita"), izquierda, derecha);
+        h.setAlignment(Pos.CENTER_LEFT);
+        return h;
     }
 
     /** Cruceta en pantalla: mantener pulsado repite el movimiento. */
@@ -123,6 +147,8 @@ final class FaseMapa extends HBox {
             case DOWN -> mover(0, 1, paso);
             case LEFT -> mover(-1, 0, paso);
             case RIGHT -> mover(1, 0, paso);
+            case Q -> partida.girar(-1);
+            case E -> partida.girar(1);
             case ENTER, SPACE -> partida.confirmar();
             default -> {
                 return;
@@ -138,6 +164,7 @@ final class FaseMapa extends HBox {
                     ? new PanelResultado(partida)
                     : controles);
         }
+        pistas.actualizar();
         mapa.mostrar(partida);
     }
 }

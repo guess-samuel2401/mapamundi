@@ -50,7 +50,7 @@ final class Celebracion {
      * @param transformacion la transformación actual del mapa (se consulta en cada fotograma, por si hay zoom)
      * @param vueltas        desplazamiento del país para caer dentro de la vista (antimeridiano)
      */
-    void iniciar(Pais pais, int vueltas, int puntos, Supplier<Transformacion> transformacion) {
+    void iniciar(Pais pais, int vueltas, String puntos, Supplier<Transformacion> transformacion) {
         detener();
         List<Particula> particulas = new ArrayList<>();
         for (int i = 0; i < PARTICULAS; i++) {
@@ -81,7 +81,8 @@ final class Celebracion {
         capa.getGraphicsContext2D().clearRect(0, 0, capa.getWidth(), capa.getHeight());
     }
 
-    private void dibujar(double t, Pais pais, int vueltas, int puntos, List<Particula> particulas, Transformacion tr) {
+    /** @param puntos el texto que sube flotando ("+860", "+1720 ×2"), o null si la ronda no sumó */
+    private void dibujar(double t, Pais pais, int vueltas, String puntos, List<Particula> particulas, Transformacion tr) {
         GraphicsContext gc = capa.getGraphicsContext2D();
         gc.clearRect(0, 0, capa.getWidth(), capa.getHeight());
         Forma f = pais.forma();
@@ -136,13 +137,13 @@ final class Celebracion {
         gc.setGlobalAlpha(1);
 
         // 4. Los puntos ganados suben flotando (encima del país; si no caben, debajo).
-        if (puntos > 0) {
+        if (puntos != null) {
             double pop = t < 0.3 ? 0.6 + 0.55 * easeOut(t / 0.3) : 1.15 - 0.15 * Math.min(1, (t - 0.3) / 0.2);
             double arriba = cy - radio - 18;
             double inicioY = arriba - SUBIDA >= MARGEN_TEXTO ? arriba
                     : Math.min(capa.getHeight() - MARGEN_TEXTO, cy + radio + SUBIDA + 24);
             double y = inicioY - SUBIDA * easeOut(Math.min(1, t / DURACION));
-            double x = Math.max(70, Math.min(capa.getWidth() - 70, cx));
+            double x = Math.max(110, Math.min(capa.getWidth() - 110, cx));
             gc.setGlobalAlpha(t < 1.1 ? 1 : Math.max(0, 1 - (t - 1.1) / (DURACION - 1.1)));
             gc.save();
             gc.translate(x, y);
@@ -152,9 +153,9 @@ final class Celebracion {
             gc.setTextBaseline(VPos.CENTER);
             gc.setLineWidth(6);
             gc.setStroke(Pintor.TINTA);
-            gc.strokeText("+" + puntos, 0, 0);
+            gc.strokeText(puntos, 0, 0);
             gc.setFill(Pintor.SOL);
-            gc.fillText("+" + puntos, 0, 0);
+            gc.fillText(puntos, 0, 0);
             gc.restore();
             gc.setGlobalAlpha(1);
         }

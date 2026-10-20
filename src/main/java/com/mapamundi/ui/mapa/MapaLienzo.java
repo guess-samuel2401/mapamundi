@@ -2,6 +2,7 @@ package com.mapamundi.ui.mapa;
 
 import com.mapamundi.geo.Forma;
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Pista;
 import com.mapamundi.juego.Resultado;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Pais;
@@ -9,6 +10,7 @@ import com.mapamundi.ui.Fuentes;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
@@ -19,6 +21,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Fase 2: el mapa en blanco del continente con la pieza que mueve el jugador.
  * Arrastrar la pieza la mueve; arrastrar el fondo desplaza el mapa; la rueda hace zoom.
@@ -28,6 +34,11 @@ public final class MapaLienzo extends Region {
     /** Área mínima (px) para poder agarrar países diminutos como Andorra o Tuvalu. */
     private static final double AGARRE_MIN = 34;
     private static final double ZOOM_MAX = 12;
+    /** "Frío o caliente": de rojo (en el margen de acierto) a azul (a 12 márgenes o más). */
+    private static final Color[] TEMPERATURA = {
+            Color.web("#e3263b"), Color.web("#ff8a3d"), Color.web("#f2c230"), Color.web("#6fb3e8"), Color.web("#2f6fd6"),
+    };
+    private static final double MARGENES_HELADO = 12;
 
     private final Canvas canvas = new Canvas();
     /** Capa encima del mapa para la animación de acierto. */
@@ -69,7 +80,8 @@ public final class MapaLienzo extends Region {
         Resultado r = p.fase() == Partida.Fase.RESULTADO ? p.resultado() : null;
         if (r != null && r.acierto() && r != celebrado) {
             celebrado = r;
-            celebracion.iniciar(p.actual(), p.vueltas(), r.puntos() + r.bonus(), this::transformacion);
+            String texto = r.total() > 0 ? "+" + r.total() + (r.multiplicador() > 1 ? "  ×" + r.multiplicador() : "") : null;
+            celebracion.iniciar(p.actual(), p.vueltas(), texto, this::transformacion);
         }
     }
 
@@ -116,12 +128,17 @@ public final class MapaLienzo extends Region {
 
         Pais actual = partida.actual();
         boolean terminada = partida.fase() == Partida.Fase.RESULTADO;
-        // Mapa en blanco; los países ya ubicados en esta partida quedan pintados.
-        Pintor.mapa(gc, t, atlas, p -> partida.ubicados().contains(p) && !(p == actual && !terminada) ? Pintor.colorDe(p) : null, grosor);
+        // Mapa en blanco; los países ya ubicados en esta partida quedan pintados, y los vecinos si se pidió esa pista.
+        Set<Pais> vecinos = partida.pistas().contains(Pista.VECINOS) ? new HashSet<>(atlas.vecinos(actual)) : Set.of();
+        Pintor.mapa(gc, t, atlas, p -> vecinos.contains(p) || partida.ubicados().contains(p) && !(p == actual && !terminada)
+                ? Pintor.colorDe(p) : null, grosor);
 
         Forma f = actual.forma();
         int vueltas = partida.vueltas();
         boolean acierto = terminada && partida.resultado().acierto();
+        boolean zona = !terminada && partida.pistas().contains(Pista.ZONA);
+
+        if (zona) dibujarZona(gc, t, vueltas, true);
 
         if (terminada && !acierto) {
             // Ubicación real del país, resaltada.
@@ -131,6 +148,10 @@ public final class MapaLienzo extends Region {
         }
 
         if (!acierto) dibujarPieza(gc, t, actual, f, vueltas + partida.despU(), partida.despV(), terminada);
+        // El borde de la zona y los nombres de los vecinos van encima de la pieza, para que no los tape.
+        if (zona) dibujarZona(gc, t, vueltas, false);
+        if (!vecinos.isEmpty()) nombrarVecinos(gc, t, vecinos);
+        if (!terminada) dibujarRotulos(gc, t, actual, f, vueltas + partida.despU(), partida.despV());
 
         if (terminada && !acierto && partida.resultado().tieneDistancia()) dibujarMarcas(gc, t, f, vueltas);
         if (partida.enPausa()) {
@@ -141,43 +162,126 @@ public final class MapaLienzo extends Region {
 
     private void dibujarPieza(GraphicsContext gc, Transformacion t, Pais pais, Forma f, double du, double dv, boolean terminada) {
         boolean forma = partida.ajustes().modo().muestraForma();
+        Color calor = !terminada && partida.ajustes().frioCaliente() ? colorTemperatura(margenes()) : null;
+        double px = t.x(f.anclaU() + du), py = t.y(f.anclaV() + dv);
+        gc.save();
+        // Modo experto: la pieza se dibuja girada sobre su punto de referencia.
+        if (partida.giro() != 0) {
+            gc.translate(px, py);
+            gc.rotate(partida.giro());
+            gc.translate(-px, -py);
+        }
         gc.setGlobalAlpha(terminada ? 0.55 : 1);
+        if (calor != null) gc.setEffect(new DropShadow(BlurType.GAUSSIAN, calor, 20, 0.55, 0, 0));
         if (forma) {
-            gc.setEffect(new DropShadow(4, 2, 3, Pintor.TINTA.deriveColor(0, 1, 1, 0.45)));
+            if (calor == null) gc.setEffect(new DropShadow(4, 2, 3, Pintor.TINTA.deriveColor(0, 1, 1, 0.45)));
             Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.colorDe(pais), Pintor.BORDE, 1.2);
         } else {
-            gc.setEffect(new DropShadow(6, Pintor.SOL));
+            if (calor == null) gc.setEffect(new DropShadow(6, Pintor.SOL));
             Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.TINTA.deriveColor(0, 1, 1, 0.85), null, 0);
         }
+        gc.restore();
         gc.setEffect(null);
         gc.setGlobalAlpha(1);
-        if (terminada) return;
+    }
 
-        // Anillo amarillo para encontrar la pieza aunque sea diminuta, y el rótulo con su nombre.
+    /**
+     * Anillo para encontrar la pieza aunque sea diminuta, el rótulo con su nombre y, con "frío o caliente",
+     * la temperatura justo debajo del nombre.
+     */
+    private void dibujarRotulos(GraphicsContext gc, Transformacion t, Pais pais, Forma f, double du, double dv) {
+        Color calor = partida.ajustes().frioCaliente() ? colorTemperatura(margenes()) : null;
         double[] caja = cajaPantalla(t, f, du, dv);
         double cx = (caja[0] + caja[2]) / 2, cy = (caja[1] + caja[3]) / 2;
         double radio = Math.max(AGARRE_MIN / 2, Math.hypot(caja[2] - caja[0], caja[3] - caja[1]) / 2) + 6;
         if (radio < 80) {
-            gc.setStroke(Pintor.SOL);
+            gc.setStroke(calor != null ? calor : Pintor.SOL);
             gc.setLineWidth(2.5);
             gc.setLineDashes(6, 4);
             gc.strokeOval(cx - radio, cy - radio, radio * 2, radio * 2);
             gc.setLineDashes();
         }
         String rotulo = rotulo(pais);
+        double y = Math.max(4, Math.min(caja[1], cy - radio) - (calor != null ? 54 : 28));
         if (rotulo != null) {
-            Font fuente = Fuentes.texto(FontWeight.EXTRA_BOLD, 14);
-            gc.setFont(fuente);
-            Text medida = new Text(rotulo);
-            medida.setFont(fuente);
-            double ancho = medida.getLayoutBounds().getWidth() + 16;
-            double y = Math.max(4, Math.min(caja[1], cy - radio) - 28);
-            gc.setFill(Pintor.TINTA.deriveColor(0, 1, 1, 0.9));
-            gc.fillRoundRect(cx - ancho / 2, y, ancho, 23, 10, 10);
-            gc.setFill(Color.WHITE);
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.setTextBaseline(VPos.CENTER);
-            gc.fillText(rotulo, cx, y + 11.5);
+            etiqueta(gc, rotulo, cx, y, Pintor.TINTA.deriveColor(0, 1, 1, 0.9), Color.WHITE, false);
+            y += 26;
+        }
+        if (calor != null) etiqueta(gc, "♨ " + textoTemperatura(margenes()), cx, y, calor, Pintor.TINTA, true);
+    }
+
+    /** Un rótulo redondeado centrado en x, con su borde superior en y. */
+    private static void etiqueta(GraphicsContext gc, String texto, double x, double y, Color fondo, Color tinta, boolean contorno) {
+        Font fuente = Fuentes.texto(FontWeight.EXTRA_BOLD, 14);
+        gc.setFont(fuente);
+        Text medida = new Text(texto);
+        medida.setFont(fuente);
+        double ancho = medida.getLayoutBounds().getWidth() + 16;
+        gc.setFill(fondo);
+        gc.fillRoundRect(x - ancho / 2, y, ancho, 23, 10, 10);
+        if (contorno) {
+            gc.setStroke(Pintor.TINTA);
+            gc.setLineWidth(1.5);
+            gc.strokeRoundRect(x - ancho / 2, y, ancho, 23, 10, 10);
+        }
+        gc.setFill(tinta);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.fillText(texto, x, y + 11.5);
+    }
+
+    /** Distancia actual de la pieza, medida en márgenes de acierto (1 = justo en el límite). */
+    private double margenes() {
+        return partida.distanciaActualKm() / partida.ajustes().velocidad().toleranciaKm();
+    }
+
+    static Color colorTemperatura(double margenes) {
+        double s = margenes <= 1 ? 0 : Math.min(1, Math.log(margenes) / Math.log(MARGENES_HELADO));
+        double pos = s * (TEMPERATURA.length - 1);
+        int i = Math.min(TEMPERATURA.length - 2, (int) pos);
+        return TEMPERATURA[i].interpolate(TEMPERATURA[i + 1], pos - i);
+    }
+
+    static String textoTemperatura(double margenes) {
+        if (margenes <= 1) return "¡Te quemas!";
+        if (margenes <= 2.5) return "Caliente";
+        if (margenes <= 5) return "Templado";
+        if (margenes <= 10) return "Frío";
+        return "Helado";
+    }
+
+    /** Pista "zona": un círculo amarillo translúcido que contiene el lugar del país (relleno o borde). */
+    private void dibujarZona(GraphicsContext gc, Transformacion t, int vueltas, boolean relleno) {
+        double x = t.x(partida.zonaU() + vueltas), y = t.y(partida.zonaV()), r = partida.zonaRadio() * t.escala();
+        if (relleno) {
+            gc.setFill(Pintor.SOL.deriveColor(0, 1, 1, 0.22));
+            gc.fillOval(x - r, y - r, r * 2, r * 2);
+            return;
+        }
+        gc.setStroke(Pintor.TINTA);
+        gc.setLineWidth(4.5);
+        gc.strokeOval(x - r, y - r, r * 2, r * 2);
+        gc.setStroke(Pintor.SOL);
+        gc.setLineWidth(2.5);
+        gc.setLineDashes(10, 7);
+        gc.strokeOval(x - r, y - r, r * 2, r * 2);
+        gc.setLineDashes();
+    }
+
+    /** Pista "vecinos": el nombre de cada país vecino sobre su centro. */
+    private void nombrarVecinos(GraphicsContext gc, Transformacion t, Set<Pais> vecinos) {
+        gc.setFont(Fuentes.texto(FontWeight.EXTRA_BOLD, 12));
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setLineWidth(3.5);
+        com.mapamundi.geo.Region visible = t.visible();
+        for (Pais p : vecinos) {
+            Forma f = p.forma();
+            double x = t.x(f.anclaU() + Pintor.vueltas(visible, f)), y = t.y(f.anclaV());
+            gc.setStroke(Color.WHITE);
+            gc.strokeText(p.nombre(), x, y);
+            gc.setFill(Pintor.TINTA);
+            gc.fillText(p.nombre(), x, y);
         }
     }
 
@@ -213,9 +317,24 @@ public final class MapaLienzo extends Region {
         gc.strokeText("★", rx, ry);
     }
 
+    /** Caja de la pieza en pantalla {xMin, yMin, xMax, yMax}, contando su giro. */
     private double[] cajaPantalla(Transformacion t, Forma f, double du, double dv) {
         com.mapamundi.geo.Region c = f.cajaNucleo();
-        return new double[]{t.x(c.uMin() + du), t.y(c.vMin() + dv), t.x(c.uMax() + du), t.y(c.vMax() + dv)};
+        double x0 = t.x(c.uMin() + du), y0 = t.y(c.vMin() + dv), x1 = t.x(c.uMax() + du), y1 = t.y(c.vMax() + dv);
+        int giro = partida.giro();
+        if (giro == 0) return new double[]{x0, y0, x1, y1};
+        double px = t.x(f.anclaU() + du), py = t.y(f.anclaV() + dv);
+        double cos = Math.cos(Math.toRadians(giro)), sin = Math.sin(Math.toRadians(giro));
+        double[] r = {Double.MAX_VALUE, Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
+        for (double[] esquina : List.of(new double[]{x0, y0}, new double[]{x1, y0}, new double[]{x0, y1}, new double[]{x1, y1})) {
+            double dx = esquina[0] - px, dy = esquina[1] - py;
+            double x = px + dx * cos - dy * sin, y = py + dx * sin + dy * cos;
+            r[0] = Math.min(r[0], x);
+            r[1] = Math.min(r[1], y);
+            r[2] = Math.max(r[2], x);
+            r[3] = Math.max(r[3], y);
+        }
+        return r;
     }
 
     // ------------------------------------------------------------------ ratón
@@ -259,6 +378,12 @@ public final class MapaLienzo extends Region {
         setOnMouseReleased(e -> {
             arrastrandoPieza = false;
             setCursor(sobrePieza(e.getX(), e.getY()) ? javafx.scene.Cursor.OPEN_HAND : javafx.scene.Cursor.DEFAULT);
+        });
+        // Clic derecho sobre la pieza: girarla (modo experto).
+        setOnMouseClicked(e -> {
+            if (partida != null && e.getButton() == MouseButton.SECONDARY && sobrePieza(e.getX(), e.getY())) {
+                partida.girar(e.isShiftDown() ? -1 : 1);
+            }
         });
         setOnScroll(e -> {
             if (vistaActual == null || e.getDeltaY() == 0) return;

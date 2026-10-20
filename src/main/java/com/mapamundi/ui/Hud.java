@@ -20,10 +20,12 @@ final class Hud extends VBox {
     private final Label puntaje = valor("hud-puntaje");
     private final Label errores = valor("hud-valor");
     private final Corazones vidas = new Corazones(Partida.VIDAS);
+    private final Label racha = valor("hud-valor");
     private final Label modo = valor("texto-suave");
     private final Label reloj = valor("hud-puntaje");
     private final ProgressBar tiempo = new ProgressBar(1);
     private final HBox cajaAvance;
+    private final HBox cajaVidas;
     final Button sonido = new Button("🔊");
     final Button pausa = new Button("⏸ F5");
 
@@ -32,12 +34,13 @@ final class Hud extends VBox {
         setSpacing(6);
         Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-hud");
         cajaAvance = par("Avance", avance);
+        cajaVidas = par("Vidas", vidas);
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
         sonido.setFocusTraversable(false);
         pausa.setFocusTraversable(false);
         HBox fila = new HBox(18, titulo, par("Nivel", nivel), cajaAvance, par("Puntaje", puntaje), par("Errores", errores),
-                par("Vidas", vidas), hueco, modo, sonido, pausa);
+                cajaVidas, par("Racha", racha), hueco, modo, sonido, pausa);
         fila.setAlignment(Pos.CENTER_LEFT);
 
         tiempo.getStyleClass().add("barra-tiempo");
@@ -58,17 +61,32 @@ final class Hud extends VBox {
         puntaje.setText(String.format("%04d", p.puntaje()));
         errores.setText(p.erroresContinente() + "/" + Partida.INTENTOS_CONTINENTE);
         errores.setStyle(p.erroresContinente() >= Partida.INTENTOS_CONTINENTE - 1 ? "-fx-text-fill: -rojo;" : "");
+        boolean contrarreloj = p.ajustes().contrarreloj();
         vidas.mostrar(p.vidas());
-        modo.setText(p.ajustes().modo().nombre() + " · " + p.ajustes().velocidad().nombre());
+        cajaVidas.setVisible(!contrarreloj);
+        cajaVidas.setManaged(!contrarreloj);
+        // El combo que valdrá el próximo acierto.
+        int combo = Partida.multiplicador(p.racha() + 1);
+        racha.setText(p.racha() + (combo > 1 ? "  ×" + combo : ""));
+        racha.getStyleClass().remove("hud-combo");
+        if (combo > 1) racha.getStyleClass().add("hud-combo");
+        String extras = (contrarreloj ? " · Contrarreloj" : "") + (p.ajustes().piezaGirada() ? " · Experto" : "");
+        modo.setText(p.ajustes().modo().nombre() + " · " + p.ajustes().velocidad().nombre() + extras);
         sonido.setText(silencio ? "🔇" : "🔊");
 
-        int total = p.ajustes().velocidad().segundos();
-        boolean enMapa = p.fase() != Partida.Fase.CONTINENTE;
-        double fraccion = enMapa ? (double) p.segundos() / total : 1;
+        double fraccion;
+        if (contrarreloj) {
+            int s = p.segundosPartida();
+            fraccion = Math.min(1, (double) s / Partida.SEGUNDOS_CONTRARRELOJ);
+            reloj.setText(String.format("%d:%02d", s / 60, s % 60));
+        } else {
+            boolean enMapa = p.fase() != Partida.Fase.CONTINENTE;
+            fraccion = enMapa ? (double) p.segundos() / p.ajustes().velocidad().segundos() : 1;
+            reloj.setText(enMapa ? String.format("00:%02d", p.segundos()) : "--:--");
+        }
         tiempo.setProgress(fraccion);
         tiempo.getStyleClass().remove("poco");
         if (fraccion <= 0.33) tiempo.getStyleClass().add("poco");
-        reloj.setText(enMapa ? String.format("00:%02d", p.segundos()) : "--:--");
     }
 
     private static HBox par(String clave, Node valor) {

@@ -3,6 +3,7 @@ package com.mapamundi.ui;
 import com.mapamundi.juego.Ajustes;
 import com.mapamundi.juego.Modo;
 import com.mapamundi.juego.Nivel;
+import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Puntajes;
 import com.mapamundi.juego.Velocidad;
 import com.mapamundi.modelo.Atlas;
@@ -57,6 +58,14 @@ final class PantallaMenu extends StackPane {
     private final ToggleGroup grupoVelocidad = new ToggleGroup();
     private final ComboBox<Modo> modo = new ComboBox<>();
     private final CheckBox mostrarDatos = new CheckBox("Mostrar los datos del país después de cada ronda");
+    private final ToggleButton contrarreloj = interruptor("◷  Contrarreloj",
+            Partida.SEGUNDOS_CONTRARRELOJ + " segundos para ubicar todos los países que puedas, sin corazones. "
+                    + "Cada acierto suma " + Partida.SEGUNDOS_POR_ACIERTO + " s al reloj.");
+    private final ToggleButton frioCaliente = interruptor("♨  Frío o caliente",
+            "Mientras arrastras, la pieza brilla de azul (lejos) a rojo (cerca de su lugar).");
+    private final ToggleButton piezaGirada = interruptor("⟳  Pieza girada",
+            "Modo experto: la pieza aparece girada y hay que enderezarla con Q / E o clic derecho. +"
+                    + Partida.PUNTOS_GIRO + " puntos por acierto.");
     private final Map<Continente, CheckBox> casillas = new EnumMap<>(Continente.class);
     private final Label resumen = FichaPais.etiqueta("", "resumen-partida");
     private final Consumer<Ajustes> jugar;
@@ -241,6 +250,15 @@ final class PantallaMenu extends StackPane {
         ayudaModo.textProperty().bind(modo.valueProperty().map(Modo::ayuda));
 
         mostrarDatos.setSelected(inicial.mostrarDatos());
+        contrarreloj.setSelected(inicial.contrarreloj());
+        frioCaliente.setSelected(inicial.frioCaliente());
+        piezaGirada.setSelected(inicial.piezaGirada());
+        HBox reglas = new HBox(8, contrarreloj, frioCaliente, piezaGirada);
+        for (ToggleButton t : List.of(contrarreloj, frioCaliente, piezaGirada)) {
+            t.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(t, Priority.ALWAYS);
+            t.selectedProperty().addListener(o -> actualizarResumen());
+        }
 
         // El récord al pie, como reto antes de empezar. Con las casillas de continentes a la vista no cabe en 768 px.
         Region empuje = new Region();
@@ -254,6 +272,7 @@ final class PantallaMenu extends StackPane {
                 seccion("Nivel", "Cada 6 países bien ubicados subes al siguiente."), fichas, continentes,
                 seccion("Velocidad", null), segmentos,
                 seccion("Modo de juego", null), modo, ayudaModo,
+                seccion("Reglas extra", "Pasa el ratón para ver cada una."), reglas,
                 mostrarDatos, empuje, record);
         v.getStyleClass().add("panel");
         v.setPrefWidth(ANCHO_CONFIG);
@@ -303,6 +322,19 @@ final class PantallaMenu extends StackPane {
         return h;
     }
 
+    /** Interruptor redondeado para una regla extra, con su explicación al pasar el ratón. */
+    private static ToggleButton interruptor(String texto, String ayuda) {
+        ToggleButton b = new ToggleButton(texto);
+        b.getStyleClass().setAll("interruptor");
+        Tooltip t = new Tooltip(ayuda);
+        t.setShowDelay(Duration.millis(250));
+        t.setWrapText(true);
+        t.setMaxWidth(320);
+        b.setTooltip(t);
+        Animaciones.alPasar(b, 1.05, 2);
+        return b;
+    }
+
     private static ListCell<Modo> celdaModo() {
         return new ListCell<>() {
             @Override
@@ -320,7 +352,10 @@ final class PantallaMenu extends StackPane {
         int i = (Integer) grupoNivel.getSelectedToggle().getUserData();
         Velocidad v = (Velocidad) grupoVelocidad.getSelectedToggle().getUserData();
         String nivel = i < 0 ? "Continentes a elegir" : "Nivel " + (i + 1) + " · " + niveles.get(i).nombre();
-        resumen.setText(nivel + "   ·   " + v.nombre() + " (" + v.segundos() + " s)   ·   " + modo.getValue().nombre());
+        String tiempo = contrarreloj.isSelected() ? "Contrarreloj (" + Partida.SEGUNDOS_CONTRARRELOJ + " s, ±" + v.toleranciaKm() + " km)"
+                : v.nombre() + " (" + v.segundos() + " s)";
+        String extras = (frioCaliente.isSelected() ? "   ·   Frío o caliente" : "") + (piezaGirada.isSelected() ? "   ·   Pieza girada" : "");
+        resumen.setText(nivel + "   ·   " + tiempo + "   ·   " + modo.getValue().nombre() + extras);
     }
 
     private void empezar() {
@@ -334,7 +369,7 @@ final class PantallaMenu extends StackPane {
                 modo.getValue(),
                 (Integer) grupoNivel.getSelectedToggle().getUserData(),
                 elegidos.isEmpty() ? EnumSet.allOf(Continente.class) : elegidos,
-                mostrarDatos.isSelected()));
+                mostrarDatos.isSelected(), contrarreloj.isSelected(), frioCaliente.isSelected(), piezaGirada.isSelected()));
     }
 
     // ------------------------------------------------------------------ ventanas superpuestas
@@ -351,7 +386,11 @@ final class PantallaMenu extends StackPane {
                 paso("1", "Elige el continente", "Aparece un país. Elige su continente con las flechas + Enter, las teclas 1–5 o un clic. Tienes 5 intentos: +100 puntos."),
                 paso("2", "Coloca el país", "Arrástralo con el ratón (o usa las flechas; con Shift va más rápido) y pulsa Enter o Confirmar. La rueda del ratón hace zoom."),
                 paso("3", "Suma puntos", "Si queda dentro del margen (en km reales): +500 y un bonus por los segundos que sobran. Si fallas o se acaba el tiempo, pierdes un corazón ♥ (tienes 5)."),
-                paso("4", "Pausa", "F5, P o Esc detienen el cronómetro. F11: pantalla completa."));
+                paso("4", "Rachas y pistas", "Desde el 4.º acierto seguido los puntos valen ×2, y desde el 8.º, ×3. Si te atascas, pide una pista "
+                        + "(descartar continentes, zona o vecinos): su costo se resta de los puntos de esa ronda."),
+                paso("5", "Reglas extra", "Contrarreloj: " + Partida.SEGUNDOS_CONTRARRELOJ + " s para toda la partida, sin corazones. "
+                        + "Frío o caliente: la pieza cambia de color según lo cerca que esté. Pieza girada: hay que enderezarla con Q / E."),
+                paso("6", "Pausa", "F5, P o Esc detienen el cronómetro. F11: pantalla completa."));
         Button tutorial = new Button("🎓  Ver el tutorial");
         tutorial.setOnAction(e -> verTutorial());
         Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos de los países: Wikidata (CC0) "

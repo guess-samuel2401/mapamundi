@@ -115,6 +115,12 @@
 .boton-grande { -fx-font-size: 20px; -fx-padding: 12 28 12 28; }
 .cruceta .button { -fx-padding: 6 0 6 0; -fx-min-width: 42; -fx-min-height: 40; -fx-font-size: 15px; -fx-background-color: -tinta, -papel-2; }
 .cruceta .button:hover { -fx-background-color: -tinta, -coral-claro; }
+.boton-pista { -fx-background-color: -tinta, -papel-2; -fx-font-size: 13px; -fx-padding: 5 8 5 8; }
+.boton-pista:hover { -fx-background-color: -tinta, -coral-claro; }
+.boton-pista.usada { -fx-background-color: -tinta, -sol-claro; }
+.boton-pista.usada:disabled { -fx-opacity: 1; }
+.racha { -fx-font-family: "Nunito ExtraBold"; -fx-text-fill: #c4500a; }
+.hud-combo { -fx-text-fill: #c4500a; }
 
 /* ------------------------------------------------------------- fase de continente */
 
@@ -209,6 +215,22 @@
 .ficha-nivel-nombre { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }
 .ficha-nivel-detalle { -fx-font-size: 12px; -fx-text-fill: -tinta-suave; }
 .caja-continentes { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
+
+/* Reglas extra: interruptores redondeados; encendidos, en amarillo como la ficha de nivel elegida. */
+.interruptor {
+    -fx-background-color: -papel-2;
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(29, 43, 79, 0.3);
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-padding: 5 8 5 8;
+    -fx-font-family: "Nunito ExtraBold";
+    -fx-font-size: 13px;
+    -fx-text-fill: -tinta-suave;
+    -fx-cursor: hand;
+}
+.interruptor:hover { -fx-border-color: -fondo; }
+.interruptor:selected { -fx-background-color: -sol-claro; -fx-border-color: -sol; -fx-border-width: 3; -fx-text-fill: -tinta; }
 
 /* Velocidad: control segmentado azul marino, distinto del botón Jugar. */
 .segmento {

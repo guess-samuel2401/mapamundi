@@ -2,6 +2,7 @@ package com.mapamundi.modelo;
 
 import com.google.gson.Gson;
 import com.mapamundi.geo.Forma;
+import com.mapamundi.geo.Mercator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +11,10 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** Todos los países y territorios del mapa, cargados desde datos/paises.json. */
 public final class Atlas {
@@ -61,6 +65,24 @@ public final class Atlas {
     public List<Pais> de(Continente c) {
         return paises.stream().filter(p -> p.continente() == c).toList();
     }
+
+    /**
+     * Países que tocan la pieza de {@code pais} (su núcleo). Si es una isla sin fronteras terrestres,
+     * los tres países más cercanos. Se calcula una vez por país.
+     */
+    public List<Pais> vecinos(Pais pais) {
+        return vecinos.computeIfAbsent(pais, p -> {
+            Forma f = p.forma();
+            List<Pais> tocan = paises.stream().filter(o -> o != p && f.tocaA(o.forma())).toList();
+            if (!tocan.isEmpty()) return tocan;
+            return paises.stream().filter(o -> o != p)
+                    .sorted(Comparator.comparingDouble(o -> Mercator.distanciaKmUV(f.anclaU(), f.anclaV(),
+                            o.forma().anclaU(), o.forma().anclaV())))
+                    .limit(3).toList();
+        });
+    }
+
+    private final Map<Pais, List<Pais>> vecinos = new HashMap<>();
 
     // Estructura del JSON generado por herramientas/construir_datos.py
     private static final class Archivo {

@@ -35,6 +35,27 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 4. Tras cada ronda se ve tu posición (●), la real (★) y los datos del país.
 5. **F5**, P o Esc: pausa.
 
+**Rachas y combos:** los aciertos seguidos multiplican los puntos de la ronda: ×2 desde el 4.º y ×3 desde el 8.º
+(fallar reinicia la racha). El panel superior muestra la racha y lo que valdrá el próximo acierto.
+
+**Pistas** (una de cada tipo por ronda; su costo se resta de los puntos de esa ronda):
+
+| Pista | Fase | Qué hace | Costo |
+|---|---|---|---|
+| Descartar 2 | Continente | Tacha dos continentes equivocados (sin gastar intentos) | 50 |
+| Zona | Mapa | Marca un círculo que contiene el país (sin que esté en el centro) | 100 |
+| Vecinos | Mapa | Pinta y nombra los países con los que tiene frontera (o los 3 más cercanos, si es una isla) | 150 |
+
+**Reglas extra** (se combinan entre sí, en *Configura tu partida*):
+
+- **Contrarreloj:** 90 segundos para toda la partida y sin corazones; cada acierto suma 5 s. No hay bonus de
+  tiempo por ronda, pero sí combos. La velocidad elegida solo fija el margen en km.
+- **Frío o caliente:** mientras arrastras, la pieza brilla de azul a rojo según lo cerca que esté y un rótulo lo
+  dice ("Helado", "Frío", "Templado", "Caliente", "¡Te quemas!").
+- **Pieza girada (modo experto):** la pieza aparece girada entre 45° y 180°; se endereza de 15° en 15° con
+  **Q / E**, los botones ⟲ ⟳ o el clic derecho (Shift + clic derecho gira al revés). Solo vale si queda derecha,
+  y cada acierto da +250 extra.
+
 | Velocidad | Tiempo | Margen  | Bonus por segundo |
 |-----------|--------|---------|-------------------|
 | Lenta     | 45 s   | ±250 km | 10                |
@@ -52,9 +73,10 @@ La primera vez que se abre el juego aparece un **tutorial** de 5 pasos (se puede
 
 ### Logros e insignias
 
-23 insignias de bronce, plata y oro: rachas de 5, 10 y 20 aciertos seguidos, puntería (a menos de 25 km),
-rapidez, capitales, modo "solo datos", completar un nivel sin perder corazones, llegar a niveles y puntuaciones,
-ubicar 25, 100 o los 197 países y completar cada continente. Se ven en **★ Logros** del menú, con el avance de
+25 insignias de bronce, plata y oro: rachas de 5, 10 y 20 aciertos seguidos, puntería (a menos de 25 km),
+rapidez, capitales, modo "solo datos", completar un nivel sin fallar, 10 países en una partida contrarreloj,
+10 aciertos con la pieza girada, llegar a niveles y puntuaciones, ubicar 25, 100 o los 197 países y completar
+cada continente. Se ven en **★ Logros** del menú, con el avance de
 las que faltan; al conseguir una aparece un aviso durante la partida y un resumen al final.
 
 ### Ajustes (⚙)

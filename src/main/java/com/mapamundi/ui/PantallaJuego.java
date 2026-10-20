@@ -2,6 +2,7 @@ package com.mapamundi.ui;
 
 import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Resultado;
 import com.mapamundi.modelo.Atlas;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -46,6 +47,7 @@ final class PantallaJuego extends StackPane {
     private FaseMapa faseMapa;
     private Partida.Fase faseAnterior;
     private String ultimoCartel;
+    private Resultado ultimoCombo;
     private StackPane dialogo;
     private Consejo consejo;
     private final List<Logro> ganadas = new ArrayList<>();
@@ -167,8 +169,16 @@ final class PantallaJuego extends StackPane {
         faseAnterior = fase;
 
         String cartel = partida.nivelSuperado();
-        if (cartel != null && !cartel.equals(ultimoCartel)) mostrarCartel(cartel);
+        if (cartel != null && !cartel.equals(ultimoCartel)) mostrarCartel("¡NIVEL SUPERADO!", cartel);
         ultimoCartel = cartel;
+
+        // Al subir de combo (4.º y 8.º acierto seguidos), un cartel que lo celebra.
+        Resultado r = partida.fase() == Partida.Fase.RESULTADO ? partida.resultado() : null;
+        if (r != null && r != ultimoCombo && r.acierto()
+                && Partida.multiplicador(partida.racha()) > Partida.multiplicador(partida.racha() - 1)) {
+            mostrarCartel("¡RACHA DE " + partida.racha() + "!", "Puntos ×" + r.multiplicador());
+        }
+        if (r != null) ultimoCombo = r;
     }
 
     /** En la primera partida, un consejo breve al entrar en cada fase (solo una vez por fase). */
@@ -190,8 +200,8 @@ final class PantallaJuego extends StackPane {
         consejo = Consejo.mostrar(this, texto);
     }
 
-    private void mostrarCartel(String nivel) {
-        VBox caja = new VBox(2, FichaPais.etiqueta("¡NIVEL SUPERADO!", "negrita"), FichaPais.etiqueta(nivel, "titulo-mapa-grande"));
+    private void mostrarCartel(String arriba, String grande) {
+        VBox caja = new VBox(2, FichaPais.etiqueta(arriba, "negrita"), FichaPais.etiqueta(grande, "titulo-mapa-grande"));
         caja.getStyleClass().add("cartel-nivel");
         caja.setAlignment(Pos.CENTER);
         caja.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);

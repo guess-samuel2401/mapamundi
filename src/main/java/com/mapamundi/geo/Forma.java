@@ -110,6 +110,37 @@ public final class Forma {
         return (min + max) / 2;
     }
 
+    /** Distancia (en unidades Mercator, ~2 km) por debajo de la cual dos fronteras se consideran la misma. */
+    private static final double TOQUE = 0.00006;
+
+    /**
+     * Si el núcleo de esta forma toca alguna parte de {@code otra} (comparten frontera). Solo se comparan
+     * los puntos que caen cerca de la otra forma, para que países enormes como Rusia no sean lentos.
+     */
+    public boolean tocaA(Forma otra) {
+        Region aqui = cajaNucleo.ampliadaFija(TOQUE), alla = otra.caja.ampliadaFija(TOQUE);
+        if (!aqui.seCruzaCon(alla)) return false;
+        List<double[]> mios = puntosDentro(nucleo, alla), suyos = puntosDentro(otra.anillos, aqui);
+        for (double[] a : mios) {
+            for (double[] b : suyos) {
+                if (Math.abs(a[0] - b[0]) <= TOQUE && Math.abs(a[1] - b[1]) <= TOQUE) return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<double[]> puntosDentro(List<Anillo> anillos, Region caja) {
+        List<double[]> puntos = new ArrayList<>();
+        for (Anillo a : anillos) {
+            if (!a.caja().seCruzaCon(caja)) continue;
+            for (int i = 0; i < a.puntos(); i++) {
+                double u = a.u(i), v = a.v(i);
+                if (u >= caja.uMin() && u <= caja.uMax() && v >= caja.vMin() && v <= caja.vMax()) puntos.add(new double[]{u, v});
+            }
+        }
+        return puntos;
+    }
+
     public List<Anillo> anillos() {
         return anillos;
     }

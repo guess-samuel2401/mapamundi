@@ -62,7 +62,8 @@ final class PantallaFin extends VBox {
             HBox fila = new HBox(8, nombre, guardar);
             Runnable accion = () -> {
                 String texto = nombre.getText().isBlank() ? "Anónimo" : nombre.getText().trim();
-                Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, partida.puntaje(), partida.nivel().nombre());
+                String nivel = partida.nivel().nombre() + (partida.ajustes().contrarreloj() ? " · contrarreloj" : "");
+                Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, partida.puntaje(), nivel);
                 tabla.getChildren().setAll(new TablaPuntajes(puntajes.guardar(e), e));
                 tarjeta.getChildren().remove(fila);
             };

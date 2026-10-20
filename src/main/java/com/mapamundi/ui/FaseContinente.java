@@ -1,6 +1,7 @@
 package com.mapamundi.ui;
 
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Pista;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Continente;
 import com.mapamundi.ui.mapa.Miniatura;
@@ -30,10 +31,12 @@ final class FaseContinente extends HBox {
     private final Map<Continente, Button> botones = new EnumMap<>(Continente.class);
     private final Map<Continente, Label> marcas = new EnumMap<>(Continente.class);
     private final Label intentos = FichaPais.etiqueta("", "negrita");
+    private final BotonesPista pistas;
     private int seleccion;
 
     FaseContinente(Partida partida, Atlas atlas) {
         this.partida = partida;
+        pistas = new BotonesPista(partida, Pista.DESCARTAR);
         setSpacing(18);
 
         VBox izquierda = new VBox(10);
@@ -54,7 +57,7 @@ final class FaseContinente extends HBox {
         }
         Label ayuda = FichaPais.etiqueta("Usa ← → y Enter, las teclas 1–5 o haz clic.", "texto-suave");
         ayuda.setWrapText(true);
-        izquierda.getChildren().addAll(intentos, ayuda);
+        izquierda.getChildren().addAll(intentos, ayuda, pistas);
 
         GridPane rejilla = new GridPane();
         rejilla.setHgap(14);
@@ -124,6 +127,7 @@ final class FaseContinente extends HBox {
 
     void actualizar() {
         intentos.setText("Intentos: " + partida.erroresContinente() + "/" + Partida.INTENTOS_CONTINENTE);
+        pistas.actualizar();
         for (Continente c : Continente.values()) {
             Button b = botones.get(c);
             boolean descartado = partida.descartados().contains(c);
