@@ -47,7 +47,26 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 **Modos** (los del original): Mapa y nombre del país · Mapa y nombre de la capital · Solo nombre del país ·
 Solo nombre de la capital · Solo datos del país.
 
-Las 10 mejores puntuaciones se guardan en `%USERPROFILE%\.mapamundi\puntajes.json`.
+La primera vez que se abre el juego aparece un **tutorial** de 5 pasos (se puede volver a ver desde el botón
+**?** del menú o desde Ajustes), y durante la primera partida salen consejos breves en la parte de abajo.
+
+### Logros e insignias
+
+23 insignias de bronce, plata y oro: rachas de 5, 10 y 20 aciertos seguidos, puntería (a menos de 25 km),
+rapidez, capitales, modo "solo datos", completar un nivel sin perder corazones, llegar a niveles y puntuaciones,
+ubicar 25, 100 o los 197 países y completar cada continente. Se ven en **★ Logros** del menú, con el avance de
+las que faltan; al conseguir una aparece un aviso durante la partida y un resumen al final.
+
+### Ajustes (⚙)
+
+- **Música de fondo** (una para el menú y otra, más tranquila, para la partida) y volumen de música y efectos
+  por separado. El botón de sonido del panel superior silencia todo.
+- **Pantalla completa** (también con **F11**).
+- **Modo daltónico:** paleta de colores distinguibles con daltonismo (Okabe-Ito) y una trama distinta en cada
+  color de país, para no depender solo del color. El verde y el rojo de acierto/fallo pasan a azul y naranja.
+
+Todo se guarda en `%USERPROFILE%\.mapamundi\`: `preferencias.json` (ajustes y tutorial visto), `logros.json`
+y `puntajes.json` (las 10 mejores puntuaciones).
 
 ## Ejecutar
 
@@ -66,8 +85,9 @@ En **VS Code** (con el *Extension Pack for Java*):
 
 Pruebas: `.\mvnw.cmd test` (o la tarea **Pruebas**).
 
-Para probar la tabla de récords con datos ficticios sin tocar los reales, apunta la variable de entorno
-`MAPAMUNDI_PUNTAJES` a otro archivo JSON antes de abrir el juego:
+Para probar con datos ficticios sin tocar los reales, apunta estas variables de entorno a otros archivos JSON
+antes de abrir el juego: `MAPAMUNDI_PUNTAJES` (récords), `MAPAMUNDI_LOGROS` (insignias) y
+`MAPAMUNDI_PREFERENCIAS` (ajustes; con un archivo nuevo vuelve a salir el tutorial):
 
 ```bash
 $env:MAPAMUNDI_PUNTAJES = "C:\ruta\puntajes-de-prueba.json"; .\mvnw.cmd compile javafx:run
@@ -140,6 +160,9 @@ python -I herramientas/construir_datos.py "D:\Fuente Globalizacion\mapamundi\pai
 `actualizar_datos.py` consulta Wikidata (licencia CC0) y guarda capital, población, superficie, idiomas oficiales,
 moneda y PIB nominal (el PIB per cápita se calcula con la población). Si a un país le falta un dato, se usa el del
 juego original. La religión y las exportaciones siguen siendo las del juego de 2003 y la ficha lo indica.
+
+La música de fondo (`src/main/resources/com/mapamundi/musica/`) es original, sintetizada con
+`python herramientas/crear_musica.py` (necesita numpy); los bucles están mezclados para repetirse sin corte.
 
 `herramientas/adpcm_a_pcm.py` convierte sonidos MS-ADPCM (como `FinTiempo.wav`) a PCM, que es lo que reproduce JavaFX.
 
