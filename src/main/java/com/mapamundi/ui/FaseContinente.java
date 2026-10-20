@@ -70,7 +70,7 @@ final class FaseContinente extends HBox {
     }
 
     private Button tarjeta(Atlas atlas, Continente c) {
-        Label nombre = FichaPais.etiqueta(c.nombre(), "titulo-mapa");
+        Label nombre = FichaPais.etiqueta(c.nombre(), "titulo-tarjeta");
         Label tecla = FichaPais.etiqueta(String.valueOf(c.tecla()), "numero-tecla");
         Label error = FichaPais.etiqueta("✗", "marca-error");
         error.setVisible(false);

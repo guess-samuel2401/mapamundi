@@ -4,6 +4,7 @@ import com.mapamundi.geo.Forma;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Pais;
+import com.mapamundi.ui.Fuentes;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -107,7 +109,7 @@ public final class MapaLienzo extends Region {
 
         if (terminada && !acierto) {
             // Ubicación real del país, resaltada.
-            gc.setEffect(new DropShadow(10, Color.web("#ffe600")));
+            gc.setEffect(new DropShadow(10, Pintor.SOL));
             Pintor.forma(gc, f.anillos(), vueltas, 0, t, Pintor.colorDe(actual), Pintor.BORDE, grosor + 0.6);
             gc.setEffect(null);
         }
@@ -116,7 +118,7 @@ public final class MapaLienzo extends Region {
 
         if (terminada && !acierto && partida.resultado().tieneDistancia()) dibujarMarcas(gc, t, f, vueltas);
         if (partida.enPausa()) {
-            gc.setFill(Color.web("#2f7878", 0.92));
+            gc.setFill(Pintor.FONDO_OSCURO.deriveColor(0, 1, 1, 0.92));
             gc.fillRect(0, 0, t.ancho(), t.alto());
         }
     }
@@ -125,11 +127,11 @@ public final class MapaLienzo extends Region {
         boolean forma = partida.ajustes().modo().muestraForma();
         gc.setGlobalAlpha(terminada ? 0.55 : 1);
         if (forma) {
-            gc.setEffect(new DropShadow(4, 2, 3, Color.web("#000000", 0.45)));
+            gc.setEffect(new DropShadow(4, 2, 3, Pintor.TINTA.deriveColor(0, 1, 1, 0.45)));
             Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.colorDe(pais), Pintor.BORDE, 1.2);
         } else {
-            gc.setEffect(new DropShadow(6, Color.web("#ffe600")));
-            Pintor.forma(gc, f.nucleo(), du, dv, t, Color.web("#1b1b1b", 0.85), null, 0);
+            gc.setEffect(new DropShadow(6, Pintor.SOL));
+            Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.TINTA.deriveColor(0, 1, 1, 0.85), null, 0);
         }
         gc.setEffect(null);
         gc.setGlobalAlpha(1);
@@ -140,23 +142,26 @@ public final class MapaLienzo extends Region {
         double cx = (caja[0] + caja[2]) / 2, cy = (caja[1] + caja[3]) / 2;
         double radio = Math.max(AGARRE_MIN / 2, Math.hypot(caja[2] - caja[0], caja[3] - caja[1]) / 2) + 6;
         if (radio < 80) {
-            gc.setStroke(Color.web("#ffe600"));
-            gc.setLineWidth(2);
+            gc.setStroke(Pintor.SOL);
+            gc.setLineWidth(2.5);
             gc.setLineDashes(6, 4);
             gc.strokeOval(cx - radio, cy - radio, radio * 2, radio * 2);
             gc.setLineDashes();
         }
         String rotulo = rotulo(pais);
         if (rotulo != null) {
-            gc.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-            double ancho = rotulo.length() * 7.4 + 12;
-            double y = Math.max(4, Math.min(caja[1], cy - radio) - 26);
-            gc.setFill(Color.web("#14213d", 0.85));
-            gc.fillRoundRect(cx - ancho / 2, y, ancho, 21, 8, 8);
+            Font fuente = Fuentes.texto(FontWeight.EXTRA_BOLD, 14);
+            gc.setFont(fuente);
+            Text medida = new Text(rotulo);
+            medida.setFont(fuente);
+            double ancho = medida.getLayoutBounds().getWidth() + 16;
+            double y = Math.max(4, Math.min(caja[1], cy - radio) - 28);
+            gc.setFill(Pintor.TINTA.deriveColor(0, 1, 1, 0.9));
+            gc.fillRoundRect(cx - ancho / 2, y, ancho, 23, 10, 10);
             gc.setFill(Color.WHITE);
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setTextBaseline(VPos.CENTER);
-            gc.fillText(rotulo, cx, y + 10.5);
+            gc.fillText(rotulo, cx, y + 11.5);
         }
     }
 
@@ -172,12 +177,12 @@ public final class MapaLienzo extends Region {
     private void dibujarMarcas(GraphicsContext gc, Transformacion t, Forma f, int vueltas) {
         double rx = t.x(f.anclaU() + vueltas), ry = t.y(f.anclaV());
         double gx = t.x(f.anclaU() + vueltas + partida.despU()), gy = t.y(f.anclaV() + partida.despV());
-        gc.setStroke(Color.web("#e0001b"));
+        gc.setStroke(Pintor.ROJO);
         gc.setLineWidth(2.5);
         gc.setLineDashes(8, 6);
         gc.strokeLine(gx, gy, rx, ry);
         gc.setLineDashes();
-        gc.setFill(Color.web("#14213d"));
+        gc.setFill(Pintor.TINTA);
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
         gc.fillOval(gx - 7, gy - 7, 14, 14);
@@ -185,9 +190,9 @@ public final class MapaLienzo extends Region {
         gc.setFont(Font.font("Segoe UI Symbol", FontWeight.BOLD, 30));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(Pintor.TINTA);
         gc.setLineWidth(1.5);
-        gc.setFill(Color.web("#ffe600"));
+        gc.setFill(Pintor.SOL);
         gc.fillText("★", rx, ry);
         gc.strokeText("★", rx, ry);
     }

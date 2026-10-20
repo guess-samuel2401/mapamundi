@@ -92,3 +92,21 @@ python -I herramientas/construir_datos.py "D:\Fuente Globalizacion\mapamundi\pai
 - Fronteras: [Natural Earth](https://www.naturalearthdata.com/) 1:50m, dominio público.
 - Idioma, religión, moneda, exportaciones e imágenes de referencia: Mapamundi original (2000–2003).
 - Población: estimaciones de Natural Earth (2019).
+- Tipografías: [Baloo 2](https://github.com/EkType/Baloo2) (títulos y números) y
+  [Nunito](https://github.com/googlefonts/nunito) (texto), licencia SIL Open Font License 1.1
+  (`src/main/resources/com/mapamundi/fuentes/OFL-*.txt`). Los archivos estáticos vienen de Fontsource y
+  `herramientas/renombrar_fuentes.py` ajusta sus nombres internos para que JavaFX los reconozca.
+
+## Sistema visual
+
+| Uso | Color |
+|---|---|
+| Fondo de la app / mar del mapa | `#3E9C9C` / `#74BEBC` |
+| Paneles (papel) | `#FFF7EC` |
+| Texto / texto secundario | `#1D2B4F` / `#4A5878` |
+| Logotipo y títulos / rojo para texto pequeño | `#E3263B` / `#B3132A` |
+| Acción principal y selección | `#FFD23F` (claro `#FFF1B8`) |
+| Acento (botones secundarios, panel superior) | `#FF8F6B` |
+| Países (atlas) | `#F4A99B` `#F3D27A` `#A9D38C` `#8FC6E6` `#C8B4E3` `#F6B878` `#9ED8C4` |
+
+Escala tipográfica: 12 · 14 · 16 · 20 · 28 · 40 · 64 px.

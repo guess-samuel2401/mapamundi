@@ -35,6 +35,7 @@ public final class Ventana {
         // En pantallas pequeñas (p. ej. 1366×768) la ventana se abre maximizada para que quepa el mapa.
         Rectangle2D pantalla = Screen.getPrimary().getVisualBounds();
         boolean cabe = pantalla.getWidth() >= 1300 && pantalla.getHeight() >= 840;
+        Fuentes.cargar();
         Scene escena = new Scene(raiz, Math.min(1280, pantalla.getWidth()), Math.min(800, pantalla.getHeight()));
         escenario.setMaximized(!cabe);
         escena.getStylesheets().add(Objects.requireNonNull(Ventana.class.getResource("/com/mapamundi/estilos.css")).toExternalForm());

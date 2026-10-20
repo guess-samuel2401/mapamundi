@@ -1,121 +1,150 @@
-/* Colores del Mapamundi original (formularios de Visual FoxPro). */
+/*
+ * Mapamundi 2.0 — sistema visual.
+ *
+ * Paleta: el verde agua y el rojo del original, ordenados. Fondo verde profundo para que el mar del
+ * mapa se separe de la página, paneles color papel, coral como acento (el salmón del original) y
+ * amarillo sol solo para la acción principal y la selección.
+ *
+ * Tipografía: Baloo 2 (títulos y números) + Nunito (texto). Escala: 12 · 14 · 16 · 20 · 28 · 40 · 72.
+ * JavaFX solo combina Regular/Bold en una familia: SemiBold y ExtraBold son familias aparte.
+ */
 .root {
-    -agua: #65b1b1;
-    -agua-claro: #8fcaca;
-    -agua-oscuro: #2f7878;
-    -salmon: #ffa980;
-    -salmon-claro: #ffd2bb;
-    -rojo: #e0001b;
-    -rojo-oscuro: #a10016;
-    -tinta: #14213d;
-    -amarillo: #ffe600;
-    -verde: #1f9d55;
-    -fx-background-color: -agua;
-    -fx-font-family: "Segoe UI", "Arial", sans-serif;
-    -fx-font-size: 13px;
+    -fondo: #3e9c9c;
+    -fondo-oscuro: #2c7779;
+    -mar: #74bebc;
+    -papel: #fff7ec;
+    -papel-2: #ffffff;
+    -tinta: #1d2b4f;
+    -tinta-suave: #4a5878;
+    -coral: #ff8f6b;
+    -coral-claro: #ffe1d3;
+    -rojo: #e3263b;
+    -rojo-texto: #b3132a;
+    -sol: #ffd23f;
+    -sol-claro: #fff1b8;
+    -verde: #2e9e5b;
+    -crema: #fff7ec;
+
+    -fx-background-color: -fondo;
+    -fx-font-family: "Nunito";
+    -fx-font-size: 14px;
     -fx-text-fill: -tinta;
-    -fx-focus-color: -amarillo;
+    -fx-focus-color: -sol;
     -fx-faint-focus-color: transparent;
 }
 
-.label {
-    -fx-text-fill: -tinta;
-}
+.label { -fx-text-fill: -tinta; }
 
-/* Títulos rojos con borde negro, como "África", "América"… del original. */
-.titulo-mapa, .titulo-mapa-grande, .titulo-mapa-mediano {
-    -fx-font-family: "Arial Black", "Arial";
-    -fx-font-weight: bold;
+/* ------------------------------------------------------------- tipografía */
+
+.titulo-portada {
+    -fx-font-family: "Baloo 2 ExtraBold";
+    -fx-font-size: 64px;
     -fx-text-fill: -rojo;
-    -fx-effect: dropshadow(one-pass-box, black, 2, 1, 0, 0);
+    /* Contorno azul marino: el sello del logotipo original, solo aquí. */
+    -fx-effect: dropshadow(one-pass-box, -tinta, 3, 1, 0, 0);
 }
-.titulo-mapa { -fx-font-size: 22px; }
-.titulo-mapa-grande { -fx-font-size: 40px; }
-.titulo-mapa-mediano { -fx-font-size: 24px; }
-.titulo-portada { -fx-font-family: "Arial Black"; -fx-font-size: 64px; -fx-text-fill: -rojo;
-    -fx-effect: dropshadow(one-pass-box, black, 3, 1, 2, 2); }
+.titulo-mapa { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -rojo; }
+.titulo-mapa-grande { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 40px; -fx-text-fill: -rojo; }
+.titulo-mapa-mediano { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 28px; -fx-text-fill: -rojo; }
+/* Nombre del continente sobre su mapa: halo blanco para leerse sobre cualquier color. */
+.titulo-tarjeta {
+    -fx-font-family: "Baloo 2 ExtraBold";
+    -fx-font-size: 26px;
+    -fx-text-fill: -rojo;
+    -fx-effect: dropshadow(one-pass-box, white, 3, 0.95, 0, 0);
+}
+.titulo-config { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 24px; -fx-text-fill: -tinta; }
 
-/* Rojo oscuro para texto pequeño: el rojo vivo sobre salmón no llega al contraste AA. */
-.subtitulo-rojo { -fx-text-fill: -rojo-oscuro; -fx-font-weight: bold; -fx-font-size: 14px; }
-.pista-tipo { -fx-text-fill: derive(-tinta, 30%); -fx-font-size: 11px; -fx-font-weight: bold; }
-.texto-suave { -fx-text-fill: derive(-tinta, 25%); -fx-font-size: 12px; }
+/* Sobretítulos: pequeños, en mayúsculas y rojo oscuro (contraste AA sobre papel). */
+.subtitulo-rojo, .titulo-seccion, .hud-clave {
+    -fx-font-family: "Nunito ExtraBold";
+    -fx-font-size: 12px;
+    -fx-text-fill: -rojo-texto;
+}
+.subtitulo-rojo { -fx-font-size: 14px; }
+.pista-tipo { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; -fx-text-fill: -tinta-suave; }
+.texto-suave { -fx-font-size: 13px; -fx-text-fill: -tinta-suave; }
 .negrita { -fx-font-weight: bold; }
 
-/* Paneles salmón con relieve. */
+/* ------------------------------------------------------------- superficies */
+
 .panel {
-    -fx-background-color: -tinta, -salmon-claro;
+    -fx-background-color: -tinta, -papel;
     -fx-background-insets: 0, 2;
-    -fx-background-radius: 16, 14;
-    -fx-padding: 14;
-    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 5);
+    -fx-background-radius: 18, 16;
+    -fx-padding: 14 16 14 16;
+    -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.35), 0, 0, 0, 6);
 }
 
 .hud {
-    -fx-background-color: -tinta, -salmon;
-    -fx-background-insets: 0, 0 0 2 0;
-    -fx-padding: 8 16 8 16;
+    -fx-background-color: -coral, -papel;
+    -fx-background-insets: 0, 0 0 4 0;
+    -fx-padding: 8 18 8 18;
 }
-.hud-clave { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 11px; }
-.hud-valor { -fx-font-weight: bold; -fx-font-size: 15px; }
-.hud-puntaje { -fx-font-family: "Consolas", monospace; -fx-text-fill: -agua-oscuro; -fx-font-weight: bold; -fx-font-size: 16px; }
-.estrellas { -fx-font-size: 18px; -fx-text-fill: #e6b800; }
+.hud-valor { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 16px; }
+.hud-puntaje { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -fondo-oscuro; }
+.estrellas { -fx-font-size: 18px; -fx-text-fill: #e8a800; }
 
 .barra-tiempo .bar { -fx-background-color: -verde; -fx-background-radius: 6; -fx-background-insets: 0; }
 .barra-tiempo.poco .bar { -fx-background-color: -rojo; }
-.barra-tiempo .track { -fx-background-color: -tinta, rgba(255, 255, 255, 0.6); -fx-background-insets: 0, 1;
-    -fx-background-radius: 6; }
+.barra-tiempo .track { -fx-background-color: -tinta, #eadfce; -fx-background-insets: 0, 1; -fx-background-radius: 6; }
 
-/* Botones con relieve, al estilo Windows 98 pero redondeados. */
+/* ------------------------------------------------------------- botones */
+
 .button, .toggle-button {
-    -fx-background-color: -tinta, -salmon;
+    -fx-background-color: -tinta, -coral;
     -fx-background-insets: 0 0 -4 0, 0;
     -fx-background-radius: 12;
     -fx-border-color: -tinta;
     -fx-border-width: 2;
     -fx-border-radius: 12;
-    -fx-font-weight: bold;
+    -fx-font-family: "Nunito ExtraBold";
+    -fx-font-size: 14px;
     -fx-text-fill: -tinta;
     -fx-padding: 8 16 8 16;
     -fx-cursor: hand;
 }
-.button:hover, .toggle-button:hover { -fx-background-color: -tinta, derive(-salmon, 15%); }
+.button:hover, .toggle-button:hover { -fx-background-color: -tinta, derive(-coral, 18%); }
 .button:pressed, .toggle-button:pressed { -fx-translate-y: 3; -fx-background-insets: 0 0 -1 0, 0; }
-.button:focused { -fx-border-color: -amarillo; }
-.boton-principal, .toggle-button:selected { -fx-background-color: -tinta, -amarillo; }
-.boton-principal:hover, .toggle-button:selected:hover { -fx-background-color: -tinta, derive(-amarillo, 30%); }
+.button:focused { -fx-border-color: -sol; }
+.boton-principal, .toggle-button:selected { -fx-background-color: -tinta, -sol; }
+.boton-principal:hover, .toggle-button:selected:hover { -fx-background-color: -tinta, derive(-sol, 35%); }
 .boton-grande { -fx-font-size: 20px; -fx-padding: 12 28 12 28; }
-.cruceta .button { -fx-padding: 6 0 6 0; -fx-min-width: 42; -fx-min-height: 40; -fx-font-size: 15px; }
+.cruceta .button { -fx-padding: 6 0 6 0; -fx-min-width: 42; -fx-min-height: 40; -fx-font-size: 15px; -fx-background-color: -tinta, -papel-2; }
+.cruceta .button:hover { -fx-background-color: -tinta, -coral-claro; }
 
-/* Botones de continente de la fase 1. */
+/* ------------------------------------------------------------- fase de continente */
+
 .tarjeta-continente {
-    -fx-background-color: -tinta, -agua-claro;
+    -fx-background-color: -tinta, -mar;
     -fx-background-insets: 0 0 -5 0, 0;
-    -fx-border-color: rgba(20, 33, 61, 0.6);
+    -fx-border-color: rgba(29, 43, 79, 0.55);
     -fx-border-width: 4;
     -fx-border-radius: 16;
     -fx-background-radius: 16;
     -fx-padding: 6;
 }
-.tarjeta-continente.seleccionada { -fx-border-color: -amarillo; }
-.tarjeta-continente:disabled { -fx-opacity: 0.4; }
-.marca-error { -fx-font-size: 90px; -fx-text-fill: -rojo; -fx-font-weight: bold; }
-.numero-tecla { -fx-background-color: rgba(20, 33, 61, 0.75); -fx-text-fill: white; -fx-font-weight: bold;
-    -fx-padding: 1 6 1 6; -fx-background-radius: 4; }
+.tarjeta-continente.seleccionada { -fx-border-color: -sol; }
+.marca-error { -fx-font-size: 90px; -fx-text-fill: -rojo; -fx-font-family: "Nunito ExtraBold";
+    -fx-effect: dropshadow(one-pass-box, white, 3, 0.9, 0, 0); }
+.numero-tecla { -fx-background-color: rgba(29, 43, 79, 0.85); -fx-text-fill: white; -fx-font-family: "Nunito ExtraBold";
+    -fx-padding: 1 7 1 7; -fx-background-radius: 6; }
 
-.mapa {
-    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 5);
-}
+.mapa { -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.35), 0, 0, 0, 6); }
 
-.ficha { -fx-background-color: rgba(255, 255, 255, 0.6); -fx-background-radius: 8; -fx-padding: 8; }
-.ficha-clave { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 12px; }
-.ficha-valor { -fx-font-size: 12px; }
+/* ------------------------------------------------------------- ficha del país y resultado */
 
-.acierto { -fx-text-fill: -verde; -fx-font-size: 20px; -fx-font-weight: bold; }
-.fallo { -fx-text-fill: -rojo; -fx-font-size: 20px; -fx-font-weight: bold; }
+.ficha { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 10; }
+.ficha-clave { -fx-text-fill: -rojo-texto; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; }
+.ficha-valor { -fx-font-size: 13px; }
 
-.opcion { -fx-padding: 4 8 4 8; -fx-background-radius: 8; }
-.opcion:selected, .opcion.activa { -fx-background-color: rgba(255, 230, 0, 0.6); }
-.radio-button, .check-box { -fx-text-fill: -tinta; -fx-font-weight: bold; }
+.acierto { -fx-text-fill: -verde; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; }
+.fallo { -fx-text-fill: -rojo-texto; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; }
+
+/* ------------------------------------------------------------- controles de formulario */
+
+.radio-button, .check-box { -fx-text-fill: -tinta; -fx-font-family: "Nunito SemiBold"; }
 .radio-button .radio, .check-box .box { -fx-border-color: -tinta; -fx-background-color: white; }
 .radio-button .radio { -fx-border-radius: 1em; -fx-background-radius: 1em; }
 .radio-button .dot { -fx-background-radius: 1em; }
@@ -123,102 +152,99 @@
 
 .scroll-pane, .scroll-pane > .viewport { -fx-background-color: transparent; }
 .text-field { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; -fx-background-radius: 12;
-    -fx-padding: 8 12 8 12; -fx-font-weight: bold; }
+    -fx-padding: 8 12 8 12; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 15px; }
 
-.capa-pausa { -fx-background-color: rgba(47, 120, 120, 0.75); }
-.cartel-nivel { -fx-background-color: -tinta, -salmon-claro; -fx-background-insets: 0, 3; -fx-background-radius: 16;
+.capa-pausa { -fx-background-color: rgba(44, 119, 121, 0.82); }
+.cartel-nivel { -fx-background-color: -tinta, -papel; -fx-background-insets: 0, 3; -fx-background-radius: 18;
     -fx-padding: 12 30 12 30; }
 
 /* ------------------------------------------------------------- menú principal */
 
-.lema { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -tinta; }
-.insignia { -fx-background-color: -tinta; -fx-text-fill: -amarillo; -fx-font-family: "Arial Black"; -fx-font-size: 16px;
-    -fx-padding: 2 10 2 10; -fx-background-radius: 10; -fx-rotate: -8; }
+.lema { -fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: -crema; }
+.insignia { -fx-background-color: -tinta; -fx-text-fill: -sol; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 18px;
+    -fx-padding: 0 10 0 10; -fx-background-radius: 10; -fx-rotate: -8; }
 .marco-mapa {
-    -fx-background-color: -tinta, -agua;
+    -fx-background-color: -tinta, -mar;
     -fx-background-insets: 0, 4;
     -fx-background-radius: 20, 17;
     -fx-padding: 4;
-    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.4), 0, 0, 0, 7);
 }
-.boton-jugar { -fx-font-family: "Arial Black"; -fx-font-size: 26px; -fx-padding: 12 28 12 28; -fx-background-radius: 16;
+.boton-jugar { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 30px; -fx-padding: 6 28 6 28; -fx-background-radius: 16;
     -fx-border-radius: 16; -fx-border-width: 3; }
 .boton-fantasma {
-    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
     -fx-background-insets: 0;
-    -fx-border-color: -tinta;
-    -fx-text-fill: -tinta;
+    -fx-border-color: -crema;
+    -fx-text-fill: -crema;
     -fx-font-size: 14px;
     -fx-padding: 14 16 14 16;
 }
-.boton-fantasma:hover { -fx-background-color: rgba(255, 255, 255, 0.5); }
+.boton-fantasma:hover { -fx-background-color: rgba(255, 255, 255, 0.24); }
 .boton-fantasma:pressed { -fx-translate-y: 2; -fx-background-insets: 0; }
-.resumen-partida { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: -tinta;
-    -fx-background-color: rgba(255, 255, 255, 0.35); -fx-background-radius: 8; -fx-padding: 4 10 4 10; }
-
-.titulo-config { -fx-font-family: "Arial Black"; -fx-font-size: 20px; -fx-text-fill: -tinta; }
-.titulo-seccion { -fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: -rojo-oscuro; }
+.resumen-partida { -fx-font-family: "Nunito SemiBold"; -fx-font-size: 13px; -fx-text-fill: -crema;
+    -fx-background-color: rgba(16, 30, 50, 0.22); -fx-background-radius: 8; -fx-padding: 4 10 4 10; }
 
 /* Fichas de nivel: el recuadro amarillo del original marca la elegida. */
 .ficha-nivel {
-    -fx-background-color: #fff8f3;
+    -fx-background-color: -papel-2;
     -fx-background-radius: 12;
-    -fx-border-color: rgba(20, 33, 61, 0.35);
+    -fx-border-color: rgba(29, 43, 79, 0.25);
     -fx-border-width: 2;
     -fx-border-radius: 12;
-    -fx-padding: 5 8 5 5;
+    -fx-padding: 4 6 4 4;
     -fx-cursor: hand;
     -fx-alignment: center-left;
 }
-.ficha-nivel:hover { -fx-border-color: -agua-oscuro; }
-.ficha-nivel:selected { -fx-background-color: #fff7c2; -fx-border-color: -amarillo; -fx-border-width: 3;
-    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.35), 6, 0, 0, 2); }
-.ficha-nivel:focused { -fx-border-color: -agua-oscuro; }
-.ficha-nivel:selected:focused { -fx-border-color: -amarillo; }
-.ficha-nivel-nombre { -fx-font-weight: bold; -fx-font-size: 14px; }
-.ficha-nivel-detalle { -fx-font-size: 11px; -fx-text-fill: derive(-tinta, 25%); }
-.caja-continentes { -fx-background-color: rgba(255, 255, 255, 0.55); -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
+.ficha-nivel:hover { -fx-border-color: -fondo; }
+.ficha-nivel:selected { -fx-background-color: -sol-claro; -fx-border-color: -sol; -fx-border-width: 3;
+    -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.25), 6, 0, 0, 2); }
+.ficha-nivel:focused { -fx-border-color: -fondo; }
+.ficha-nivel:selected:focused { -fx-border-color: -sol; }
+.ficha-nivel-nombre { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }
+.ficha-nivel-detalle { -fx-font-size: 12px; -fx-text-fill: -tinta-suave; }
+.caja-continentes { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
 
 /* Velocidad: control segmentado azul marino, distinto del botón Jugar. */
 .segmento {
-    -fx-background-color: white;
+    -fx-background-color: -papel-2;
     -fx-border-color: -tinta;
     -fx-border-width: 2;
-    -fx-padding: 6 8 6 8;
+    -fx-padding: 4 8 4 8;
     -fx-cursor: hand;
     -fx-alignment: center;
 }
 .segmento-izq { -fx-background-radius: 12 0 0 12; -fx-border-radius: 12 0 0 12; }
 .segmento-centro { -fx-border-width: 2 0 2 0; }
 .segmento-der { -fx-background-radius: 0 12 12 0; -fx-border-radius: 0 12 12 0; }
-.segmento:hover { -fx-background-color: #eef7f7; }
+.segmento:hover { -fx-background-color: #eaf5f4; }
 .segmento:selected { -fx-background-color: -tinta; }
 .segmento:selected .label { -fx-text-fill: white; }
-.segmento-titulo { -fx-font-weight: bold; -fx-font-size: 14px; }
-.segmento-detalle { -fx-font-size: 11px; }
-.segmento .label { -fx-alignment: center; }
+.segmento-titulo { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }
+.segmento-detalle { -fx-font-size: 12px; }
 
 .combo-box {
-    -fx-background-color: -tinta, white;
+    -fx-background-color: -tinta, -papel-2;
     -fx-background-insets: 0, 2;
     -fx-background-radius: 12;
     -fx-padding: 4 6 4 6;
-    -fx-font-weight: bold;
+    -fx-font-family: "Nunito ExtraBold";
     -fx-font-size: 14px;
 }
 .combo-box .list-cell { -fx-text-fill: -tinta; -fx-padding: 4 8 4 8; }
-.combo-box-popup .list-view { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; }
+.combo-box-popup .list-view { -fx-background-color: -tinta, -papel-2; -fx-background-insets: 0, 2; }
+.combo-box-popup .list-cell { -fx-font-family: "Nunito SemiBold"; }
 .combo-box-popup .list-cell:filled:selected, .combo-box-popup .list-cell:filled:hover {
-    -fx-background-color: -amarillo; -fx-text-fill: -tinta; }
+    -fx-background-color: -sol; -fx-text-fill: -tinta; }
 
-.caja-record { -fx-background-color: -tinta, #fff7c2; -fx-background-insets: 0, 2; -fx-background-radius: 14, 12;
-    -fx-padding: 10 14 10 14; }
-.trofeo { -fx-font-size: 30px; }
-.record-puntos { -fx-font-family: "Arial Black"; -fx-font-size: 18px; -fx-text-fill: -tinta; }
+.caja-record { -fx-background-color: -tinta, -sol-claro; -fx-background-insets: 0, 2; -fx-background-radius: 14, 12;
+    -fx-padding: 6 14 6 14; }
+.trofeo { -fx-font-size: 26px; }
+.record-puntos { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -tinta; }
 
-.capa-dialogo { -fx-background-color: rgba(20, 33, 61, 0.55); }
-.numero-paso { -fx-background-color: -rojo; -fx-text-fill: white; -fx-font-family: "Arial Black"; -fx-font-size: 14px;
+.capa-dialogo { -fx-background-color: rgba(16, 30, 50, 0.55); }
+.numero-paso { -fx-background-color: -rojo; -fx-text-fill: white; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 16px;
     -fx-background-radius: 15; }
 
-.tabla-puntajes .fila-par { -fx-background-color: rgba(255, 255, 255, 0.35); }
-.tabla-puntajes .fila-nueva { -fx-background-color: rgba(255, 230, 0, 0.7); }
+.tabla-puntajes .fila-par { -fx-background-color: rgba(29, 43, 79, 0.05); }
+.tabla-puntajes .fila-nueva { -fx-background-color: -sol-claro; }

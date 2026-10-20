@@ -17,16 +17,26 @@ import java.util.function.Function;
 /** Dibuja el mapa en un Canvas con los colores del Mapamundi original. */
 public final class Pintor {
 
-    public static final Color AGUA = Color.web("#65b1b1");
-    public static final Color TIERRA = Color.WHITE;
-    public static final Color OTRA_TIERRA = Color.web("#e4e4dc");
-    public static final Color BORDE = Color.web("#1b1b1b");
-    public static final Color GRIS_SILUETA = Color.web("#e5e5e5");
+    // Los mismos valores que las variables de estilos.css (el Canvas no lee CSS).
+    public static final Color AGUA = Color.web("#74bebc");
+    public static final Color TIERRA = Color.web("#fffdf8");
+    public static final Color OTRA_TIERRA = Color.web("#e8e2d4");
+    public static final Color RESTO_DEL_MUNDO = Color.web("#e4e3dc");
+    public static final Color BORDE = Color.web("#2a3552");
+    public static final Color GRIS_SILUETA = Color.web("#ece8df");
+    public static final Color TINTA = Color.web("#1d2b4f");
+    public static final Color ROJO = Color.web("#e3263b");
+    public static final Color SOL = Color.web("#ffd23f");
+    public static final Color FONDO_OSCURO = Color.web("#2c7779");
 
-    /** Colores vivos como los de los mapas del juego original; el índice viene de MAPCOLOR7. */
+    /**
+     * Paleta de atlas: siete tonos suaves y armónicos (coral, arena, salvia, cielo, lavanda, albaricoque, menta)
+     * que distinguen a los vecinos sin competir con el botón Jugar ni con los títulos rojos.
+     * El índice viene de MAPCOLOR7 de Natural Earth.
+     */
     private static final Color[] PALETA = {
-            Color.web("#ff7f7f"), Color.web("#ffff80"), Color.web("#b7f26a"), Color.web("#7fd0ff"),
-            Color.web("#ff99cc"), Color.web("#ffb366"), Color.web("#c7a6ff"),
+            Color.web("#f4a99b"), Color.web("#f3d27a"), Color.web("#a9d38c"), Color.web("#8fc6e6"),
+            Color.web("#c8b4e3"), Color.web("#f6b878"), Color.web("#9ed8c4"),
     };
 
     private Pintor() {

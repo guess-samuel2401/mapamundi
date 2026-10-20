@@ -50,7 +50,7 @@ import java.util.function.Consumer;
 final class PantallaMenu extends StackPane {
 
     private static final double ANCHO_CONFIG = 500;
-    private static final double ANCHO_MINI = 82, ALTO_MINI = 56;
+    private static final double ANCHO_MINI = 70, ALTO_MINI = 46;
 
     private final List<Nivel> niveles;
     private final ToggleGroup grupoNivel = new ToggleGroup();
@@ -72,7 +72,7 @@ final class PantallaMenu extends StackPane {
         VBox configuracion = configuracion(atlas, inicial);
 
         HBox columnas = new HBox(24, portada, configuracion);
-        columnas.setPadding(new Insets(22, 26, 22, 26));
+        columnas.setPadding(new Insets(16, 26, 18, 26));
         ScrollPane desplazable = new ScrollPane(columnas);
         desplazable.setFitToWidth(true);
         desplazable.setFitToHeight(true);
@@ -143,7 +143,7 @@ final class PantallaMenu extends StackPane {
         // Nivel: fichas con mini-mapa
         GridPane fichas = new GridPane();
         fichas.setHgap(10);
-        fichas.setVgap(8);
+        fichas.setVgap(6);
         for (int i = 0; i < niveles.size(); i++) {
             Nivel n = niveles.get(i);
             Set<Pais> deNivel = new HashSet<>(n.paises());
@@ -209,7 +209,7 @@ final class PantallaMenu extends StackPane {
         record.visibleProperty().bind(personal.selectedProperty().not());
         record.managedProperty().bind(personal.selectedProperty().not());
 
-        VBox v = new VBox(10,
+        VBox v = new VBox(7,
                 titulo,
                 seccion("Nivel", "Cada 6 países bien ubicados subes al siguiente."), fichas, continentes,
                 seccion("Velocidad", null), segmentos,
@@ -258,7 +258,7 @@ final class PantallaMenu extends StackPane {
         HBox h = new HBox(8, FichaPais.etiqueta(nombre.toUpperCase(), "titulo-seccion"));
         h.setAlignment(Pos.BASELINE_LEFT);
         if (nota != null) h.getChildren().add(FichaPais.etiqueta(nota, "texto-suave"));
-        h.setPadding(new Insets(4, 0, 0, 0));
+        h.setPadding(new Insets(2, 0, 0, 0));
         return h;
     }
 

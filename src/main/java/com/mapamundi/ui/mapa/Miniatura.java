@@ -22,7 +22,7 @@ public final class Miniatura {
         Region vista = c.vista();
         Transformacion t = Transformacion.ajustada(vista, ancho, alto);
         Pintor.mapa(canvas.getGraphicsContext2D(), t, atlas,
-                p -> p.continente() == c ? Pintor.colorDe(p) : Color.web("#cfd8d8"), 0.5);
+                p -> p.continente() == c ? Pintor.colorDe(p) : Pintor.RESTO_DEL_MUNDO, 0.5);
         return canvas;
     }
 
@@ -34,7 +34,7 @@ public final class Miniatura {
         Canvas canvas = new Canvas(ancho, alto);
         Transformacion t = Transformacion.cubriendo(region, ancho, alto);
         Pintor.mapa(canvas.getGraphicsContext2D(), t, atlas,
-                p -> resaltar.test(p) ? Pintor.colorDe(p) : Color.web("#d5dede"), 0.35);
+                p -> resaltar.test(p) ? Pintor.colorDe(p) : Pintor.RESTO_DEL_MUNDO, 0.35);
         return canvas;
     }
 
@@ -44,7 +44,7 @@ public final class Miniatura {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double margen = 8;
         Pintor.ajustada(gc, pais.forma().nucleo(), pais.forma().cajaNucleo(), margen, margen, ancho - 2 * margen, alto - 2 * margen,
-                Pintor.GRIS_SILUETA, Color.web("#333333"), 1.5);
+                Pintor.GRIS_SILUETA, Pintor.TINTA, 1.8);
         return canvas;
     }
 }

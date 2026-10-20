@@ -72,7 +72,7 @@ final class PantallaFin extends VBox {
     private static VBox cifra(String clave, String valor) {
         VBox v = new VBox(2, FichaPais.etiqueta(clave.toUpperCase(), "hud-clave"), FichaPais.etiqueta(valor, "titulo-mapa"));
         v.setAlignment(Pos.CENTER);
-        v.setStyle("-fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 12; -fx-padding: 8 18 8 18;");
+        v.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 8 18 8 18;");
         return v;
     }
 }
