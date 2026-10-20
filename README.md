@@ -36,8 +36,11 @@ Las 10 mejores puntuaciones se guardan en `%USERPROFILE%\.mapamundi\puntajes.jso
 Requiere un JDK 25 (el proyecto trae Maven Wrapper, no hace falta instalar Maven).
 
 ```bash
-.\mvnw.cmd javafx:run
+.\mvnw.cmd compile javafx:run
 ```
+
+(`javafx:run` por sí solo no compila: si `target/classes` está desactualizado, falla con
+"no se ha encontrado la clase principal".)
 
 En **VS Code** (con el *Extension Pack for Java*):
 - Pestaña *Ejecutar y depurar* → **Jugar Mapamundi**, o

@@ -4,8 +4,8 @@
     {
       "label": "Jugar (Maven)",
       "type": "shell",
-      "command": "./mvnw javafx:run",
-      "windows": { "command": ".\\mvnw.cmd javafx:run" },
+      "command": "./mvnw compile javafx:run",
+      "windows": { "command": ".\\mvnw.cmd compile javafx:run" },
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": []
     },
