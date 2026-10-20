@@ -29,7 +29,7 @@ final class Hud extends VBox {
     Hud() {
         getStyleClass().add("hud");
         setSpacing(6);
-        Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-mapa");
+        Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-hud");
         cajaAvance = par("Avance", avance);
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);

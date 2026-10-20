@@ -27,16 +27,16 @@ public final class Pintor {
     public static final Color TINTA = Color.web("#1d2b4f");
     public static final Color ROJO = Color.web("#e3263b");
     public static final Color SOL = Color.web("#ffd23f");
+    public static final Color CORAL = Color.web("#ff8f6b");
     public static final Color FONDO_OSCURO = Color.web("#2c7779");
 
     /**
-     * Paleta de atlas: siete tonos suaves y armónicos (coral, arena, salvia, cielo, lavanda, albaricoque, menta)
-     * que distinguen a los vecinos sin competir con el botón Jugar ni con los títulos rojos.
-     * El índice viene de MAPCOLOR7 de Natural Earth.
+     * Paleta de atlas: siete tonos suaves y cálidos (coral, arena, salvia, rosa, lavanda, albaricoque, caqui).
+     * Sin celestes ni verdes azulados, que se confundían con el mar. El índice viene de MAPCOLOR7 de Natural Earth.
      */
     private static final Color[] PALETA = {
-            Color.web("#f4a99b"), Color.web("#f3d27a"), Color.web("#a9d38c"), Color.web("#8fc6e6"),
-            Color.web("#c8b4e3"), Color.web("#f6b878"), Color.web("#9ed8c4"),
+            Color.web("#f4a99b"), Color.web("#f3d27a"), Color.web("#a9d38c"), Color.web("#eda7c9"),
+            Color.web("#c4b0e6"), Color.web("#f6b878"), Color.web("#d2bf94"),
     };
 
     private Pintor() {

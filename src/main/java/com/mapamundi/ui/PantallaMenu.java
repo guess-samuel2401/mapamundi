@@ -87,7 +87,7 @@ final class PantallaMenu extends StackPane {
     // ------------------------------------------------------------------ portada
 
     private VBox portada(Atlas atlas) {
-        Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-portada");
+        Label titulo = Logotipo.crear("Mapamundi");
         Label edicion = FichaPais.etiqueta("2.0", "insignia");
         HBox cabecera = new HBox(10, titulo, edicion);
         cabecera.setAlignment(Pos.CENTER_LEFT);

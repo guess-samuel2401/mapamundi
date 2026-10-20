@@ -37,13 +37,14 @@
 
 /* ------------------------------------------------------------- tipografía */
 
+/* Logotipo: crema con contorno azul marino y sombra coral (el efecto doble se pone en Logotipo.java). */
 .titulo-portada {
     -fx-font-family: "Baloo 2 ExtraBold";
     -fx-font-size: 64px;
-    -fx-text-fill: -rojo;
-    /* Contorno azul marino: el sello del logotipo original, solo aquí. */
-    -fx-effect: dropshadow(one-pass-box, -tinta, 3, 1, 0, 0);
+    -fx-text-fill: -crema;
 }
+/* El logotipo pequeño del panel superior, sobre papel. */
+.titulo-hud { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -tinta; }
 .titulo-mapa { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -rojo; }
 .titulo-mapa-grande { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 40px; -fx-text-fill: -rojo; }
 .titulo-mapa-mediano { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 28px; -fx-text-fill: -rojo; }
