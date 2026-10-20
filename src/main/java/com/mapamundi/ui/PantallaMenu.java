@@ -106,14 +106,16 @@ final class PantallaMenu extends StackPane {
         botonJugar.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(botonJugar, Priority.ALWAYS);
         botonJugar.setOnAction(e -> empezar());
-        latir(botonJugar);
+        Animaciones.alPasar(botonJugar, 1.06, 3, latir(botonJugar));
 
         Button records = new Button("🏆  Récords");
         records.getStyleClass().add("boton-fantasma");
         records.setOnAction(e -> mostrarDialogo("Puntuaciones más altas", tablaPuntajes()));
+        Animaciones.alPasar(records, 1.08, 3);
         Button ayuda = new Button("?  Cómo se juega");
         ayuda.getStyleClass().add("boton-fantasma");
         ayuda.setOnAction(e -> mostrarDialogo("Cómo se juega", comoSeJuega()));
+        Animaciones.alPasar(ayuda, 1.08, 3);
 
         HBox acciones = new HBox(12, botonJugar, records, ayuda);
         acciones.setAlignment(Pos.CENTER_LEFT);
@@ -124,7 +126,7 @@ final class PantallaMenu extends StackPane {
     }
 
     /** Un latido suave en el botón Jugar para que sea lo primero que se mira. */
-    private static void latir(Node nodo) {
+    private static ScaleTransition latir(Node nodo) {
         ScaleTransition t = new ScaleTransition(Duration.millis(900), nodo);
         t.setFromX(1);
         t.setFromY(1);
@@ -133,6 +135,7 @@ final class PantallaMenu extends StackPane {
         t.setAutoReverse(true);
         t.setCycleCount(ScaleTransition.INDEFINITE);
         t.play();
+        return t;
     }
 
     // ------------------------------------------------------------------ configuración
@@ -185,6 +188,8 @@ final class PantallaMenu extends StackPane {
             b.setSelected(v == inicial.velocidad());
             b.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(b, Priority.ALWAYS);
+            // Los segmentos están pegados entre sí: crecen poco para no invadir al vecino.
+            Animaciones.alPasar(b, 1.04, 2);
             segmentos.getChildren().add(b);
         }
         grupoVelocidad.selectedToggleProperty().addListener((o, antes, ahora) -> {
@@ -245,6 +250,7 @@ final class PantallaMenu extends StackPane {
         b.setUserData(indice);
         b.setMaxWidth(Double.MAX_VALUE);
         b.setPrefWidth((ANCHO_CONFIG - 40) / 2);
+        Animaciones.alPasar(b, 1.05, 3);
         return b;
     }
 

@@ -175,6 +175,7 @@
 }
 .boton-jugar { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 30px; -fx-padding: 6 28 6 28; -fx-background-radius: 16;
     -fx-border-radius: 16; -fx-border-width: 3; }
+.boton-jugar:hover { -fx-effect: dropshadow(gaussian, rgba(255, 210, 63, 0.55), 22, 0.15, 0, 4); }
 .boton-fantasma {
     -fx-background-color: rgba(255, 255, 255, 0.12);
     -fx-background-insets: 0;
@@ -183,7 +184,8 @@
     -fx-font-size: 14px;
     -fx-padding: 14 16 14 16;
 }
-.boton-fantasma:hover { -fx-background-color: rgba(255, 255, 255, 0.24); }
+.boton-fantasma:hover { -fx-background-color: rgba(255, 255, 255, 0.24); -fx-border-color: -sol; -fx-text-fill: -sol;
+    -fx-effect: dropshadow(gaussian, rgba(10, 6, 30, 0.45), 12, 0, 0, 5); }
 .boton-fantasma:pressed { -fx-translate-y: 2; -fx-background-insets: 0; }
 .resumen-partida { -fx-font-family: "Nunito SemiBold"; -fx-font-size: 13px; -fx-text-fill: -crema;
     -fx-background-color: rgba(16, 30, 50, 0.22); -fx-background-radius: 8; -fx-padding: 4 10 4 10; }
@@ -199,7 +201,7 @@
     -fx-cursor: hand;
     -fx-alignment: center-left;
 }
-.ficha-nivel:hover { -fx-border-color: -fondo; }
+.ficha-nivel:hover { -fx-border-color: -fondo; -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.3), 10, 0, 0, 4); }
 .ficha-nivel:selected { -fx-background-color: -sol-claro; -fx-border-color: -sol; -fx-border-width: 3;
     -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.25), 6, 0, 0, 2); }
 .ficha-nivel:focused { -fx-border-color: -fondo; }
