@@ -2,6 +2,7 @@ package com.mapamundi.ui.mapa;
 
 import com.mapamundi.geo.Forma;
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Resultado;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Pais;
 import com.mapamundi.ui.Fuentes;
@@ -29,8 +30,12 @@ public final class MapaLienzo extends Region {
     private static final double ZOOM_MAX = 12;
 
     private final Canvas canvas = new Canvas();
+    /** Capa encima del mapa para la animación de acierto. */
+    private final Canvas efectos = new Canvas();
+    private final Celebracion celebracion = new Celebracion(efectos);
     private final Atlas atlas;
     private Partida partida;
+    private Resultado celebrado;
 
     private com.mapamundi.geo.Region vistaActual;
     private double zoom = 1;
@@ -42,7 +47,11 @@ public final class MapaLienzo extends Region {
 
     public MapaLienzo(Atlas atlas) {
         this.atlas = atlas;
-        getChildren().add(canvas);
+        getChildren().addAll(canvas, efectos);
+        // Si la ronda termina antes de que acabe la animación, no seguir dibujando en una capa invisible.
+        sceneProperty().addListener((o, antes, escena) -> {
+            if (escena == null) celebracion.detener();
+        });
         getStyleClass().add("mapa");
         setMinSize(200, 200);
         widthProperty().addListener(o -> dibujar());
@@ -57,6 +66,11 @@ public final class MapaLienzo extends Region {
             restablecerZoom();
         }
         dibujar();
+        Resultado r = p.fase() == Partida.Fase.RESULTADO ? p.resultado() : null;
+        if (r != null && r.acierto() && r != celebrado) {
+            celebrado = r;
+            celebracion.iniciar(p.actual(), p.vueltas(), r.puntos() + r.bonus(), this::transformacion);
+        }
     }
 
     public void restablecerZoom() {
@@ -76,6 +90,8 @@ public final class MapaLienzo extends Region {
     protected void layoutChildren() {
         canvas.setWidth(getWidth());
         canvas.setHeight(getHeight());
+        efectos.setWidth(getWidth());
+        efectos.setHeight(getHeight());
         // Esquinas redondeadas, como los paneles.
         Rectangle recorte = new Rectangle(getWidth(), getHeight());
         recorte.setArcWidth(28);
