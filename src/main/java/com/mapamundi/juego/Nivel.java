@@ -32,6 +32,11 @@ public record Nivel(String nombre, List<Pais> paises, Region vista) {
                 new Nivel("Todo el mundo", atlas.paises(), VISTA_MUNDO));
     }
 
+    /** Cuántos niveles tiene la progresión (el último es "Todo el mundo"). */
+    public static int progresionTotal() {
+        return 7;
+    }
+
     private static Nivel continente(Atlas atlas, Continente c) {
         return new Nivel(c.nombre(), atlas.de(c), c.vista());
     }

@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.modelo.Atlas;
 import javafx.animation.FadeTransition;
@@ -19,34 +20,47 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-/** Pantalla de juego: panel superior, la fase actual, la pausa y el cartel de nivel superado. */
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Pantalla de juego: panel superior, la fase actual, la pausa, el cartel de nivel superado,
+ * los avisos de insignias y los consejos de la primera partida.
+ */
 final class PantallaJuego extends StackPane {
 
     interface AlTerminar {
-        void fin(Partida partida);
+        void fin(Partida partida, List<Logro> insigniasGanadas);
     }
 
     private final Partida partida;
+    private final Contexto ctx;
     private final Atlas atlas;
     private final Sonidos sonidos;
     private final Hud hud = new Hud();
     private final BorderPane cuerpo = new BorderPane();
     private final StackPane capaPausa;
+    private final AvisoLogros avisos;
     private final Timeline reloj;
     private FaseContinente faseContinente;
     private FaseMapa faseMapa;
     private Partida.Fase faseAnterior;
     private String ultimoCartel;
+    private StackPane dialogo;
+    private Consejo consejo;
+    private final List<Logro> ganadas = new ArrayList<>();
     // Una sola instancia, para poder quitarla después con removeEventFilter.
     private final EventHandler<KeyEvent> manejadorTeclas = this::tecla;
 
-    PantallaJuego(Partida partida, Atlas atlas, Sonidos sonidos, Runnable salir, AlTerminar alTerminar) {
+    PantallaJuego(Partida partida, Contexto ctx, Runnable salir, AlTerminar alTerminar) {
         this.partida = partida;
-        this.atlas = atlas;
-        this.sonidos = sonidos;
+        this.ctx = ctx;
+        this.atlas = ctx.atlas();
+        this.sonidos = ctx.sonidos();
         cuerpo.setTop(hud);
         capaPausa = construirPausa(salir);
-        getChildren().addAll(cuerpo, capaPausa);
+        avisos = new AvisoLogros(sonidos);
+        getChildren().addAll(cuerpo, avisos, capaPausa);
 
         hud.sonido.setOnAction(e -> {
             sonidos.alternarSilencio();
@@ -60,9 +74,14 @@ final class PantallaJuego extends StackPane {
 
         partida.alSonar(sonidos::reproducir);
         partida.alCambiar(() -> {
+            List<Logro> nuevos = ctx.logros().revisar(partida);
+            if (!nuevos.isEmpty()) {
+                avisos.mostrar(nuevos);
+                ganadas.addAll(nuevos);
+            }
             if (partida.fase() == Partida.Fase.FIN) {
                 reloj.stop();
-                alTerminar.fin(partida);
+                alTerminar.fin(partida, ganadas);
             } else {
                 actualizar();
             }
@@ -79,6 +98,9 @@ final class PantallaJuego extends StackPane {
         seguir.getStyleClass().add("boton-principal");
         seguir.setMaxWidth(Double.MAX_VALUE);
         seguir.setOnAction(e -> partida.alternarPausa());
+        Button ajustes = new Button("⚙  Ajustes");
+        ajustes.setMaxWidth(Double.MAX_VALUE);
+        ajustes.setOnAction(e -> abrirAjustes());
         Button menu = new Button("Salir al menú");
         menu.setMaxWidth(Double.MAX_VALUE);
         menu.setOnAction(e -> {
@@ -86,7 +108,7 @@ final class PantallaJuego extends StackPane {
             salir.run();
         });
         VBox caja = new VBox(12, FichaPais.etiqueta("Pausa", "titulo-mapa-grande"),
-                FichaPais.etiqueta("El cronómetro está detenido.", ""), seguir, menu);
+                FichaPais.etiqueta("El cronómetro está detenido.", ""), seguir, ajustes, menu);
         caja.getStyleClass().add("panel");
         caja.setAlignment(Pos.CENTER);
         caja.setMaxSize(320, USE_PREF_SIZE);
@@ -96,7 +118,12 @@ final class PantallaJuego extends StackPane {
         return capa;
     }
 
+    private void abrirAjustes() {
+        dialogo = Dialogo.mostrar(this, "Ajustes", new PanelAjustes(ctx, this::actualizar, null), 520, () -> dialogo = null);
+    }
+
     private void tecla(KeyEvent e) {
+        if (dialogo != null) return; // Esc y Enter son para la ventana de Ajustes
         KeyCode k = e.getCode();
         if (k == KeyCode.F5 || k == KeyCode.P || k == KeyCode.ESCAPE) {
             partida.alternarPausa();
@@ -136,11 +163,31 @@ final class PantallaJuego extends StackPane {
         } else if (faseMapa != null) {
             faseMapa.actualizar();
         }
+        if (fase != faseAnterior) consejoDeLaFase(fase);
         faseAnterior = fase;
 
         String cartel = partida.nivelSuperado();
         if (cartel != null && !cartel.equals(ultimoCartel)) mostrarCartel(cartel);
         ultimoCartel = cartel;
+    }
+
+    /** En la primera partida, un consejo breve al entrar en cada fase (solo una vez por fase). */
+    private void consejoDeLaFase(Partida.Fase fase) {
+        Consejo.quitar(this, consejo);
+        consejo = null;
+        String clave = switch (fase) {
+            case CONTINENTE -> "continente";
+            case UBICACION -> "mapa";
+            case RESULTADO -> "resultado";
+            default -> null;
+        };
+        if (clave == null || !ctx.preferencias().primeraVez(clave)) return;
+        String texto = switch (clave) {
+            case "continente" -> "Elige el continente del país con un clic o con las teclas 1 a 5. Si te equivocas, puedes volver a intentarlo.";
+            case "mapa" -> "Arrastra el país hasta su lugar y pulsa Enter. La rueda del ratón hace zoom y arrastrando el mar mueves el mapa.";
+            default -> "Aquí ves la distancia, los puntos y los datos del país. Pulsa Enter para seguir.";
+        };
+        consejo = Consejo.mostrar(this, texto);
     }
 
     private void mostrarCartel(String nivel) {

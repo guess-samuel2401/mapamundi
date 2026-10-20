@@ -58,6 +58,10 @@ public final class Partida {
     private double despV;
     private Resultado resultado;
     private String nivelSuperado;
+    private int racha;
+    private int mejorRacha;
+    private int vidasAlEmpezarNivel = VIDAS;
+    private boolean nivelSinPerderVidas;
 
     private Runnable alCambiar = () -> { };
     private Consumer<Sonido> alSonar = s -> { };
@@ -159,6 +163,8 @@ public final class Partida {
         if (vidas <= 0) {
             fase = Fase.FIN;
         } else if (indiceNivel >= 0 && indiceNivel < progresion.size() - 1 && aciertosNivel >= PAISES_POR_NIVEL) {
+            nivelSinPerderVidas = vidas == vidasAlEmpezarNivel;
+            vidasAlEmpezarNivel = vidas;
             indiceNivel++;
             empezarNivel(progresion.get(indiceNivel));
             nivelSuperado = nivel.nombre();
@@ -231,10 +237,13 @@ public final class Partida {
         if (r.acierto()) {
             ubicados.add(actual);
             aciertosNivel++;
+            racha++;
+            mejorRacha = Math.max(mejorRacha, racha);
             despU = 0;
             despV = 0;
         } else {
             vidas--;
+            racha = 0;
         }
         if (vidas <= 0) sonar(Sonido.FIN_PARTIDA);
         else if (r.acierto()) sonar(Sonido.UBICADO);
@@ -275,4 +284,9 @@ public final class Partida {
     public Resultado resultado() { return resultado; }
     public Set<Pais> ubicados() { return Collections.unmodifiableSet(ubicados); }
     public String nivelSuperado() { return nivelSuperado; }
+    /** Aciertos seguidos en esta partida (se reinicia al fallar). */
+    public int racha() { return racha; }
+    public int mejorRacha() { return mejorRacha; }
+    /** Si el último nivel superado se completó sin perder ningún corazón. */
+    public boolean nivelSinPerderVidas() { return nivelSinPerderVidas; }
 }

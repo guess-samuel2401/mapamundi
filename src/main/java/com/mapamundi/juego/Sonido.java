@@ -8,7 +8,8 @@ public enum Sonido {
     MAL_UBICADO("perdio"),
     FIN_TIEMPO("fintiempo"),
     FIN_PARTIDA("perdiotreserrores"),
-    NIVEL_SUPERADO("figuracompleta");
+    NIVEL_SUPERADO("figuracompleta"),
+    LOGRO("figuracompleta");
 
     private final String archivo;
 

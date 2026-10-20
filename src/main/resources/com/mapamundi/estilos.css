@@ -248,6 +248,56 @@
 .record-puntos { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -tinta; }
 
 .capa-dialogo { -fx-background-color: rgba(16, 30, 50, 0.55); }
+
+.boton-icono { -fx-font-size: 18px; -fx-padding: 10 16 10 16; -fx-min-width: 50; }
+.boton-discreto { -fx-background-color: transparent; -fx-background-insets: 0; -fx-border-color: transparent;
+    -fx-text-fill: -tinta-suave; -fx-underline: true; }
+.boton-discreto:hover { -fx-background-color: rgba(29, 43, 79, 0.06); }
+
+/* ------------------------------------------------------------- ajustes */
+
+.slider .track { -fx-background-color: -tinta, #eadfce; -fx-background-insets: 0, 1; -fx-background-radius: 4; -fx-pref-height: 8; }
+.slider .thumb { -fx-background-color: -tinta, -sol; -fx-background-insets: 0, 2; -fx-background-radius: 10; -fx-padding: 9; }
+.slider:disabled { -fx-opacity: 0.45; }
+
+/* ------------------------------------------------------------- logros e insignias */
+
+.icono-insignia { -fx-font-family: "Baloo 2 ExtraBold"; }
+.tarjeta-logro { -fx-background-color: white; -fx-background-radius: 12; -fx-padding: 8 10 8 8;
+    -fx-border-color: rgba(29, 43, 79, 0.15); -fx-border-radius: 12; }
+.tarjeta-logro.conseguida { -fx-background-color: #fffaf0; -fx-border-color: -sol; }
+.logro-nombre { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }
+.logro-nombre-bloqueado { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; -fx-text-fill: -tinta-suave; }
+.logro-fecha { -fx-font-size: 11px; -fx-text-fill: -verde; -fx-font-family: "Nunito SemiBold"; }
+.barra-logros .bar { -fx-background-color: -coral; -fx-background-radius: 5; -fx-background-insets: 0; }
+.barra-logros .track { -fx-background-color: #ece6da; -fx-background-radius: 5; }
+.aviso-logro { -fx-background-color: -tinta, -papel; -fx-background-insets: 0, 2; -fx-background-radius: 16, 14;
+    -fx-padding: 10 18 10 10; -fx-effect: dropshadow(gaussian, rgba(10, 6, 30, 0.45), 16, 0, 0, 6); }
+
+/* ------------------------------------------------------------- tutorial y consejos */
+
+.tutorial-lamina { -fx-background-color: -mar; -fx-background-radius: 14; -fx-border-color: -tinta; -fx-border-width: 3;
+    -fx-border-radius: 14; -fx-padding: 8; }
+.tutorial-texto { -fx-font-size: 15px; }
+.tutorial-tarjeta { -fx-border-color: rgba(29, 43, 79, 0.5); -fx-border-width: 3; -fx-border-radius: 10;
+    -fx-background-color: -mar; -fx-background-radius: 10; }
+.tutorial-tarjeta.seleccionada { -fx-border-color: -sol; }
+.tutorial-continente { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 13px; -fx-text-fill: -rojo;
+    -fx-effect: dropshadow(one-pass-box, white, 2, 0.95, 0, 0); }
+.tutorial-puntos { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 46px; -fx-text-fill: -sol;
+    -fx-effect: dropshadow(one-pass-box, -tinta, 4, 1, 0, 0); }
+.consejo { -fx-background-color: -tinta; -fx-background-radius: 16; -fx-padding: 12 14 12 16;
+    -fx-effect: dropshadow(gaussian, rgba(10, 6, 30, 0.5), 18, 0, 0, 6); }
+.consejo-texto { -fx-text-fill: white; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 14px; }
+.consejo-icono { -fx-font-size: 22px; }
+
+/* ------------------------------------------------------------- modo daltónico */
+/* Verde/rojo cambian a azul/naranja (pareja de Okabe-Ito que se distingue con daltonismo rojo-verde). */
+.daltonico .acierto { -fx-text-fill: #0b6aa8; }
+.daltonico .fallo { -fx-text-fill: #c4500a; }
+.daltonico .barra-tiempo .bar { -fx-background-color: #0b6aa8; }
+.daltonico .barra-tiempo.poco .bar { -fx-background-color: #d55e00; }
+.daltonico .logro-fecha { -fx-text-fill: #0b6aa8; }
 .numero-paso { -fx-background-color: -rojo; -fx-text-fill: white; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 16px;
     -fx-background-radius: 15; }
 

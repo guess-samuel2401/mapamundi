@@ -10,8 +10,8 @@ import com.mapamundi.modelo.Continente;
 import com.mapamundi.modelo.Pais;
 import com.mapamundi.ui.mapa.MapaDecorativo;
 import com.mapamundi.ui.mapa.Miniatura;
-import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -23,7 +23,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -61,11 +61,19 @@ final class PantallaMenu extends StackPane {
     private final Label resumen = FichaPais.etiqueta("", "resumen-partida");
     private final Consumer<Ajustes> jugar;
     private final Puntajes puntajes;
+    private final Contexto ctx;
+    private final Runnable refrescar;
 
-    PantallaMenu(Atlas atlas, Ajustes inicial, Puntajes puntajes, Consumer<Ajustes> jugar) {
+    /**
+     * @param refrescar vuelve a construir el menú (tras cambiar el modo daltónico, para redibujar los mapas)
+     */
+    PantallaMenu(Contexto ctx, Ajustes inicial, Consumer<Ajustes> jugar, Runnable refrescar) {
+        Atlas atlas = ctx.atlas();
+        this.ctx = ctx;
         this.niveles = Nivel.progresion(atlas);
         this.jugar = jugar;
-        this.puntajes = puntajes;
+        this.puntajes = ctx.puntajes();
+        this.refrescar = refrescar;
 
         VBox portada = portada(atlas);
         HBox.setHgrow(portada, Priority.ALWAYS);
@@ -82,6 +90,17 @@ final class PantallaMenu extends StackPane {
         grupoVelocidad.selectedToggleProperty().addListener(o -> actualizarResumen());
         modo.valueProperty().addListener(o -> actualizarResumen());
         actualizarResumen();
+
+        // La primera vez que se abre el juego, la guía de bienvenida.
+        if (!ctx.preferencias().tutorialVisto) Platform.runLater(this::verTutorial);
+    }
+
+    private void verTutorial() {
+        getChildren().removeIf(n -> n.getStyleClass().contains("capa-dialogo"));
+        Tutorial.mostrar(this, ctx.atlas(), () -> {
+            ctx.preferencias().tutorialVisto = true;
+            ctx.preferencias().guardar();
+        });
     }
 
     // ------------------------------------------------------------------ portada
@@ -110,14 +129,30 @@ final class PantallaMenu extends StackPane {
 
         Button records = new Button("🏆  Récords");
         records.getStyleClass().add("boton-fantasma");
-        records.setOnAction(e -> mostrarDialogo("Puntuaciones más altas", tablaPuntajes()));
+        records.setOnAction(e -> Dialogo.mostrar(this, "Puntuaciones más altas", tablaPuntajes()));
         Animaciones.alPasar(records, 1.08, 3);
-        Button ayuda = new Button("?  Cómo se juega");
-        ayuda.getStyleClass().add("boton-fantasma");
-        ayuda.setOnAction(e -> mostrarDialogo("Cómo se juega", comoSeJuega()));
-        Animaciones.alPasar(ayuda, 1.08, 3);
+        Button logros = new Button("🏅  Logros");
+        logros.getStyleClass().add("boton-fantasma");
+        logros.setOnAction(e -> Dialogo.mostrar(this, "Logros e insignias", new PanelLogros(ctx.logros()), 720, null));
+        Animaciones.alPasar(logros, 1.08, 3);
+        Button ayuda = new Button("?");
+        ayuda.getStyleClass().addAll("boton-fantasma", "boton-icono");
+        ayuda.setTooltip(new Tooltip("Cómo se juega"));
+        ayuda.setOnAction(e -> Dialogo.mostrar(this, "Cómo se juega", comoSeJuega()));
+        Animaciones.alPasar(ayuda, 1.1, 3);
+        Button ajustes = new Button("⚙");
+        ajustes.getStyleClass().addAll("boton-fantasma", "boton-icono");
+        ajustes.setTooltip(new Tooltip("Ajustes: música, pantalla completa, modo daltónico…"));
+        boolean[] cambioAspecto = {false};
+        ajustes.setOnAction(e -> Dialogo.mostrar(this, "Ajustes",
+                new PanelAjustes(ctx, () -> cambioAspecto[0] = true, this::verTutorial), 520,
+                () -> {
+                    // Los mapas del menú están dibujados de antemano: se rehace la pantalla para el modo daltónico.
+                    if (cambioAspecto[0]) refrescar.run();
+                }));
+        Animaciones.alPasar(ajustes, 1.1, 3);
 
-        HBox acciones = new HBox(12, botonJugar, records, ayuda);
+        HBox acciones = new HBox(10, botonJugar, records, logros, ayuda, ajustes);
         acciones.setAlignment(Pos.CENTER_LEFT);
 
         VBox v = new VBox(12, cabecera, lema, marco, acciones, resumen);
@@ -311,15 +346,18 @@ final class PantallaMenu extends StackPane {
         return tabla;
     }
 
-    private static Node comoSeJuega() {
+    private Node comoSeJuega() {
         VBox pasos = new VBox(12,
                 paso("1", "Elige el continente", "Aparece un país. Elige su continente con las flechas + Enter, las teclas 1–5 o un clic. Tienes 5 intentos: +100 puntos."),
                 paso("2", "Coloca el país", "Arrástralo con el ratón (o usa las flechas; con Shift va más rápido) y pulsa Enter o Confirmar. La rueda del ratón hace zoom."),
                 paso("3", "Suma puntos", "Si queda dentro del margen (en km reales): +500 y un bonus por los segundos que sobran. Si fallas o se acaba el tiempo, pierdes un corazón ♥ (tienes 5)."),
-                paso("4", "Pausa", "F5, P o Esc detienen el cronómetro."));
-        Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos: Mapamundi original (2003) y Natural Earth.", "texto-suave");
+                paso("4", "Pausa", "F5, P o Esc detienen el cronómetro. F11: pantalla completa."));
+        Button tutorial = new Button("🎓  Ver el tutorial");
+        tutorial.setOnAction(e -> verTutorial());
+        Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos de los países: Wikidata (CC0) "
+                + "y Mapamundi original (2003). Música: composición original del juego.", "texto-suave");
         creditos.setWrapText(true);
-        pasos.getChildren().add(creditos);
+        pasos.getChildren().addAll(tutorial, creditos);
         return pasos;
     }
 
@@ -334,32 +372,5 @@ final class PantallaMenu extends StackPane {
         HBox h = new HBox(12, circulo, v);
         h.setAlignment(Pos.TOP_LEFT);
         return h;
-    }
-
-    private void mostrarDialogo(String titulo, Node contenido) {
-        Button cerrar = new Button("Cerrar");
-        cerrar.getStyleClass().add("boton-principal");
-        cerrar.setCancelButton(true);
-        HBox pie = new HBox(cerrar);
-        pie.setAlignment(Pos.CENTER_RIGHT);
-        VBox caja = new VBox(14, FichaPais.etiqueta(titulo, "titulo-config"), contenido, pie);
-        caja.getStyleClass().add("panel");
-        caja.setMaxSize(620, USE_PREF_SIZE);
-        caja.setOnMouseClicked(e -> e.consume());
-
-        StackPane capa = new StackPane(caja);
-        capa.getStyleClass().add("capa-dialogo");
-        Runnable quitar = () -> getChildren().remove(capa);
-        cerrar.setOnAction(e -> quitar.run());
-        capa.setOnMouseClicked(e -> quitar.run());
-        capa.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE) quitar.run();
-        });
-        getChildren().add(capa);
-        FadeTransition entrada = new FadeTransition(Duration.millis(160), capa);
-        entrada.setFromValue(0);
-        entrada.setToValue(1);
-        entrada.play();
-        cerrar.requestFocus();
     }
 }

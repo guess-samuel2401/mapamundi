@@ -40,11 +40,34 @@ public final class Pintor {
             Color.web("#c4b0e6"), Color.web("#f6b878"), Color.web("#d2bf94"),
     };
 
+    /**
+     * Modo daltónico: tonos de la paleta Okabe-Ito (distinguibles con daltonismo rojo-verde), aclarados para
+     * que se lean los bordes, y además una trama distinta por índice para no depender solo del color.
+     */
+    private static final Color[] PALETA_DALTONICO = {
+            Color.web("#f5b94a"), Color.web("#f2e86b"), Color.web("#d9a0c4"), Color.web("#ee8f5f"),
+            Color.web("#7aa6d8"), Color.web("#c9ad84"), Color.web("#b5cf7f"),
+    };
+    private static final Paint[] TRAMAS = new Paint[PALETA_DALTONICO.length];
+    private static boolean daltonico;
+
     private Pintor() {
     }
 
-    public static Color colorDe(Pais p) {
-        return PALETA[Math.floorMod(p.color() - 1, PALETA.length)];
+    public static void daltonico(boolean activo) {
+        daltonico = activo;
+    }
+
+    public static boolean daltonico() {
+        return daltonico;
+    }
+
+    /** Relleno de un país: su color de la paleta o, en modo daltónico, color + trama. */
+    public static Paint colorDe(Pais p) {
+        int i = Math.floorMod(p.color() - 1, PALETA.length);
+        if (!daltonico) return PALETA[i];
+        if (TRAMAS[i] == null) TRAMAS[i] = Tramas.crear(i, PALETA_DALTONICO[i]);
+        return TRAMAS[i];
     }
 
     /** Agua, territorios no jugables y países; {@code relleno} decide el color de cada país (null = blanco). */

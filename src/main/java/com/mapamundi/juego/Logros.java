@@ -1,0 +1,229 @@
+package com.mapamundi.juego;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mapamundi.modelo.Atlas;
+import com.mapamundi.modelo.Continente;
+import com.mapamundi.modelo.Pais;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+
+/**
+ * Logros e insignias. Algunos se ganan en una sola jugada (puntería, rapidez, racha) y otros
+ * se acumulan entre partidas (países distintos ubicados, continentes completos). Se guardan en
+ * ~/.mapamundi/logros.json; la variable de entorno MAPAMUNDI_LOGROS permite usar otro archivo.
+ */
+public final class Logros {
+
+    public enum Categoria { BRONCE, PLATA, ORO }
+
+    public enum Logro {
+        PRIMER_PAIS("¡Primer país!", "Ubica tu primer país.", "✔", Categoria.BRONCE, 1),
+        RACHA_5("En racha", "Acierta 5 países seguidos en una partida.", "5×", Categoria.BRONCE, 5),
+        RACHA_10("Imparable", "Acierta 10 países seguidos en una partida.", "10×", Categoria.PLATA, 10),
+        RACHA_20("Leyenda viva", "Acierta 20 países seguidos en una partida.", "20×", Categoria.ORO, 20),
+        PUNTERIA("Puntería perfecta", "Ubica un país a menos de 25 km de su lugar.", "◎", Categoria.PLATA, 1),
+        RELAMPAGO("Relámpago", "Acierta usando menos del 20 % del tiempo.", "⚡", Categoria.PLATA, 1),
+        VELOCISTA("Velocista", "Acierta un país en velocidad Rápida.", "»", Categoria.BRONCE, 1),
+        CAPITALES("Experto en capitales", "Acierta 10 países jugando por la capital.", "♛", Categoria.PLATA, 10),
+        DETECTIVE("Detective", "Acierta 10 países en el modo «Solo datos».", "?", Categoria.ORO, 10),
+        SIN_RASGUNO("Sin un rasguño", "Supera un nivel sin perder ningún corazón.", "♥", Categoria.PLATA, 1),
+        NIVEL_3("Explorador", "Llega al nivel 3 (Europa).", "3", Categoria.BRONCE, 1),
+        NIVEL_MUNDO("Ciudadano del mundo", "Llega al nivel «Todo el mundo».", "7", Categoria.ORO, 1),
+        PUNTOS_5000("Gran puntuación", "Consigue 5.000 puntos en una partida.", "5K", Categoria.PLATA, 5000),
+        PUNTOS_15000("Récord histórico", "Consigue 15.000 puntos en una partida.", "15K", Categoria.ORO, 15000),
+        VIAJERO("Viajero", "Ubica 25 países distintos.", "25", Categoria.BRONCE, 25),
+        TROTAMUNDOS("Trotamundos", "Ubica 100 países distintos.", "100", Categoria.PLATA, 100),
+        DUENO_DEL_MUNDO("Dueño del mundo", "Ubica los 197 países.", "197", Categoria.ORO, 197),
+        SUDAMERICA("Sudamérica completa", "Ubica todos los países de Sudamérica.", "SA", Categoria.PLATA, 0),
+        AMERICA("América completa", "Ubica todos los países de América.", "AM", Categoria.ORO, 0),
+        EUROPA("Europa completa", "Ubica todos los países de Europa.", "EU", Categoria.ORO, 0),
+        AFRICA("África completa", "Ubica todos los países de África.", "AF", Categoria.ORO, 0),
+        ASIA("Asia completa", "Ubica todos los países de Asia.", "AS", Categoria.ORO, 0),
+        OCEANIA("Oceanía completa", "Ubica todos los países de Oceanía.", "OC", Categoria.PLATA, 0);
+
+        private final String nombre, descripcion, icono;
+        private final Categoria categoria;
+        private final int objetivo;
+
+        Logro(String nombre, String descripcion, String icono, Categoria categoria, int objetivo) {
+            this.nombre = nombre;
+            this.descripcion = descripcion;
+            this.icono = icono;
+            this.categoria = categoria;
+            this.objetivo = objetivo;
+        }
+
+        public String nombre() { return nombre; }
+        public String descripcion() { return descripcion; }
+        public String icono() { return icono; }
+        public Categoria categoria() { return categoria; }
+    }
+
+    /** Lo que se guarda en disco. */
+    private static final class Estado {
+        Map<String, String> desbloqueados = new LinkedHashMap<>();
+        Set<String> ubicados = new HashSet<>();
+        int aciertos;
+        int aciertosCapital;
+        int aciertosDatos;
+    }
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    private final Path archivo;
+    private final Map<Logro, Set<String>> paisesDeColeccion = new LinkedHashMap<>();
+    private Estado estado;
+    private Resultado revisado;
+    private String nivelRevisado;
+
+    public Logros(Path archivo, Atlas atlas) {
+        this.archivo = archivo;
+        Predicate<Pais> sudamerica = Pais::sudamerica;
+        coleccion(Logro.SUDAMERICA, atlas, sudamerica);
+        coleccion(Logro.AMERICA, atlas, p -> p.continente() == Continente.AMERICA);
+        coleccion(Logro.EUROPA, atlas, p -> p.continente() == Continente.EUROPA);
+        coleccion(Logro.AFRICA, atlas, p -> p.continente() == Continente.AFRICA);
+        coleccion(Logro.ASIA, atlas, p -> p.continente() == Continente.ASIA);
+        coleccion(Logro.OCEANIA, atlas, p -> p.continente() == Continente.OCEANIA);
+        estado = leer();
+    }
+
+    public static Logros delUsuario(Atlas atlas) {
+        String otro = System.getenv("MAPAMUNDI_LOGROS");
+        Path archivo = otro != null && !otro.isBlank() ? Path.of(otro)
+                : Path.of(System.getProperty("user.home"), ".mapamundi", "logros.json");
+        return new Logros(archivo, atlas);
+    }
+
+    private void coleccion(Logro logro, Atlas atlas, Predicate<Pais> filtro) {
+        Set<String> isos = new HashSet<>();
+        for (Pais p : atlas.paises()) if (filtro.test(p)) isos.add(p.iso());
+        paisesDeColeccion.put(logro, isos);
+    }
+
+    // ------------------------------------------------------------------ evaluación
+
+    /**
+     * Revisa la partida tras cada cambio (la llama la pantalla de juego). Devuelve los logros que se
+     * acaban de desbloquear, en orden, para mostrarlos. Cada ronda y cada nivel se cuentan una sola vez.
+     */
+    public List<Logro> revisar(Partida p) {
+        List<Logro> nuevos = new ArrayList<>();
+        Resultado r = p.fase() == Partida.Fase.RESULTADO ? p.resultado() : null;
+        if (r != null && r != revisado) {
+            revisado = r;
+            if (r.acierto()) acierto(p, r, nuevos);
+            comprobar(Logro.PUNTOS_5000, p.puntaje() >= 5000, nuevos);
+            comprobar(Logro.PUNTOS_15000, p.puntaje() >= 15000, nuevos);
+        }
+        String nivel = p.nivelSuperado();
+        if (nivel != null && !nivel.equals(nivelRevisado)) {
+            nivelRevisado = nivel;
+            comprobar(Logro.SIN_RASGUNO, p.nivelSinPerderVidas(), nuevos);
+            comprobar(Logro.NIVEL_3, p.numeroNivel() >= 3, nuevos);
+            comprobar(Logro.NIVEL_MUNDO, p.numeroNivel() >= Nivel.progresionTotal(), nuevos);
+        }
+        if (!nuevos.isEmpty() || r != null) guardar();
+        return nuevos;
+    }
+
+    private void acierto(Partida p, Resultado r, List<Logro> nuevos) {
+        estado.aciertos++;
+        estado.ubicados.add(p.actual().iso());
+        Modo modo = p.ajustes().modo();
+        if (modo.porCapital()) estado.aciertosCapital++;
+        if (modo == Modo.DATOS) estado.aciertosDatos++;
+        Velocidad v = p.ajustes().velocidad();
+        double tiempoRestante = r.bonus() / (double) (v.segundos() * v.bonusPorSegundo());
+
+        comprobar(Logro.PRIMER_PAIS, estado.aciertos >= 1, nuevos);
+        comprobar(Logro.RACHA_5, p.racha() >= 5, nuevos);
+        comprobar(Logro.RACHA_10, p.racha() >= 10, nuevos);
+        comprobar(Logro.RACHA_20, p.racha() >= 20, nuevos);
+        comprobar(Logro.PUNTERIA, r.distanciaKm() < 25, nuevos);
+        comprobar(Logro.RELAMPAGO, tiempoRestante >= 0.8, nuevos);
+        comprobar(Logro.VELOCISTA, v == Velocidad.RAPIDA, nuevos);
+        comprobar(Logro.CAPITALES, estado.aciertosCapital >= Logro.CAPITALES.objetivo, nuevos);
+        comprobar(Logro.DETECTIVE, estado.aciertosDatos >= Logro.DETECTIVE.objetivo, nuevos);
+        comprobar(Logro.VIAJERO, estado.ubicados.size() >= Logro.VIAJERO.objetivo, nuevos);
+        comprobar(Logro.TROTAMUNDOS, estado.ubicados.size() >= Logro.TROTAMUNDOS.objetivo, nuevos);
+        comprobar(Logro.DUENO_DEL_MUNDO, estado.ubicados.size() >= Logro.DUENO_DEL_MUNDO.objetivo, nuevos);
+        paisesDeColeccion.forEach((logro, isos) -> comprobar(logro, estado.ubicados.containsAll(isos), nuevos));
+    }
+
+    private void comprobar(Logro l, boolean conseguido, List<Logro> nuevos) {
+        if (conseguido && !estado.desbloqueados.containsKey(l.name())) {
+            estado.desbloqueados.put(l.name(), LocalDate.now().toString());
+            nuevos.add(l);
+        }
+    }
+
+    // ------------------------------------------------------------------ consultas
+
+    public boolean desbloqueado(Logro l) {
+        return estado.desbloqueados.containsKey(l.name());
+    }
+
+    /** Fecha (AAAA-MM-DD) en que se consiguió, o null. */
+    public String fecha(Logro l) {
+        return estado.desbloqueados.get(l.name());
+    }
+
+    public int cantidadDesbloqueados() {
+        return (int) java.util.Arrays.stream(Logro.values()).filter(this::desbloqueado).count();
+    }
+
+    /** Avance hacia un logro acumulativo, como {actual, objetivo}; null si se gana en una sola jugada. */
+    public int[] progreso(Logro l) {
+        return switch (l) {
+            case CAPITALES -> new int[]{estado.aciertosCapital, l.objetivo};
+            case DETECTIVE -> new int[]{estado.aciertosDatos, l.objetivo};
+            case VIAJERO, TROTAMUNDOS, DUENO_DEL_MUNDO -> new int[]{estado.ubicados.size(), l.objetivo};
+            case SUDAMERICA, AMERICA, EUROPA, AFRICA, ASIA, OCEANIA -> {
+                Set<String> isos = paisesDeColeccion.get(l);
+                int hechos = (int) isos.stream().filter(estado.ubicados::contains).count();
+                yield new int[]{hechos, isos.size()};
+            }
+            default -> null;
+        };
+    }
+
+    // ------------------------------------------------------------------ disco
+
+    private Estado leer() {
+        try {
+            if (Files.exists(archivo)) {
+                Estado e = GSON.fromJson(Files.readString(archivo, StandardCharsets.UTF_8), Estado.class);
+                if (e != null) {
+                    if (e.desbloqueados == null) e.desbloqueados = new LinkedHashMap<>();
+                    if (e.ubicados == null) e.ubicados = new HashSet<>();
+                    return e;
+                }
+            }
+        } catch (IOException | RuntimeException e) {
+            System.err.println("Logros ilegibles, se empieza de cero: " + e.getMessage());
+        }
+        return new Estado();
+    }
+
+    private void guardar() {
+        try {
+            Files.createDirectories(archivo.getParent());
+            Files.writeString(archivo, GSON.toJson(estado), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.err.println("No se pudieron guardar los logros: " + e.getMessage());
+        }
+    }
+}

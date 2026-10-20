@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Puntajes;
 import javafx.application.Platform;
@@ -8,14 +9,17 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
+
 /** Fin de la partida: si el puntaje entra en el top 10 se pide el nombre (FrmIngresoDatos del original). */
 final class PantallaFin extends VBox {
 
-    PantallaFin(Partida partida, Puntajes puntajes, Runnable menu, Runnable otraVez) {
+    PantallaFin(Partida partida, Puntajes puntajes, List<Logro> insignias, Runnable menu, Runnable otraVez) {
         super(14);
         setPadding(new Insets(20, 32, 24, 32));
         setAlignment(Pos.TOP_CENTER);
@@ -26,12 +30,23 @@ final class PantallaFin extends VBox {
         HBox cifras = new HBox(10,
                 cifra("Puntaje", String.valueOf(partida.puntaje())),
                 cifra("Países ubicados", String.valueOf(partida.ubicados().size())),
+                cifra("Mejor racha", String.valueOf(partida.mejorRacha())),
                 cifra("Nivel", partida.nivel().nombre()));
         cifras.setAlignment(Pos.CENTER);
 
         VBox tarjeta = new VBox(12, globo, FichaPais.etiqueta("Fin del juego", "titulo-mapa-grande"), cifras);
         tarjeta.getStyleClass().add("panel");
         tarjeta.setAlignment(Pos.CENTER);
+        if (!insignias.isEmpty()) {
+            FlowPane lista = new FlowPane(14, 8);
+            lista.setAlignment(Pos.CENTER);
+            for (Logro l : insignias) {
+                HBox h = new HBox(6, new Insignia(l, true, 16), FichaPais.etiqueta(l.nombre(), "logro-nombre"));
+                h.setAlignment(Pos.CENTER_LEFT);
+                lista.getChildren().add(h);
+            }
+            tarjeta.getChildren().addAll(FichaPais.etiqueta("INSIGNIAS CONSEGUIDAS EN ESTA PARTIDA", "titulo-seccion"), lista);
+        }
 
         VBox tabla = new VBox(new TablaPuntajes(puntajes.leer(), null));
 
