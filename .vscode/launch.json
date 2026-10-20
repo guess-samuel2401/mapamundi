@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Jugar Mapamundi",
+      "request": "launch",
+      "mainClass": "com.mapamundi.Lanzador",
+      "projectName": "mapamundi",
+      "vmArgs": "--enable-native-access=ALL-UNNAMED"
+    }
+  ]
+}

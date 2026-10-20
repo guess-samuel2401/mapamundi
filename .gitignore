@@ -1,0 +1,5 @@
+target/
+herramientas/fuentes/
+herramientas/__pycache__/
+*.log
+.idea/

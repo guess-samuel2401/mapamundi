@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Jugar (Maven)",
+      "type": "shell",
+      "command": "./mvnw javafx:run",
+      "windows": { "command": ".\\mvnw.cmd javafx:run" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pruebas",
+      "type": "shell",
+      "command": "./mvnw test",
+      "windows": { "command": ".\\mvnw.cmd test" },
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

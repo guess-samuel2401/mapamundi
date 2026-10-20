@@ -1,0 +1,131 @@
+/* Colores del Mapamundi original (formularios de Visual FoxPro). */
+.root {
+    -agua: #65b1b1;
+    -agua-claro: #8fcaca;
+    -agua-oscuro: #2f7878;
+    -salmon: #ffa980;
+    -salmon-claro: #ffd2bb;
+    -rojo: #e0001b;
+    -tinta: #14213d;
+    -amarillo: #ffe600;
+    -verde: #1f9d55;
+    -fx-background-color: -agua;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: -tinta;
+    -fx-focus-color: -amarillo;
+    -fx-faint-focus-color: transparent;
+}
+
+.label {
+    -fx-text-fill: -tinta;
+}
+
+/* Títulos rojos con borde negro, como "África", "América"… del original. */
+.titulo-mapa, .titulo-mapa-grande, .titulo-mapa-mediano {
+    -fx-font-family: "Arial Black", "Arial";
+    -fx-font-weight: bold;
+    -fx-text-fill: -rojo;
+    -fx-effect: dropshadow(one-pass-box, black, 2, 1, 0, 0);
+}
+.titulo-mapa { -fx-font-size: 22px; }
+.titulo-mapa-grande { -fx-font-size: 40px; }
+.titulo-mapa-mediano { -fx-font-size: 24px; }
+.titulo-portada { -fx-font-family: "Arial Black"; -fx-font-size: 64px; -fx-text-fill: -rojo;
+    -fx-effect: dropshadow(one-pass-box, black, 3, 1, 2, 2); }
+
+.subtitulo-rojo { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 14px; }
+.pista-tipo { -fx-text-fill: derive(-tinta, 40%); -fx-font-size: 11px; -fx-font-weight: bold; }
+.texto-suave { -fx-text-fill: derive(-tinta, 45%); -fx-font-size: 12px; }
+.negrita { -fx-font-weight: bold; }
+
+/* Paneles salmón con relieve. */
+.panel {
+    -fx-background-color: -tinta, -salmon-claro;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 16, 14;
+    -fx-padding: 14;
+    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 5);
+}
+
+.hud {
+    -fx-background-color: -tinta, -salmon;
+    -fx-background-insets: 0, 0 0 2 0;
+    -fx-padding: 8 16 8 16;
+}
+.hud-clave { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 11px; }
+.hud-valor { -fx-font-weight: bold; -fx-font-size: 15px; }
+.hud-puntaje { -fx-font-family: "Consolas", monospace; -fx-text-fill: -agua-oscuro; -fx-font-weight: bold; -fx-font-size: 16px; }
+.estrellas { -fx-font-size: 18px; -fx-text-fill: #e6b800; }
+
+.barra-tiempo .bar { -fx-background-color: -verde; -fx-background-radius: 6; -fx-background-insets: 0; }
+.barra-tiempo.poco .bar { -fx-background-color: -rojo; }
+.barra-tiempo .track { -fx-background-color: -tinta, rgba(255, 255, 255, 0.6); -fx-background-insets: 0, 1;
+    -fx-background-radius: 6; }
+
+/* Botones con relieve, al estilo Windows 98 pero redondeados. */
+.button, .toggle-button {
+    -fx-background-color: -tinta, -salmon;
+    -fx-background-insets: 0 0 -4 0, 0;
+    -fx-background-radius: 12;
+    -fx-border-color: -tinta;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-font-weight: bold;
+    -fx-text-fill: -tinta;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+.button:hover, .toggle-button:hover { -fx-background-color: -tinta, derive(-salmon, 15%); }
+.button:pressed, .toggle-button:pressed { -fx-translate-y: 3; -fx-background-insets: 0 0 -1 0, 0; }
+.button:focused { -fx-border-color: -amarillo; }
+.boton-principal, .toggle-button:selected { -fx-background-color: -tinta, -amarillo; }
+.boton-principal:hover, .toggle-button:selected:hover { -fx-background-color: -tinta, derive(-amarillo, 30%); }
+.boton-grande { -fx-font-size: 20px; -fx-padding: 12 28 12 28; }
+.cruceta .button { -fx-padding: 6 0 6 0; -fx-min-width: 42; -fx-min-height: 40; -fx-font-size: 15px; }
+
+/* Botones de continente de la fase 1. */
+.tarjeta-continente {
+    -fx-background-color: -tinta, -agua-claro;
+    -fx-background-insets: 0 0 -5 0, 0;
+    -fx-border-color: rgba(20, 33, 61, 0.6);
+    -fx-border-width: 4;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 6;
+}
+.tarjeta-continente.seleccionada { -fx-border-color: -amarillo; }
+.tarjeta-continente:disabled { -fx-opacity: 0.4; }
+.marca-error { -fx-font-size: 90px; -fx-text-fill: -rojo; -fx-font-weight: bold; }
+.numero-tecla { -fx-background-color: rgba(20, 33, 61, 0.75); -fx-text-fill: white; -fx-font-weight: bold;
+    -fx-padding: 1 6 1 6; -fx-background-radius: 4; }
+
+.mapa {
+    -fx-effect: dropshadow(gaussian, rgba(20, 33, 61, 0.45), 0, 0, 0, 5);
+}
+
+.ficha { -fx-background-color: rgba(255, 255, 255, 0.6); -fx-background-radius: 8; -fx-padding: 8; }
+.ficha-clave { -fx-text-fill: -rojo; -fx-font-weight: bold; -fx-font-size: 12px; }
+.ficha-valor { -fx-font-size: 12px; }
+
+.acierto { -fx-text-fill: -verde; -fx-font-size: 20px; -fx-font-weight: bold; }
+.fallo { -fx-text-fill: -rojo; -fx-font-size: 20px; -fx-font-weight: bold; }
+
+.opcion { -fx-padding: 4 8 4 8; -fx-background-radius: 8; }
+.opcion:selected, .opcion.activa { -fx-background-color: rgba(255, 230, 0, 0.6); }
+.radio-button, .check-box { -fx-text-fill: -tinta; -fx-font-weight: bold; }
+.radio-button .radio, .check-box .box { -fx-border-color: -tinta; -fx-background-color: white; }
+.radio-button .radio { -fx-border-radius: 1em; -fx-background-radius: 1em; }
+.radio-button .dot { -fx-background-radius: 1em; }
+.radio-button:selected .dot, .check-box:selected .mark { -fx-background-color: -rojo; }
+
+.scroll-pane, .scroll-pane > .viewport { -fx-background-color: transparent; }
+.text-field { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; -fx-background-radius: 12;
+    -fx-padding: 8 12 8 12; -fx-font-weight: bold; }
+
+.capa-pausa { -fx-background-color: rgba(47, 120, 120, 0.75); }
+.cartel-nivel { -fx-background-color: -tinta, -salmon-claro; -fx-background-insets: 0, 3; -fx-background-radius: 16;
+    -fx-padding: 12 30 12 30; }
+
+.tabla-puntajes .fila-par { -fx-background-color: rgba(255, 255, 255, 0.35); }
+.tabla-puntajes .fila-nueva { -fx-background-color: rgba(255, 230, 0, 0.7); }
