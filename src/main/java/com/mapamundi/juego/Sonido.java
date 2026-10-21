@@ -1,15 +1,15 @@
 package com.mapamundi.juego;
 
-/** Los sonidos .wav del juego original. */
+/** Los efectos de sonido del juego (sintetizados con herramientas/crear_efectos.py). */
 public enum Sonido {
-    CONTINENTE_CORRECTO("figuracorrecta"),
-    CONTINENTE_EQUIVOCADO("escogemal"),
-    UBICADO("gano"),
-    MAL_UBICADO("perdio"),
-    FIN_TIEMPO("fintiempo"),
-    FIN_PARTIDA("perdiotreserrores"),
-    NIVEL_SUPERADO("figuracompleta"),
-    LOGRO("figuracompleta");
+    CONTINENTE_CORRECTO("continente_correcto"),
+    CONTINENTE_EQUIVOCADO("continente_error"),
+    UBICADO("ubicado"),
+    MAL_UBICADO("mal_ubicado"),
+    FIN_TIEMPO("fin_tiempo"),
+    FIN_PARTIDA("fin_partida"),
+    NIVEL_SUPERADO("nivel_superado"),
+    LOGRO("logro");
 
     private final String archivo;
 

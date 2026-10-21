@@ -14,7 +14,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Efectos (los .wav originales) y música de fondo (composiciones propias del juego).
+ * Efectos y música de fondo, ambos composiciones propias del juego.
  * Si el equipo no tiene audio, el juego sigue en silencio.
  */
 public final class Sonidos {

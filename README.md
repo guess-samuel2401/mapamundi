@@ -153,7 +153,8 @@ src/main/java/com/mapamundi/
   ui/mapa/                    dibujo del mapa en Canvas, zoom, arrastre
 src/main/resources/com/mapamundi/
   datos/paises.json           generado (fronteras + datos)
-  sonidos/                    los .wav del juego original
+  sonidos/                    efectos de sonido (generados con herramientas/crear_efectos.py)
+  musica/                     música de fondo (generada con herramientas/crear_musica.py)
   estilos.css                 colores del original
 herramientas/                 scripts de Python para generar los datos
 ```
@@ -186,13 +187,17 @@ juego original. La religión y las exportaciones siguen siendo las del juego de 
 La música de fondo (`src/main/resources/com/mapamundi/musica/`) es original, sintetizada con
 `python herramientas/crear_musica.py` (necesita numpy); los bucles están mezclados para repetirse sin corte.
 
-`herramientas/adpcm_a_pcm.py` convierte sonidos MS-ADPCM (como `FinTiempo.wav`) a PCM, que es lo que reproduce JavaFX.
+Los efectos de sonido (`src/main/resources/com/mapamundi/sonidos/`) también son originales: los sintetiza
+`python herramientas/crear_efectos.py` con los mismos timbres y la misma tonalidad (do mayor) que la música.
+Hay uno para cada momento: continente correcto o equivocado, país ubicado o mal ubicado, fin del tiempo,
+fin de la partida, nivel superado e insignia conseguida.
 
 ## Créditos
 
 - Fronteras: [Natural Earth](https://www.naturalearthdata.com/) 1:50m, dominio público.
 - Capital, población, superficie, idiomas, moneda y PIB: [Wikidata](https://www.wikidata.org/) (CC0).
 - Religión, exportaciones e imágenes de referencia: Mapamundi original (2000–2003).
+- Música y efectos de sonido: composiciones originales del juego, sintetizadas por código.
 - Tipografías: [Baloo 2](https://github.com/EkType/Baloo2) (títulos y números) y
   [Nunito](https://github.com/googlefonts/nunito) (texto), licencia SIL Open Font License 1.1
   (`src/main/resources/com/mapamundi/fuentes/OFL-*.txt`). Los archivos estáticos vienen de Fontsource y

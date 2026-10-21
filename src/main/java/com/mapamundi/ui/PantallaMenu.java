@@ -394,7 +394,7 @@ final class PantallaMenu extends StackPane {
         Button tutorial = new Button("🎓  Ver el tutorial");
         tutorial.setOnAction(e -> verTutorial());
         Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos de los países: Wikidata (CC0) "
-                + "y Mapamundi original (2003). Música: composición original del juego.", "texto-suave");
+                + "y Mapamundi original (2003). Música y efectos de sonido: composiciones originales del juego.", "texto-suave");
         creditos.setWrapText(true);
         pasos.getChildren().addAll(tutorial, creditos);
         return pasos;
