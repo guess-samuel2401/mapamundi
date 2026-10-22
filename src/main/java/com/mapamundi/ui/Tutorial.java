@@ -1194,22 +1194,6 @@ final class Tutorial {
                 gc.setEffect(bien ? new DropShadow(14, Pintor.SOL) : new DropShadow(4, 2, 3, Pintor.TINTA.deriveColor(0, 1, 1, 0.45)));
                 Pintor.forma(gc, f.nucleo(), du, dv, tr, Pintor.colorDe(kenia), Pintor.BORDE, 1.3);
                 gc.setEffect(null);
-                if (!bien) {
-                    double cx = tr.x(f.anclaU() + du), cy = tr.y(f.anclaV() + dv);
-                    double ang = switch (fase) {
-                        case "der" -> 0;
-                        case "izq" -> Math.PI;
-                        default -> Math.PI / 2;
-                    };
-                    double x = cx + Math.cos(ang) * 24, y = cy + Math.sin(ang) * 24;
-                    double[] xs = {x + Math.cos(ang) * 8, x + Math.cos(ang + 2.3) * 8, x + Math.cos(ang - 2.3) * 8};
-                    double[] ys = {y + Math.sin(ang) * 8, y + Math.sin(ang + 2.3) * 8, y + Math.sin(ang - 2.3) * 8};
-                    gc.setFill(Pintor.SOL);
-                    gc.setStroke(Pintor.TINTA);
-                    gc.setLineWidth(1.6);
-                    gc.fillPolygon(xs, ys, 3);
-                    gc.strokePolygon(xs, ys, 3);
-                }
             }
         });
         return e;

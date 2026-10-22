@@ -110,7 +110,6 @@ public final class MapaClasico extends Region {
         }
         gc.setGlobalAlpha(1);
         if (quieta) return;
-        flecha(gc, cx, cy, partida.direccion());
         String rotulo = switch (partida.ajustes().modo()) {
             case DATOS -> null;
             case MAPA_CAPITAL, CAPITAL -> pais.capital();
@@ -130,23 +129,5 @@ public final class MapaClasico extends Region {
             gc.setTextBaseline(VPos.CENTER);
             gc.fillText(rotulo, cx, y + 11.5);
         }
-    }
-
-    /** Una flecha amarilla junto a la pieza que indica hacia dónde se mueve. */
-    private static void flecha(GraphicsContext gc, double cx, double cy, PartidaClasica.Direccion d) {
-        double ang = switch (d) {
-            case ARRIBA -> -Math.PI / 2;
-            case ABAJO -> Math.PI / 2;
-            case IZQUIERDA -> Math.PI;
-            case DERECHA -> 0;
-        };
-        double r = 26, x = cx + Math.cos(ang) * r, y = cy + Math.sin(ang) * r;
-        double[] xs = {x + Math.cos(ang) * 9, x + Math.cos(ang + 2.3) * 9, x + Math.cos(ang - 2.3) * 9};
-        double[] ys = {y + Math.sin(ang) * 9, y + Math.sin(ang + 2.3) * 9, y + Math.sin(ang - 2.3) * 9};
-        gc.setFill(Pintor.SOL);
-        gc.setStroke(Pintor.TINTA);
-        gc.setLineWidth(1.8);
-        gc.fillPolygon(xs, ys, 3);
-        gc.strokePolygon(xs, ys, 3);
     }
 }
