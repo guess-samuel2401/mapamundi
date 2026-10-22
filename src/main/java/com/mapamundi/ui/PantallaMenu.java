@@ -301,6 +301,12 @@ final class PantallaMenu extends StackPane {
         Node seccionNivel = seccion(t("menu.nivel"), t("menu.nivel.nota", Partida.PAISES_POR_NIVEL));
         Node seccionContinentes = seccion(t("menu.continentes"), null);
         Node seccionReglas = seccion(t("menu.reglas"), t("menu.reglas.nota"));
+        // El estilo clásico tiene su propio ritmo: la velocidad se ve, pero deshabilitada y con una nota.
+        Node seccionVelocidad = seccion(t("menu.velocidad"), null);
+        Node seccionVelocidadClasico = seccion(t("menu.velocidad"), t("menu.velocidad.clasico"));
+        mostrarSi(seccionVelocidad, clasico.not());
+        mostrarSi(seccionVelocidadClasico, clasico);
+        segmentos.disableProperty().bind(clasico);
         mostrarSi(seccionNivel, clasico.not());
         mostrarSi(seccionContinentes, clasico);
         mostrarSi(seccionReglas, clasico.not());
@@ -309,7 +315,7 @@ final class PantallaMenu extends StackPane {
         VBox v = new VBox(7,
                 cabecera, explicacionClasico,
                 seccionNivel, seccionContinentes, fichas, continentes,
-                seccion(t("menu.velocidad"), null), segmentos,
+                seccionVelocidad, seccionVelocidadClasico, segmentos,
                 seccion(t("menu.modo"), null), modo, ayudaModo,
                 seccionReglas, reglas,
                 mostrarDatos, empuje, record);
@@ -404,7 +410,7 @@ final class PantallaMenu extends StackPane {
             String elegidos = String.join(", ", casillas.entrySet().stream().filter(e -> e.getValue().isSelected())
                     .map(e -> e.getKey().nombre()).toList());
             resumen.setText(t("clasico.nombre") + "   ·   " + (elegidos.isEmpty() ? t("menu.resumen.personalizado") : elegidos)
-                    + "   ·   " + v.nombre() + "   ·   " + modo.getValue().nombre());
+                    + "   ·   " + modo.getValue().nombre());
             return;
         }
         String nivel = i < 0 ? t("menu.resumen.personalizado") : t("menu.resumen.nivel", i + 1, niveles.get(i).nombre());

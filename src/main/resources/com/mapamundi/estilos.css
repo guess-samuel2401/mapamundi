@@ -278,6 +278,7 @@
 .segmento:hover { -fx-background-color: #f1edf9; }
 .segmento:selected { -fx-background-color: -tinta; }
 .segmento:selected .label { -fx-text-fill: white; }
+.segmento:disabled { -fx-opacity: 0.4; }
 .segmento-titulo { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px; }
 .segmento-detalle { -fx-font-size: 12px; }
 

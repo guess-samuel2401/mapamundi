@@ -32,7 +32,7 @@ import java.util.function.Consumer;
  * ya no salen más países suyos; completar todos los elegidos gana la partida.
  *
  * <p>El reloj lo pone la interfaz: llama a {@link #ticCaida}, {@link #ticMovimiento} y {@link #ticReloj}
- * con los intervalos de {@link #ritmo}.
+ * con los intervalos de {@link #RITMO}.
  */
 public final class PartidaClasica {
 
@@ -61,11 +61,20 @@ public final class PartidaClasica {
         }
     }
 
-    /** Milisegundos entre tics de cada reloj, según la velocidad (los Timer del original). */
+    /** Milisegundos entre tics de cada reloj (los Timer del original). */
     public record Ritmo(int caida, int movimiento, int reloj) {
         /** Ctrl + flecha: la pieza va rápido. */
         public static final int MOVIMIENTO_RAPIDO = 30;
     }
+
+    /**
+     * El estilo clásico tiene un solo ritmo, el de la velocidad "Normal" del original (la elección de
+     * velocidad del menú no se usa): el país cae un paso cada 450 ms, la pieza avanza cada 130 ms y la barra
+     * de tiempo del mapa se llena en unos 38 s.
+     */
+    public static final Ritmo RITMO = new Ritmo(450, 130, 150);
+    /** Margen para los países diminutos: vale soltar la pieza a menos de esto de su lugar. */
+    public static final int MARGEN_KM = 150;
 
     public enum Motivo {
         UBICADO, LEJOS, TIEMPO_CAIDA, CONTINENTE_EQUIVOCADO, TIEMPO_MAPA;
@@ -124,14 +133,6 @@ public final class PartidaClasica {
 
     public void alSonar(Consumer<Sonido> c) {
         alSonar = c;
-    }
-
-    public static Ritmo ritmo(Velocidad v) {
-        return switch (v) {
-            case LENTA -> new Ritmo(700, 200, 400);
-            case NORMAL -> new Ritmo(450, 130, 150);
-            case RAPIDA -> new Ritmo(200, 100, 90);
-        };
     }
 
     /** Puntos por país: 10 en "Mapa y nombre del país" … 50 en "Solo datos del país". */
@@ -203,20 +204,20 @@ public final class PartidaClasica {
             reloj = PASOS_RELOJ;
             fallar(new Resultado(false, Motivo.TIEMPO_MAPA, distanciaKm(), 0, null), Sonido.FIN_TIEMPO);
         } else {
-            if (reloj % Math.max(1, 400 / ritmo(ajustes.velocidad()).reloj()) == 0) sonar(Sonido.TIC);
+            if (reloj % Math.max(1, 400 / RITMO.reloj()) == 0) sonar(Sonido.TIC);
             cambio();
         }
     }
 
     /**
      * Enter: se suelta la pieza. Vale si su centro cae dentro del país (como el recuadro del original)
-     * o a menos del margen de la velocidad elegida (para los países diminutos).
+     * o a menos de {@link #MARGEN_KM} (para los países diminutos).
      */
     public void confirmar() {
         if (fase != Fase.UBICACION || pausa) return;
         Forma f = actual.forma();
         double km = distanciaKm();
-        boolean acierto = f.contiene(f.anclaU() + despU, f.anclaV() + despV) || km <= ajustes.velocidad().toleranciaKm();
+        boolean acierto = f.contiene(f.anclaU() + despU, f.anclaV() + despV) || km <= MARGEN_KM;
         if (!acierto) {
             fallar(new Resultado(false, Motivo.LEJOS, km, 0, null), Sonido.MAL_UBICADO);
             return;

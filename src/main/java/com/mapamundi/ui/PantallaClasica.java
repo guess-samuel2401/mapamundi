@@ -92,7 +92,7 @@ final class PantallaClasica extends StackPane {
         this.partida = partida;
         this.ctx = ctx;
         this.sonidos = ctx.sonidos();
-        this.ritmo = PartidaClasica.ritmo(partida.ajustes().velocidad());
+        this.ritmo = PartidaClasica.RITMO;
         this.mapa = new MapaClasico(ctx.atlas());
 
         cuerpo.setTop(cabecera());
@@ -149,7 +149,7 @@ final class PantallaClasica extends StackPane {
         Label estilo = FichaPais.etiqueta(t("clasico.nombre"), "insignia-clasico");
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
-        Label modo = FichaPais.etiqueta(partida.ajustes().modo().nombre() + " · " + partida.ajustes().velocidad().nombre(), "texto-suave");
+        Label modo = FichaPais.etiqueta(partida.ajustes().modo().nombre(), "texto-suave");
         Button pausa = new Button("⏸ F5");
         for (Button b : new Button[]{sonido, pausa}) b.setFocusTraversable(false);
         sonido.setOnAction(e -> {
