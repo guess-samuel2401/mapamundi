@@ -92,10 +92,7 @@ public final class MapaClasico extends Region {
             gc.fillText("★", rx, ry);
             gc.strokeText("★", rx, ry);
         }
-        if (partida.enPausa()) {
-            gc.setFill(Pintor.FONDO_OSCURO.deriveColor(0, 1, 1, 0.92));
-            gc.fillRect(0, 0, t.ancho(), t.alto());
-        }
+        // En pausa el mapa sigue a la vista: el menú de pausa se muestra encima.
     }
 
     private void dibujarPieza(GraphicsContext gc, Transformacion t, Pais pais, Forma f, double du, double dv, boolean quieta) {

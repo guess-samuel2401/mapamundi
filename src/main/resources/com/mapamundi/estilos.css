@@ -163,7 +163,7 @@
 .text-field { -fx-background-color: -tinta, white; -fx-background-insets: 0, 2; -fx-background-radius: 12;
     -fx-padding: 8 12 8 12; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 15px; }
 
-.capa-pausa { -fx-background-color: rgba(42, 33, 80, 0.85); }
+.capa-pausa { -fx-background-color: rgba(42, 33, 80, 0.3); }
 .cartel-nivel { -fx-background-color: -tinta, -papel; -fx-background-insets: 0, 3; -fx-background-radius: 18;
     -fx-padding: 12 30 12 30; }
 
