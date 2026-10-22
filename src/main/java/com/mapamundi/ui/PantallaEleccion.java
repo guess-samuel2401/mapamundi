@@ -140,20 +140,21 @@ final class PantallaEleccion extends StackPane {
 
     // ------------------------------------------------------------------ las dos pantallas
 
-    /** «¿Con qué continente quieres jugar?»: todo el mundo y los cinco continentes. */
+    /** «¿Con qué continente quieres jugar?»: los cinco continentes y, al final, todo el mundo. */
     static PantallaEleccion continentes(Contexto ctx, Set<Continente> inicial, Consumer<Set<Continente>> alElegir,
                                         Runnable refrescar, Runnable aprender) {
         Atlas atlas = ctx.atlas();
         List<Set<Continente>> zonas = new ArrayList<>();
         List<Opcion> opciones = new ArrayList<>();
-        zonas.add(EnumSet.allOf(Continente.class));
-        opciones.add(new Opcion(Miniatura.region(atlas, Region.deGrados(-170, 190, -56, 78), p -> true, 230, 130),
-                t("eleccion.mundo"), t("menu.paises", atlas.paises().size())));
         for (Continente c : Continente.values()) {
             zonas.add(EnumSet.of(c));
             long n = atlas.paises().stream().filter(p -> p.continente() == c).count();
             opciones.add(new Opcion(Miniatura.continente(atlas, c, 230, 130), c.nombre(), t("menu.paises", n)));
         }
+        // Todo el mundo, al final.
+        zonas.add(EnumSet.allOf(Continente.class));
+        opciones.add(new Opcion(Miniatura.region(atlas, Region.deGrados(-170, 190, -56, 78), p -> true, 230, 130),
+                t("eleccion.mundo"), t("menu.paises", atlas.paises().size())));
         return new PantallaEleccion(ctx, t("eleccion.continente.titulo"), t("eleccion.continente.ayuda"), opciones, 3, 250,
                 Math.max(0, zonas.indexOf(inicial)), i -> alElegir.accept(zonas.get(i)), null, refrescar, aprender);
     }
