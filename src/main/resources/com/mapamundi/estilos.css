@@ -384,6 +384,52 @@
     -fx-effect: dropshadow(one-pass-box, white, 2, 0.95, 0, 0); }
 .tutorial-puntos { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 46px; -fx-text-fill: -sol;
     -fx-effect: dropshadow(one-pass-box, -tinta, 4, 1, 0, 0); }
+.tutorial .tutorial-lamina { -fx-background-color: #f6ecdb; -fx-padding: 5; }
+.tutorial-capitulo { -fx-background-color: -tinta, #ece3d3; -fx-background-insets: 0, 2; -fx-background-radius: 16, 14;
+    -fx-padding: 5 16 5 16; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 13px; -fx-text-fill: -tinta-suave;
+    -fx-cursor: hand; }
+.tutorial-capitulo:hover { -fx-background-color: -tinta, -coral-claro; }
+.tutorial-capitulo.activo { -fx-background-color: -tinta, -sol; -fx-text-fill: -tinta; }
+.tutorial-puntos-mini { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 26px; -fx-text-fill: -sol;
+    -fx-effect: dropshadow(one-pass-box, -tinta, 3, 1, 0, 0); }
+.tut-tarjeta { -fx-background-color: -tinta, -papel-2; -fx-background-insets: 0, 2; -fx-background-radius: 14, 12;
+    -fx-padding: 14; -fx-opacity: 0.6; }
+.tut-tarjeta.resaltada { -fx-background-color: -sol, -sol-claro; -fx-background-insets: 0, 3; -fx-opacity: 1;
+    -fx-effect: dropshadow(gaussian, rgba(255, 210, 63, 0.9), 18, 0.3, 0, 0); }
+.tut-escenario { -fx-background-color: -tinta, -papel-2; -fx-background-insets: 0, 2; -fx-background-radius: 14, 12;
+    -fx-padding: 10; }
+.tut-flecha { -fx-font-size: 30px; -fx-text-fill: -tinta-suave; }
+.tut-fila { -fx-background-color: transparent; -fx-background-radius: 10; -fx-padding: 6 10 6 10; }
+.tut-fila.activa { -fx-background-color: -tinta, -sol-claro; -fx-background-insets: 0, 2; }
+.tut-racha { -fx-background-color: rgba(29, 43, 79, 0.35), -papel-2; -fx-background-insets: 0, 2;
+    -fx-background-radius: 23; -fx-font-size: 22px; -fx-font-family: "Nunito ExtraBold"; -fx-text-fill: white; }
+.tut-racha.ok { -fx-background-color: -tinta, -verde; }
+.tut-racha.mal { -fx-background-color: -tinta, -rojo; }
+.tut-error { -fx-background-color: rgba(29, 43, 79, 0.4), -papel-2; -fx-background-insets: 0, 2; -fx-background-radius: 6;
+    -fx-font-size: 16px; -fx-font-family: "Nunito ExtraBold"; -fx-text-fill: white; }
+.tut-error.mal { -fx-background-color: -tinta, -rojo; }
+.tut-tachado { -fx-background-color: #e8dfd0; -fx-background-radius: 10; -fx-padding: 2 8 2 8; -fx-text-fill: -rojo-texto;
+    -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; -fx-strikethrough: true; }
+.tut-tachado .text { -fx-strikethrough: true; }
+.tut-continente-chip { -fx-background-color: -sol-claro; -fx-background-radius: 10; -fx-padding: 2 8 2 8;
+    -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; -fx-text-fill: -tinta; }
+.boton-pista-tut { -fx-background-color: -tinta, -papel-2; -fx-background-insets: 0, 2; -fx-background-radius: 8, 6;
+    -fx-padding: 6 10 6 10; -fx-font-family: "Nunito Bold"; -fx-font-size: 14px; -fx-text-fill: -tinta; }
+.boton-pista-tut.activa { -fx-background-color: -tinta, -sol; }
+.tecla { -fx-background-color: -tinta, linear-gradient(#ffffff, #e9e1d3); -fx-background-insets: 0, 1.5 1.5 3.5 1.5;
+    -fx-background-radius: 7, 6; -fx-padding: 3 9 6 9; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 14px;
+    -fx-text-fill: -tinta; }
+.tecla.activa { -fx-background-color: -tinta, -sol; -fx-background-insets: 2 0 0 0, 3.5 1.5 1.5 1.5; -fx-padding: 5 9 4 9;
+    -fx-effect: dropshadow(gaussian, rgba(255, 210, 63, 0.9), 12, 0.4, 0, 0); }
+.mini-boton { -fx-background-color: -sol; -fx-background-radius: 8; -fx-padding: 3 10 3 10;
+    -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px; -fx-text-fill: -tinta; }
+.mini-jugar { -fx-background-color: -tinta, -sol; -fx-background-insets: 0, 2; -fx-background-radius: 16, 14;
+    -fx-padding: 14 22 14 22; -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 22px; -fx-text-fill: -tinta; -fx-opacity: 0.6; }
+.mini-jugar.resaltada { -fx-opacity: 1; -fx-effect: dropshadow(gaussian, rgba(255, 210, 63, 0.95), 22, 0.4, 0, 0);
+    -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.marca-error-mini { -fx-font-size: 54px; -fx-text-fill: -rojo; -fx-font-family: "Nunito ExtraBold";
+    -fx-effect: dropshadow(one-pass-box, white, 3, 1, 0, 0); }
+.estilo-icono-grande { -fx-background-color: -tinta; -fx-text-fill: -sol; -fx-background-radius: 32; -fx-font-size: 30px; }
 .consejo { -fx-background-color: -tinta; -fx-background-radius: 16; -fx-padding: 12 14 12 16;
     -fx-effect: dropshadow(gaussian, rgba(10, 6, 30, 0.5), 18, 0, 0, 6); }
 .consejo-texto { -fx-text-fill: white; -fx-font-family: "Nunito SemiBold"; -fx-font-size: 14px; }

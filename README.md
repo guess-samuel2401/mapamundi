@@ -107,9 +107,13 @@ Como en el original, se eligen los continentes con los que jugar, la ficha del p
 ### Idioma y tutorial
 
 Cada vez que se abre el programa, lo primero es elegir el **idioma: español o inglés** (con un clic, ← → y Enter,
-o las teclas 1 y 2; viene marcado el último usado). Después aparece el **tutorial** de 5 pasos, que se puede
-saltar y volver a ver desde el botón **?** o desde Ajustes. Durante la primera partida salen, además,
-consejos breves en la parte de abajo.
+o las teclas 1 y 2; viene marcado el último usado). Después aparece el **tutorial animado** de 14 pasos,
+en cuatro capítulos (introducción, estilo moderno, estilo clásico y controles) a los que se salta con las
+pestañas de arriba. Cada paso tiene una pequeña animación: el continente que se elige, la pieza que se arrastra
+hasta su lugar, la racha con el ×2 y el ×3, las tres pistas, las reglas extra, las insignias, el país que cae
+y la pieza clásica que nunca se detiene. Se navega con ← → y Enter, se cierra con Esc y se puede volver a ver
+desde el botón **?** o desde Ajustes. Durante la primera partida salen, además, consejos breves en la parte de
+abajo.
 
 Todo el juego está traducido: menús, reglas, logros y los datos de los 197 países (nombres, capitales, idiomas,
 monedas, religión y exportaciones; las cifras se muestran con el formato de cada idioma). Los textos de la
