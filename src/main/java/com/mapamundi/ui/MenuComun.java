@@ -48,6 +48,20 @@ final class MenuComun {
         ayuda.setTooltip(new Tooltip(t("menu.comoSeJuega")));
         ayuda.setOnAction(e -> Dialogo.mostrar(contenedor, t("menu.comoSeJuega"), comoSeJuega(verTutorial)));
         Animaciones.alPasar(ayuda, 1.1, 3);
+        // Música de fondo: activar o quitar con un clic (lo mismo que la casilla de Ajustes).
+        Preferencias pref = ctx.preferencias();
+        Button musica = new Button();
+        musica.getStyleClass().addAll("boton-fantasma", "boton-icono");
+        musica.setTooltip(new Tooltip(t("ajustes.musica")));
+        Runnable iconoMusica = () -> musica.setText(pref.musica ? "🎵" : "🔇");
+        iconoMusica.run();
+        musica.setOnAction(e -> {
+            pref.musica = !pref.musica;
+            ctx.sonidos().aplicarVolumenMusica();
+            pref.guardar();
+            iconoMusica.run();
+        });
+        Animaciones.alPasar(musica, 1.1, 3);
         Button ajustes = new Button("⚙");
         ajustes.getStyleClass().addAll("boton-fantasma", "boton-icono");
         ajustes.setTooltip(new Tooltip(t("menu.ajustes.ayuda")));
@@ -55,13 +69,14 @@ final class MenuComun {
         ajustes.setOnAction(e -> Dialogo.mostrar(contenedor, t("ajustes.titulo"),
                 new PanelAjustes(ctx, () -> cambioAspecto[0] = true, verTutorial), 520,
                 () -> {
+                    iconoMusica.run();
                     // Los mapas están dibujados de antemano: se rehace la pantalla para el modo daltónico.
                     if (cambioAspecto[0]) refrescar.run();
                 }));
         Animaciones.alPasar(ajustes, 1.1, 3);
         // Sin foco de teclado: si no, el primero sale resaltado nada más abrir la pantalla.
-        for (Button b : new Button[]{records, logros, ayuda, ajustes}) b.setFocusTraversable(false);
-        HBox h = new HBox(10, records, logros, ayuda, ajustes);
+        for (Button b : new Button[]{records, logros, ayuda, musica, ajustes}) b.setFocusTraversable(false);
+        HBox h = new HBox(10, records, logros, ayuda, musica, ajustes);
         h.setAlignment(Pos.CENTER_RIGHT);
         return h;
     }
