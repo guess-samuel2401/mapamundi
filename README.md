@@ -27,7 +27,7 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 Al abrir el programa: **idioma** → **configuración de la partida** (paso 1, con el tutorial encima) →
 **inicio de partida** (paso 2) → juego.
 
-- **Paso 1 · Configura tu partida:** el estilo (Moderno o Clásico 2000, en dos tarjetas grandes), el nivel o los
+- **Paso 1 · Configura tu partida:** el estilo («Arrastra y ubica» o «Cae y ubica», en dos tarjetas grandes), el nivel o los
   continentes (tarjetas con su mapa), el modo de juego (cinco opciones a la vista, con su explicación y su
   dificultad de ● a ●●●●●), las reglas extra y si se muestra la ficha del país.
   **Continuar** (o Enter) lleva al paso 2.
@@ -79,10 +79,10 @@ elige la velocidad: todas las partidas (modernas y clásicas) tienen el mismo ri
 **Modos** (los del original): Mapa y nombre del país · Mapa y nombre de la capital · Solo nombre del país ·
 Solo nombre de la capital · Solo datos del país.
 
-### Estilo clásico (2000)
+### Estilo «Cae y ubica» (como el original del 2000)
 
-En *Configura tu partida* se elige el estilo: **Moderno** (todo lo anterior) o
-**Clásico (2000)**, que recrea la jugabilidad del Mapamundi original a partir de su código fuente en Visual FoxPro
+En *Configura tu partida* se elige el estilo: **Arrastra y ubica** (todo lo anterior) o
+**Cae y ubica**, que recrea la jugabilidad del Mapamundi original a partir de su código fuente en Visual FoxPro
 (`frmprincipal`, `frmafrica`… y `errores.prg`):
 
 1. **El país cae** desde arriba, un paso por tic y con un "bip" (cada 450 ms, el ritmo de la velocidad "Normal"
@@ -102,13 +102,13 @@ En *Configura tu partida* se elige el estilo: **Moderno** (todo lo anterior) o
 
 Como en el original, se eligen los continentes con los que jugar, la ficha del país se ve durante la jugada si
 "Mostrar los datos del país" está marcado, y en los modos sin forma la pieza es un cuadradito oscuro (la
-"sombra"). Las reglas extra, las pistas y las insignias son solo del estilo moderno.
+"sombra"). Las reglas extra, las pistas y las insignias son solo del estilo «Arrastra y ubica».
 
 ### Idioma y tutorial
 
 Cada vez que se abre el programa, lo primero es elegir el **idioma: español o inglés** (con un clic, ← → y Enter,
 o las teclas 1 y 2; viene marcado el último usado). Después aparece el **tutorial animado** de 14 pasos,
-en cuatro capítulos (introducción, estilo moderno, estilo clásico y controles) a los que se salta con las
+en cuatro capítulos (introducción, «Arrastra y ubica», «Cae y ubica» y controles) a los que se salta con las
 pestañas de arriba. Cada paso tiene una pequeña animación: el continente que se elige, la pieza que se arrastra
 hasta su lugar, la racha con el ×2 y el ×3, las tres pistas, las reglas extra, las insignias, el país que cae
 y la pieza clásica que nunca se detiene. Se navega con ← → y Enter, se cierra con Esc y se puede volver a ver
