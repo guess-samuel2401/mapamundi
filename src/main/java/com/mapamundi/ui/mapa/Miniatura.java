@@ -48,10 +48,10 @@ public final class Miniatura {
         return canvas;
     }
 
-    /** La figura geométrica que hace de pieza en los modos sin forma (ver {@link Pintor#figura}). */
+    /** El círculo de color que hace de pieza en los modos sin forma (ver {@link Pintor#figura}). */
     public static Canvas figura(Pais pais, double lado) {
         Canvas canvas = new Canvas(lado * 1.5, lado * 1.5);
-        Pintor.figura(canvas.getGraphicsContext2D(), pais, lado * 0.75, lado * 0.75, lado, Pintor.TINTA, Pintor.SOL, 2.5);
+        Pintor.figura(canvas.getGraphicsContext2D(), pais, lado * 0.75, lado * 0.75, lado, Pintor.TINTA, 2.5);
         return canvas;
     }
 }

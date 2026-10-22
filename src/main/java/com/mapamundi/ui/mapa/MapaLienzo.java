@@ -34,7 +34,7 @@ public final class MapaLienzo extends Region {
 
     /** Área mínima (px) para poder agarrar países diminutos como Andorra o Tuvalu. */
     private static final double AGARRE_MIN = 34;
-    /** Tamaño en pantalla de la figura que hace de pieza en los modos sin forma. */
+    /** Tamaño en pantalla del círculo que hace de pieza en los modos sin forma. */
     private static final double LADO_FIGURA = 26;
     private static final double ZOOM_MAX = 12;
     /** "Frío o caliente": de rojo (en el margen de acierto) a azul (a 12 márgenes o más). */
@@ -181,7 +181,7 @@ public final class MapaLienzo extends Region {
             Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.colorDe(pais), Pintor.BORDE, 1.2);
         } else {
             if (calor == null) gc.setEffect(new DropShadow(6, Pintor.SOL));
-            Pintor.figura(gc, pais, px, py, LADO_FIGURA, Pintor.TINTA.deriveColor(0, 1, 1, 0.9), Pintor.SOL, 2);
+            Pintor.figura(gc, pais, px, py, LADO_FIGURA, Pintor.TINTA, 2);
         }
         gc.restore();
         gc.setEffect(null);

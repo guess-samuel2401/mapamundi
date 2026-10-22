@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 
 /**
  * El mapa del continente en el modo clásico: los países ya ubicados en color y la pieza, que se mueve sola.
- * En los modos sin forma, la pieza es una figura geométrica (como la "sombra" ShpPais del original), que no delata
+ * En los modos sin forma, la pieza es un círculo de color (como la "sombra" ShpPais del original), que no delata
  * la silueta del país.
  */
 public final class MapaClasico extends Region {
@@ -108,7 +108,7 @@ public final class MapaClasico extends Region {
             gc.setEffect(null);
             arriba = Math.min(cy - 10, t.y(f.cajaNucleo().vMin() + dv));
         } else {
-            Pintor.figura(gc, pais, cx, cy, LADO_FIGURA, Pintor.TINTA, Pintor.SOL, 2);
+            Pintor.figura(gc, pais, cx, cy, LADO_FIGURA, Pintor.TINTA, 2);
             arriba = cy - LADO_FIGURA;
         }
         gc.setGlobalAlpha(1);

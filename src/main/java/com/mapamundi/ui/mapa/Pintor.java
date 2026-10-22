@@ -118,42 +118,17 @@ public final class Pintor {
     }
 
     /**
-     * En los modos sin forma la pieza es una figura geométrica, para no delatar la silueta del país. Cada país
-     * tiene siempre la misma: círculo, cuadrado, triángulo, rombo, estrella o hexágono.
+     * En los modos sin forma la pieza es un círculo, para no delatar la silueta del país. Solo cambia su color:
+     * el mismo que tiene el país en el mapa (en modo daltónico, con su trama).
      */
-    public static void figura(GraphicsContext gc, Pais p, double cx, double cy, double lado, Paint relleno, Paint borde, double grosor) {
+    public static void figura(GraphicsContext gc, Pais p, double cx, double cy, double lado, Paint borde, double grosor) {
         double r = lado / 2;
-        gc.beginPath();
-        switch (Math.floorMod(p.iso().hashCode(), 6)) {
-            case 0 -> gc.arc(cx, cy, r, r, 0, 360);
-            case 1 -> poligono(gc, cx, cy, r * 1.25, 4, 45);
-            case 2 -> poligono(gc, cx, cy, r * 1.25, 3, -90);
-            case 3 -> poligono(gc, cx, cy, r * 1.2, 4, -90);
-            case 4 -> {
-                for (int i = 0; i < 10; i++) {
-                    double radio = i % 2 == 0 ? r * 1.3 : r * 0.6, a = Math.toRadians(-90 + 36 * i);
-                    if (i == 0) gc.moveTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
-                    else gc.lineTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
-                }
-            }
-            default -> poligono(gc, cx, cy, r * 1.1, 6, 0);
-        }
-        gc.closePath();
-        gc.setFill(relleno);
-        gc.fill();
+        gc.setFill(colorDe(p));
+        gc.fillOval(cx - r, cy - r, lado, lado);
         if (borde != null && grosor > 0) {
             gc.setStroke(borde);
             gc.setLineWidth(grosor);
-            gc.setLineJoin(StrokeLineJoin.ROUND);
-            gc.stroke();
-        }
-    }
-
-    private static void poligono(GraphicsContext gc, double cx, double cy, double radio, int lados, double inicio) {
-        for (int i = 0; i < lados; i++) {
-            double a = Math.toRadians(inicio + 360.0 * i / lados);
-            if (i == 0) gc.moveTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
-            else gc.lineTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
+            gc.strokeOval(cx - r, cy - r, lado, lado);
         }
     }
 

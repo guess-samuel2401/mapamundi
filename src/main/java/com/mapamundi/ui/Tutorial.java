@@ -451,7 +451,7 @@ final class Tutorial {
         return r;
     }
 
-    /** Los cinco modos: la pieza cambia según el modo (forma, figura geométrica o solo datos). */
+    /** Los cinco modos: la pieza cambia según el modo (forma, círculo de color o solo datos). */
     private static Escena cincoModos(Atlas atlas) {
         Escena e = new Escena();
         Pais ecuador = pais(atlas, "EC");

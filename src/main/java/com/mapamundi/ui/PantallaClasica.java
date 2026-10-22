@@ -296,7 +296,7 @@ final class PantallaClasica extends StackPane {
         mostrado = r;
     }
 
-    /** La pieza que cae: la silueta del país (o una figura geométrica) con su nombre o su capital encima. */
+    /** La pieza que cae: la silueta del país (o un círculo de color) con su nombre o su capital encima. */
     private void armarPieza() {
         Pais p = partida.actual();
         pieza.getChildren().clear();

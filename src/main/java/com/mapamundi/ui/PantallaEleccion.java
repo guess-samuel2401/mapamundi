@@ -179,7 +179,7 @@ final class PantallaEleccion extends StackPane {
         return continentes.stream().map(Continente::nombre).collect(Collectors.joining(", "));
     }
 
-    /** Cómo se ve la pieza en cada reto: la silueta o una figura, con el nombre, la capital o una interrogación. */
+    /** Cómo se ve la pieza en cada reto: la silueta o un círculo de color, con el nombre, la capital o una interrogación. */
     private static Node muestra(Pais p, Modo m) {
         String rotulo = switch (m) {
             case DATOS -> "?";
