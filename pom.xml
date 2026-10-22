@@ -6,7 +6,7 @@
 
   <groupId>com.mapamundi</groupId>
   <artifactId>mapamundi</artifactId>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
   <name>Mapamundi</name>
   <description>Juego de geografía: ubica cada país en el mapa del mundo.</description>
 
