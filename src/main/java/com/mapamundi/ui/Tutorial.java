@@ -436,7 +436,7 @@ final class Tutorial {
         return r;
     }
 
-    /** Los cinco modos: la pieza cambia según el modo (forma, sombra o solo datos). */
+    /** Los cinco modos: la pieza cambia según el modo (forma, figura geométrica o solo datos). */
     private static Escena cincoModos(Atlas atlas) {
         Escena e = new Escena();
         Pais ecuador = pais(atlas, "EC");
@@ -477,11 +477,7 @@ final class Tutorial {
                     if (m.muestraForma()) {
                         v.getChildren().add(Miniatura.silueta(ecuador, 190, 150));
                     } else {
-                        Region sombra = new Region();
-                        sombra.getStyleClass().add("sombra-clasica");
-                        sombra.setMinSize(26, 26);
-                        sombra.setMaxSize(26, 26);
-                        v.getChildren().add(sombra);
+                        v.getChildren().add(Miniatura.figura(ecuador, 46));
                     }
                 }
                 escenario.getChildren().setAll(v);

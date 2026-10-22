@@ -19,11 +19,12 @@ import javafx.scene.text.TextAlignment;
 
 /**
  * El mapa del continente en el modo clásico: los países ya ubicados en color y la pieza, que se mueve sola.
- * En los modos sin forma, la pieza es un cuadradito oscuro, como la "sombra" (ShpPais) del original.
+ * En los modos sin forma, la pieza es una figura geométrica (como la "sombra" ShpPais del original), que no delata
+ * la silueta del país.
  */
 public final class MapaClasico extends Region {
 
-    private static final double LADO_SOMBRA = 16;
+    private static final double LADO_FIGURA = 22;
 
     private final Canvas canvas = new Canvas();
     private final Atlas atlas;
@@ -107,12 +108,8 @@ public final class MapaClasico extends Region {
             gc.setEffect(null);
             arriba = Math.min(cy - 10, t.y(f.cajaNucleo().vMin() + dv));
         } else {
-            gc.setFill(Pintor.TINTA);
-            gc.setStroke(Pintor.SOL);
-            gc.setLineWidth(2);
-            gc.fillRect(cx - LADO_SOMBRA / 2, cy - LADO_SOMBRA / 2, LADO_SOMBRA, LADO_SOMBRA);
-            gc.strokeRect(cx - LADO_SOMBRA / 2, cy - LADO_SOMBRA / 2, LADO_SOMBRA, LADO_SOMBRA);
-            arriba = cy - LADO_SOMBRA;
+            Pintor.figura(gc, pais, cx, cy, LADO_FIGURA, Pintor.TINTA, Pintor.SOL, 2);
+            arriba = cy - LADO_FIGURA;
         }
         gc.setGlobalAlpha(1);
         if (quieta) return;

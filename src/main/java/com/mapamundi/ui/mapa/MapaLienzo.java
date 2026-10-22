@@ -34,6 +34,8 @@ public final class MapaLienzo extends Region {
 
     /** Área mínima (px) para poder agarrar países diminutos como Andorra o Tuvalu. */
     private static final double AGARRE_MIN = 34;
+    /** Tamaño en pantalla de la figura que hace de pieza en los modos sin forma. */
+    private static final double LADO_FIGURA = 26;
     private static final double ZOOM_MAX = 12;
     /** "Frío o caliente": de rojo (en el margen de acierto) a azul (a 12 márgenes o más). */
     private static final Color[] TEMPERATURA = {
@@ -179,7 +181,7 @@ public final class MapaLienzo extends Region {
             Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.colorDe(pais), Pintor.BORDE, 1.2);
         } else {
             if (calor == null) gc.setEffect(new DropShadow(6, Pintor.SOL));
-            Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.TINTA.deriveColor(0, 1, 1, 0.85), null, 0);
+            Pintor.figura(gc, pais, px, py, LADO_FIGURA, Pintor.TINTA.deriveColor(0, 1, 1, 0.9), Pintor.SOL, 2);
         }
         gc.restore();
         gc.setEffect(null);
@@ -320,6 +322,10 @@ public final class MapaLienzo extends Region {
 
     /** Caja de la pieza en pantalla {xMin, yMin, xMax, yMax}, contando su giro. */
     private double[] cajaPantalla(Transformacion t, Forma f, double du, double dv) {
+        if (!partida.ajustes().modo().muestraForma()) {
+            double px = t.x(f.anclaU() + du), py = t.y(f.anclaV() + dv), m = LADO_FIGURA * 0.65;
+            return new double[]{px - m, py - m, px + m, py + m};
+        }
         com.mapamundi.geo.Region c = f.cajaNucleo();
         double x0 = t.x(c.uMin() + du), y0 = t.y(c.vMin() + dv), x1 = t.x(c.uMax() + du), y1 = t.y(c.vMax() + dv);
         int giro = partida.giro();

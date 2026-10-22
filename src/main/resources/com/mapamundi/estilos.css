@@ -267,7 +267,6 @@
     -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.35), 0, 0, 0, 6); }
 .rotulo-caida { -fx-background-color: rgba(29, 43, 79, 0.9); -fx-text-fill: white; -fx-font-family: "Nunito ExtraBold";
     -fx-font-size: 16px; -fx-padding: 2 10 2 10; -fx-background-radius: 10; }
-.sombra-clasica { -fx-background-color: -sol, -tinta; -fx-background-insets: 0, 3; }
 .mapa-completo { -fx-background-color: rgba(29, 43, 79, 0.88); -fx-text-fill: -sol; -fx-font-family: "Baloo 2 ExtraBold";
     -fx-font-size: 15px; -fx-padding: 2 10 2 10; -fx-background-radius: 8; -fx-rotate: -8; }
 

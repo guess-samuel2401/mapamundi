@@ -24,7 +24,7 @@ public enum Modo {
         return Textos.t("modo." + name() + ".ayuda");
     }
 
-    /** Si se ve la forma real del país (en colores) o solo una sombra. */
+    /** Si se ve la forma real del país (en colores) o, en su lugar, una figura geométrica. */
     public boolean muestraForma() {
         return muestraForma;
     }

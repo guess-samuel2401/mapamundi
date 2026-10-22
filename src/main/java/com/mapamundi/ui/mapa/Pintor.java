@@ -117,6 +117,46 @@ public final class Pintor {
         }
     }
 
+    /**
+     * En los modos sin forma la pieza es una figura geométrica, para no delatar la silueta del país. Cada país
+     * tiene siempre la misma: círculo, cuadrado, triángulo, rombo, estrella o hexágono.
+     */
+    public static void figura(GraphicsContext gc, Pais p, double cx, double cy, double lado, Paint relleno, Paint borde, double grosor) {
+        double r = lado / 2;
+        gc.beginPath();
+        switch (Math.floorMod(p.iso().hashCode(), 6)) {
+            case 0 -> gc.arc(cx, cy, r, r, 0, 360);
+            case 1 -> poligono(gc, cx, cy, r * 1.25, 4, 45);
+            case 2 -> poligono(gc, cx, cy, r * 1.25, 3, -90);
+            case 3 -> poligono(gc, cx, cy, r * 1.2, 4, -90);
+            case 4 -> {
+                for (int i = 0; i < 10; i++) {
+                    double radio = i % 2 == 0 ? r * 1.3 : r * 0.6, a = Math.toRadians(-90 + 36 * i);
+                    if (i == 0) gc.moveTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
+                    else gc.lineTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
+                }
+            }
+            default -> poligono(gc, cx, cy, r * 1.1, 6, 0);
+        }
+        gc.closePath();
+        gc.setFill(relleno);
+        gc.fill();
+        if (borde != null && grosor > 0) {
+            gc.setStroke(borde);
+            gc.setLineWidth(grosor);
+            gc.setLineJoin(StrokeLineJoin.ROUND);
+            gc.stroke();
+        }
+    }
+
+    private static void poligono(GraphicsContext gc, double cx, double cy, double radio, int lados, double inicio) {
+        for (int i = 0; i < lados; i++) {
+            double a = Math.toRadians(inicio + 360.0 * i / lados);
+            if (i == 0) gc.moveTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
+            else gc.lineTo(cx + radio * Math.cos(a), cy + radio * Math.sin(a));
+        }
+    }
+
     /** Dibuja una forma centrada y ajustada a un recuadro (siluetas de la fase 1). */
     public static void ajustada(GraphicsContext gc, List<Anillo> anillos, Region caja, double x, double y, double ancho, double alto,
                                 Paint relleno, Paint borde, double grosor) {

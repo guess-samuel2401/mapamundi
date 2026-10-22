@@ -296,7 +296,7 @@ final class PantallaClasica extends StackPane {
         mostrado = r;
     }
 
-    /** La pieza que cae: la silueta del país (o la sombra) con su nombre o su capital encima. */
+    /** La pieza que cae: la silueta del país (o una figura geométrica) con su nombre o su capital encima. */
     private void armarPieza() {
         Pais p = partida.actual();
         pieza.getChildren().clear();
@@ -309,11 +309,7 @@ final class PantallaClasica extends StackPane {
         if (partida.ajustes().modo().muestraForma()) {
             pieza.getChildren().add(Miniatura.silueta(p, 150, 115));
         } else {
-            Region sombra = new Region();
-            sombra.getStyleClass().add("sombra-clasica");
-            sombra.setMinSize(22, 22);
-            sombra.setMaxSize(22, 22);
-            pieza.getChildren().add(sombra);
+            pieza.getChildren().add(Miniatura.figura(p, 34));
         }
     }
 

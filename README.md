@@ -101,8 +101,8 @@ En *Configura tu partida* se elige el estilo: **Arrastra y ubica** (todo lo ante
    apaga; completar todos los elegidos gana la partida.
 
 Como en el original, se eligen los continentes con los que jugar, la ficha del país se ve durante la jugada si
-"Mostrar los datos del país" está marcado, y en los modos sin forma la pieza es un cuadradito oscuro (la
-"sombra"). Las reglas extra, las pistas y las insignias son solo del estilo «Arrastra y ubica».
+"Mostrar los datos del país" está marcado, y en los modos sin forma («Solo nombre…» y «Solo datos») la pieza
+es una figura geométrica (círculo, cuadrado, triángulo, rombo, estrella o hexágono) que no delata la silueta del país. Las reglas extra, las pistas y las insignias son solo del estilo «Arrastra y ubica».
 
 ### Idioma y tutorial
 
