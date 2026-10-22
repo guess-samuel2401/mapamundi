@@ -2,6 +2,7 @@ package com.mapamundi.i18n;
 
 import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Modo;
+import com.mapamundi.juego.PartidaClasica;
 import com.mapamundi.juego.Pista;
 import com.mapamundi.juego.Resultado;
 import com.mapamundi.juego.Velocidad;
@@ -60,7 +61,8 @@ class TextosTest {
         for (Resultado.Motivo m : Resultado.Motivo.values()) claves.add("motivo." + m.name());
         for (Pista p : Pista.values()) claves.addAll(List.of("pista." + p.name() + ".nombre", "pista." + p.name() + ".descripcion"));
         for (Logro l : Logro.values()) claves.addAll(List.of("logro." + l.name() + ".nombre", "logro." + l.name() + ".descripcion"));
-        for (String fase : List.of("continente", "mapa", "resultado")) claves.add("consejo." + fase);
+        for (String fase : List.of("continente", "mapa", "resultado", "clasico.caida", "clasico.mapa")) claves.add("consejo." + fase);
+        for (PartidaClasica.Motivo m : PartidaClasica.Motivo.values()) claves.add("clasico.motivo." + m.name());
         assertTrue(claves.size() > 150, "se encontraron " + claves.size() + " claves");
         for (Idioma i : Idioma.values()) {
             List<String> faltan = claves.stream().filter(c -> !Textos.claves(i).contains(c)).distinct().toList();

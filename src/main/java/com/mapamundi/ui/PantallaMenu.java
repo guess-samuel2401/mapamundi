@@ -13,6 +13,8 @@ import com.mapamundi.modelo.Pais;
 import com.mapamundi.ui.mapa.MapaDecorativo;
 import com.mapamundi.ui.mapa.Miniatura;
 import javafx.animation.ScaleTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,6 +59,7 @@ final class PantallaMenu extends StackPane {
     private final List<Nivel> niveles;
     private final ToggleGroup grupoNivel = new ToggleGroup();
     private final ToggleGroup grupoVelocidad = new ToggleGroup();
+    private final ToggleGroup grupoEstilo = new ToggleGroup();
     private final ComboBox<Modo> modo = new ComboBox<>();
     private final CheckBox mostrarDatos = new CheckBox(t("menu.mostrarDatos"));
     private final ToggleButton contrarreloj = interruptor("◷  " + t("regla.contrarreloj"),
@@ -182,6 +185,38 @@ final class PantallaMenu extends StackPane {
     private VBox configuracion(Atlas atlas, Ajustes inicial) {
         Label titulo = FichaPais.etiqueta(t("menu.configura"), "titulo-config");
 
+        // Estilo de juego: el moderno o el del Mapamundi original de 2000.
+        // Va en la misma línea que el título, en pequeño, para que el panel siga cabiendo en 768 px.
+        HBox estilos = new HBox();
+        String[][] opciones = {{t("estilo.moderno"), t("estilo.moderno.detalle")}, {t("clasico.nombre"), t("estilo.clasico.detalle")}};
+        for (int i = 0; i < 2; i++) {
+            ToggleButton b = new ToggleButton(opciones[i][0]);
+            b.getStyleClass().setAll("segmento", "segmento-titulo", i == 0 ? "segmento-izq" : "segmento-der");
+            Tooltip ayuda = new Tooltip(opciones[i][1]);
+            ayuda.setShowDelay(Duration.millis(250));
+            b.setTooltip(ayuda);
+            b.setToggleGroup(grupoEstilo);
+            b.setUserData(i == 1);
+            b.setSelected((i == 1) == inicial.clasico());
+            Animaciones.alPasar(b, 1.04, 2);
+            estilos.getChildren().add(b);
+        }
+        estilos.setAlignment(Pos.CENTER_RIGHT);
+        Region separacion = new Region();
+        HBox.setHgrow(separacion, Priority.ALWAYS);
+        HBox cabecera = new HBox(10, titulo, separacion, estilos);
+        cabecera.setAlignment(Pos.CENTER_LEFT);
+        grupoEstilo.selectedToggleProperty().addListener((o, antes, ahora) -> {
+            if (ahora == null) antes.setSelected(true);
+            actualizarResumen();
+        });
+        BooleanBinding clasico = Bindings.createBooleanBinding(
+                () -> grupoEstilo.getSelectedToggle() != null && (Boolean) grupoEstilo.getSelectedToggle().getUserData(),
+                grupoEstilo.selectedToggleProperty());
+        Label explicacionClasico = FichaPais.etiqueta(t("estilo.clasico.explicacion"), "texto-suave");
+        explicacionClasico.setWrapText(true);
+        mostrarSi(explicacionClasico, clasico);
+
         // Nivel: fichas con mini-mapa
         GridPane fichas = new GridPane();
         fichas.setHgap(10);
@@ -208,11 +243,13 @@ final class PantallaMenu extends StackPane {
         for (Continente c : Continente.values()) {
             CheckBox cb = new CheckBox(c.nombre());
             cb.setSelected(inicial.continentes().contains(c));
+            cb.selectedProperty().addListener(o -> actualizarResumen());
             casillas.put(c, cb);
             continentes.getChildren().add(cb);
         }
-        continentes.visibleProperty().bind(personal.selectedProperty());
-        continentes.managedProperty().bind(personal.selectedProperty());
+        // En el clásico se eligen los continentes, como en el formulario "Nivel" del original.
+        mostrarSi(continentes, personal.selectedProperty().or(clasico));
+        mostrarSi(fichas, clasico.not());
 
         // Velocidad: control segmentado
         HBox segmentos = new HBox();
@@ -259,15 +296,22 @@ final class PantallaMenu extends StackPane {
         Region empuje = new Region();
         VBox.setVgrow(empuje, Priority.ALWAYS);
         Node record = recordActual();
-        record.visibleProperty().bind(personal.selectedProperty().not());
-        record.managedProperty().bind(personal.selectedProperty().not());
+        mostrarSi(record, personal.selectedProperty().not().or(clasico));
+
+        Node seccionNivel = seccion(t("menu.nivel"), t("menu.nivel.nota", Partida.PAISES_POR_NIVEL));
+        Node seccionContinentes = seccion(t("menu.continentes"), null);
+        Node seccionReglas = seccion(t("menu.reglas"), t("menu.reglas.nota"));
+        mostrarSi(seccionNivel, clasico.not());
+        mostrarSi(seccionContinentes, clasico);
+        mostrarSi(seccionReglas, clasico.not());
+        mostrarSi(reglas, clasico.not());
 
         VBox v = new VBox(7,
-                titulo,
-                seccion(t("menu.nivel"), t("menu.nivel.nota", Partida.PAISES_POR_NIVEL)), fichas, continentes,
+                cabecera, explicacionClasico,
+                seccionNivel, seccionContinentes, fichas, continentes,
                 seccion(t("menu.velocidad"), null), segmentos,
                 seccion(t("menu.modo"), null), modo, ayudaModo,
-                seccion(t("menu.reglas"), t("menu.reglas.nota")), reglas,
+                seccionReglas, reglas,
                 mostrarDatos, empuje, record);
         v.getStyleClass().add("panel");
         v.setPrefWidth(ANCHO_CONFIG);
@@ -301,6 +345,16 @@ final class PantallaMenu extends StackPane {
         b.setPrefWidth((ANCHO_CONFIG - 40) / 2);
         Animaciones.alPasar(b, 1.05, 3);
         return b;
+    }
+
+    /** Muestra el nodo (y le deja sitio) solo mientras se cumpla la condición. */
+    private static void mostrarSi(Node nodo, javafx.beans.value.ObservableValue<Boolean> condicion) {
+        nodo.visibleProperty().bind(condicion);
+        nodo.managedProperty().bind(condicion);
+    }
+
+    private boolean clasicoElegido() {
+        return grupoEstilo.getSelectedToggle() != null && (Boolean) grupoEstilo.getSelectedToggle().getUserData();
     }
 
     private static VBox dosLineas(String arriba, String abajo, String claseArriba, String claseAbajo) {
@@ -346,6 +400,13 @@ final class PantallaMenu extends StackPane {
         if (grupoNivel.getSelectedToggle() == null || grupoVelocidad.getSelectedToggle() == null || modo.getValue() == null) return;
         int i = (Integer) grupoNivel.getSelectedToggle().getUserData();
         Velocidad v = (Velocidad) grupoVelocidad.getSelectedToggle().getUserData();
+        if (clasicoElegido()) {
+            String elegidos = String.join(", ", casillas.entrySet().stream().filter(e -> e.getValue().isSelected())
+                    .map(e -> e.getKey().nombre()).toList());
+            resumen.setText(t("clasico.nombre") + "   ·   " + (elegidos.isEmpty() ? t("menu.resumen.personalizado") : elegidos)
+                    + "   ·   " + v.nombre() + "   ·   " + modo.getValue().nombre());
+            return;
+        }
         String nivel = i < 0 ? t("menu.resumen.personalizado") : t("menu.resumen.nivel", i + 1, niveles.get(i).nombre());
         String tiempo = contrarreloj.isSelected()
                 ? t("regla.contrarreloj") + " (" + Partida.SEGUNDOS_CONTRARRELOJ + " s, ±" + v.toleranciaKm() + " km)"
@@ -361,12 +422,13 @@ final class PantallaMenu extends StackPane {
         casillas.forEach((c, cb) -> {
             if (cb.isSelected()) elegidos.add(c);
         });
+        boolean clasico = clasicoElegido();
         jugar.accept(new Ajustes(
                 (Velocidad) grupoVelocidad.getSelectedToggle().getUserData(),
                 modo.getValue(),
                 (Integer) grupoNivel.getSelectedToggle().getUserData(),
                 elegidos.isEmpty() ? EnumSet.allOf(Continente.class) : elegidos,
-                mostrarDatos.isSelected(), contrarreloj.isSelected(), frioCaliente.isSelected(), piezaGirada.isSelected()));
+                mostrarDatos.isSelected(), contrarreloj.isSelected(), frioCaliente.isSelected(), piezaGirada.isSelected(), clasico));
     }
 
     // ------------------------------------------------------------------ ventanas superpuestas
@@ -385,7 +447,8 @@ final class PantallaMenu extends StackPane {
                 paso("3", t("ayuda.3.titulo"), t("ayuda.3.texto")),
                 paso("4", t("ayuda.4.titulo"), t("ayuda.4.texto")),
                 paso("5", t("ayuda.5.titulo"), t("ayuda.5.texto", Partida.SEGUNDOS_CONTRARRELOJ)),
-                paso("6", t("ayuda.6.titulo"), t("ayuda.6.texto")));
+                paso("6", t("ayuda.6.titulo"), t("ayuda.6.texto")),
+                paso("7", t("ayuda.7.titulo"), t("ayuda.7.texto")));
         Button tutorial = new Button("🎓  " + t("ayuda.verTutorial"));
         tutorial.setOnAction(e -> verTutorial());
         Label creditos = FichaPais.etiqueta(t("ayuda.creditos"), "texto-suave");

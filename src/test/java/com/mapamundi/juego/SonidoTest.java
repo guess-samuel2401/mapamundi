@@ -26,7 +26,7 @@ class SonidoTest {
                 assertEquals(AudioFormat.Encoding.PCM_SIGNED, f.getEncoding(), ruta);
                 assertEquals(16, f.getSampleSizeInBits(), ruta);
                 double segundos = audio.getFrameLength() / f.getFrameRate();
-                assertTrue(segundos > 0.2 && segundos < 3, ruta + " dura " + segundos + " s");
+                assertTrue(segundos > 0.05 && segundos < 3, ruta + " dura " + segundos + " s");
             }
         }
     }

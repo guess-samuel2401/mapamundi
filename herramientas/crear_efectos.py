@@ -11,6 +11,7 @@ de una pieza. Genera en src/main/resources/com/mapamundi/sonidos/:
   fin_partida.wav          frase descendente en menor, más larga
   nivel_superado.wav       pequeña fanfarria con acorde final
   logro.wav                destello de campanas que sube
+  tic.wav                  "bip" corto del modo clásico (cada paso de la caída)
 
 Uso: python herramientas/crear_efectos.py   (necesita numpy)
 """
@@ -216,6 +217,11 @@ def logro():
     e.guardar('logro.wav', 0.75)
 
 
+def tic_clasico():
+    # El "bip" del modo clásico, que suena en cada paso: corto, suave y de madera, para que no canse.
+    Efecto(0.09).poner(marimba(96, 0.09), 0, 1).poner(tic(), 0, 0.25).guardar('tic.wav', 0.35)
+
+
 if __name__ == '__main__':
     continente_correcto()
     continente_error()
@@ -225,3 +231,4 @@ if __name__ == '__main__':
     fin_partida()
     nivel_superado()
     logro()
+    tic_clasico()

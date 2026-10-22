@@ -68,6 +68,28 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 **Modos** (los del original): Mapa y nombre del país · Mapa y nombre de la capital · Solo nombre del país ·
 Solo nombre de la capital · Solo datos del país.
 
+### Estilo clásico (2000)
+
+En *Configura tu partida*, arriba a la derecha, se elige el estilo: **Moderno** (todo lo anterior) o
+**Clásico (2000)**, que recrea la jugabilidad del Mapamundi original a partir de su código fuente en Visual FoxPro
+(`frmprincipal`, `frmafrica`… y `errores.prg`):
+
+1. **El país cae** desde arriba, un paso por tic y con un "bip" (cada 700, 450 o 200 ms según la velocidad).
+   Hay que elegir su continente antes de que llegue abajo: ← → y Enter, las teclas 1–5, o clic para marcar y
+   doble clic para elegir.
+2. **En el mapa, la pieza no se detiene:** sale de arriba y del centro bajando; las flechas solo cambian su
+   dirección, rebota en los bordes y **Ctrl + flecha** la mueve rápido. Enter la suelta: vale si cae sobre el país
+   (o a menos del margen de la velocidad). Una barra de tiempo se llena en unos 100, 38 o 23 s.
+3. **5 errores para toda la partida** (continente equivocado, país que llega abajo, pieza mal soltada o tiempo
+   agotado); tras un error el **mismo país** vuelve a caer.
+4. Cada país vale **10, 20, 30, 40 o 50 puntos** según el modo (de "Mapa y nombre del país" a "Solo datos"), sin
+   bonus de tiempo. Cuando están todos los países de un continente sale **¡Mapa completo!** y ese continente se
+   apaga; completar todos los elegidos gana la partida.
+
+Como en el original, se eligen los continentes con los que jugar, la ficha del país se ve durante la jugada si
+"Mostrar los datos del país" está marcado, y en los modos sin forma la pieza es un cuadradito oscuro (la
+"sombra"). Las reglas extra, las pistas y las insignias son solo del estilo moderno.
+
 ### Idioma y tutorial
 
 Cada vez que se abre el programa, lo primero es elegir el **idioma: español o inglés** (con un clic, ← → y Enter,
@@ -157,7 +179,8 @@ src/main/java/com/mapamundi/
   geo/                        Mercator (proyección de OpenStreetMap), regiones y formas de los países
   i18n/                       idiomas: Idioma (español/inglés) y Textos (lee i18n/textos_*.properties)
   modelo/                     Continente, Pais, Atlas (carga datos/paises.json)
-  juego/                      reglas y estado de la partida (sin interfaz: se prueba con JUnit)
+  juego/                      reglas y estado de la partida (sin interfaz: se prueba con JUnit);
+                              Partida (estilo moderno) y PartidaClasica (el juego de 2000)
   ui/                         pantallas JavaFX (menú, fases, resultado, fin)
   ui/mapa/                    dibujo del mapa en Canvas, zoom, arrastre
 src/main/resources/com/mapamundi/
@@ -204,7 +227,7 @@ La música de fondo (`src/main/resources/com/mapamundi/musica/`) es original, si
 Los efectos de sonido (`src/main/resources/com/mapamundi/sonidos/`) también son originales: los sintetiza
 `python herramientas/crear_efectos.py` con los mismos timbres y la misma tonalidad (do mayor) que la música.
 Hay uno para cada momento: continente correcto o equivocado, país ubicado o mal ubicado, fin del tiempo,
-fin de la partida, nivel superado e insignia conseguida.
+fin de la partida, nivel superado, insignia conseguida y el "bip" del estilo clásico.
 
 ## Créditos
 

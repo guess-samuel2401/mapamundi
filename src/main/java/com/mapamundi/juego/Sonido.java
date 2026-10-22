@@ -9,7 +9,9 @@ public enum Sonido {
     FIN_TIEMPO("fin_tiempo"),
     FIN_PARTIDA("fin_partida"),
     NIVEL_SUPERADO("nivel_superado"),
-    LOGRO("logro");
+    LOGRO("logro"),
+    /** El "bip" del modo clásico: cada paso de la caída y el reloj del mapa. */
+    TIC("tic");
 
     private final String archivo;
 

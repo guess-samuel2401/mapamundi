@@ -7,6 +7,7 @@ import com.mapamundi.juego.Logros;
 import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Nivel;
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.PartidaClasica;
 import com.mapamundi.juego.Puntajes;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.ui.mapa.Pintor;
@@ -34,6 +35,7 @@ public final class Ventana {
     private final StackPane raiz = new StackPane();
     private Ajustes ajustes = Ajustes.porDefecto();
     private PantallaJuego juego;
+    private PantallaClasica clasica;
 
     public Ventana(Stage escenario) {
         this.escenario = escenario;
@@ -99,15 +101,22 @@ public final class Ventana {
     private void jugar(Ajustes elegidos) {
         ajustes = elegidos;
         ctx.sonidos().musica(Sonidos.Musica.JUEGO);
+        if (elegidos.clasico()) {
+            // El juego tal como era en 2000.
+            PartidaClasica partida = new PartidaClasica(elegidos, ctx.atlas().paises(), new Random());
+            clasica = new PantallaClasica(partida, ctx, this::menu, p -> fin(PantallaFin.Resumen.de(p), List.of()));
+            cambiarA(clasica);
+            return;
+        }
         Partida partida = new Partida(elegidos, Nivel.progresion(ctx.atlas()), Nivel.personalizado(ctx.atlas(), elegidos.continentes()), new Random());
-        juego = new PantallaJuego(partida, ctx, this::menu, this::fin);
+        juego = new PantallaJuego(partida, ctx, this::menu, (p, insignias) -> fin(PantallaFin.Resumen.de(p), insignias));
         cambiarA(juego);
     }
 
-    private void fin(Partida partida, List<Logro> insignias) {
+    private void fin(PantallaFin.Resumen resumen, List<Logro> insignias) {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         // Con la tabla de récords llena no cabe en pantallas bajas: se puede desplazar.
-        StackPane centrada = new StackPane(new PantallaFin(partida, ctx.puntajes(), insignias, this::menu, () -> jugar(ajustes)));
+        StackPane centrada = new StackPane(new PantallaFin(resumen, ctx.puntajes(), insignias, this::menu, () -> jugar(ajustes)));
         centrada.setAlignment(Pos.TOP_CENTER);
         ScrollPane desplazable = new ScrollPane(centrada);
         desplazable.setFitToWidth(true);
@@ -118,6 +127,10 @@ public final class Ventana {
         if (juego != null && pantalla != juego) {
             juego.desconectar();
             juego = null;
+        }
+        if (clasica != null && pantalla != clasica) {
+            clasica.desconectar();
+            clasica = null;
         }
         raiz.getChildren().setAll(pantalla);
     }

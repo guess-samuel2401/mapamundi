@@ -110,6 +110,21 @@ public final class Forma {
         return (min + max) / 2;
     }
 
+    /** Si el punto (u, v) cae dentro del núcleo (regla par-impar, para respetar lagos y huecos). */
+    public boolean contiene(double u, double v) {
+        if (u < cajaNucleo.uMin() || u > cajaNucleo.uMax() || v < cajaNucleo.vMin() || v > cajaNucleo.vMax()) return false;
+        boolean dentro = false;
+        for (Anillo a : nucleo) {
+            if (u < a.caja().uMin() || u > a.caja().uMax() || v < a.caja().vMin() || v > a.caja().vMax()) continue;
+            int n = a.puntos();
+            for (int i = 0, j = n - 1; i < n; j = i++) {
+                double ui = a.u(i), vi = a.v(i), uj = a.u(j), vj = a.v(j);
+                if ((vi > v) != (vj > v) && u < (uj - ui) * (v - vi) / (vj - vi) + ui) dentro = !dentro;
+            }
+        }
+        return dentro;
+    }
+
     /** Distancia (en unidades Mercator, ~2 km) por debajo de la cual dos fronteras se consideran la misma. */
     private static final double TOQUE = 0.00006;
 

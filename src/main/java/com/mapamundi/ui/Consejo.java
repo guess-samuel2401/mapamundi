@@ -15,7 +15,7 @@ import javafx.util.Duration;
 /** Consejo de la primera partida: una franja abajo que se va sola o con «Entendido». */
 final class Consejo extends HBox {
 
-    private Consejo(String texto, Runnable alCerrar) {
+    private Consejo(String texto, double margenInferior, Runnable alCerrar) {
         super(12);
         // Los emoji en color no existen en las fuentes de JavaFX: una "i" en un círculo amarillo.
         Label icono = FichaPais.etiqueta("i", "consejo-icono");
@@ -33,13 +33,18 @@ final class Consejo extends HBox {
         getStyleClass().add("consejo");
         setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
         StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(this, new Insets(0, 0, 22, 0));
+        StackPane.setMargin(this, new Insets(0, 0, margenInferior, 0));
     }
 
     /** Muestra el consejo en el contenedor; desaparece solo a los 9 segundos. */
     static Consejo mostrar(StackPane contenedor, String texto) {
+        return mostrar(contenedor, texto, 22);
+    }
+
+    /** Igual, pero más arriba (para no tapar lo que haya al pie, como las tarjetas de continente del modo clásico). */
+    static Consejo mostrar(StackPane contenedor, String texto, double margenInferior) {
         Consejo[] c = new Consejo[1];
-        c[0] = new Consejo(texto, () -> quitar(contenedor, c[0]));
+        c[0] = new Consejo(texto, margenInferior, () -> quitar(contenedor, c[0]));
         contenedor.getChildren().add(c[0]);
         TranslateTransition subir = new TranslateTransition(Duration.millis(300), c[0]);
         subir.setFromY(80);

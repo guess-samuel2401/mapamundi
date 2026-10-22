@@ -2,6 +2,7 @@ package com.mapamundi.ui;
 
 import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.PartidaClasica;
 import com.mapamundi.juego.Puntajes;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -21,7 +22,30 @@ import static com.mapamundi.i18n.Textos.t;
 /** Fin de la partida: si el puntaje entra en el top 10 se pide el nombre (FrmIngresoDatos del original). */
 final class PantallaFin extends VBox {
 
-    PantallaFin(Partida partida, Puntajes puntajes, List<Logro> insignias, Runnable menu, Runnable otraVez) {
+    /**
+     * Lo que se muestra al final, venga de una partida moderna o clásica.
+     *
+     * @param tercera     la tercera cifra (mejor racha en la moderna, errores en la clásica): {clave, valor}
+     * @param nivelRecord lo que se guarda como "nivel" en la tabla de récords
+     */
+    record Resumen(String titulo, int puntaje, int ubicados, String[] tercera, String nivel, String nivelRecord) {
+
+        static Resumen de(Partida p) {
+            String nivel = p.nivel().nombre();
+            return new Resumen(t("fin.titulo"), p.puntaje(), p.ubicados().size(),
+                    new String[]{t("fin.mejorRacha"), String.valueOf(p.mejorRacha())}, nivel,
+                    nivel + (p.ajustes().contrarreloj() ? " · " + t("regla.contrarreloj").toLowerCase() : ""));
+        }
+
+        static Resumen de(PartidaClasica p) {
+            String estilo = t("clasico.nombre");
+            return new Resumen(t(p.ganada() ? "clasico.fin.ganada" : "fin.titulo"), p.puntaje(), p.ubicados().size(),
+                    new String[]{t("hud.errores"), p.errores() + "/" + PartidaClasica.ERRORES_MAX}, estilo,
+                    estilo + " · " + p.ajustes().modo().nombre());
+        }
+    }
+
+    PantallaFin(Resumen r, Puntajes puntajes, List<Logro> insignias, Runnable menu, Runnable otraVez) {
         super(14);
         setPadding(new Insets(20, 32, 24, 32));
         setAlignment(Pos.TOP_CENTER);
@@ -30,13 +54,15 @@ final class PantallaFin extends VBox {
         Label globo = FichaPais.etiqueta("🌍", "");
         globo.setStyle("-fx-font-size: 54px;");
         HBox cifras = new HBox(10,
-                cifra(t("fin.puntaje"), String.valueOf(partida.puntaje())),
-                cifra(t("fin.ubicados"), String.valueOf(partida.ubicados().size())),
-                cifra(t("fin.mejorRacha"), String.valueOf(partida.mejorRacha())),
-                cifra(t("hud.nivel"), partida.nivel().nombre()));
+                cifra(t("fin.puntaje"), String.valueOf(r.puntaje())),
+                cifra(t("fin.ubicados"), String.valueOf(r.ubicados())),
+                cifra(r.tercera()[0], r.tercera()[1]),
+                cifra(t("hud.nivel"), r.nivel()));
         cifras.setAlignment(Pos.CENTER);
 
-        VBox tarjeta = new VBox(12, globo, FichaPais.etiqueta(t("fin.titulo"), "titulo-mapa-grande"), cifras);
+        Label titulo = FichaPais.etiqueta(r.titulo(), "titulo-mapa-grande");
+        titulo.setWrapText(true);
+        VBox tarjeta = new VBox(12, globo, titulo, cifras);
         tarjeta.getStyleClass().add("panel");
         tarjeta.setAlignment(Pos.CENTER);
         if (!insignias.isEmpty()) {
@@ -52,7 +78,7 @@ final class PantallaFin extends VBox {
 
         VBox tabla = new VBox(new TablaPuntajes(puntajes.leer(), null));
 
-        if (puntajes.entraEnLaTabla(partida.puntaje())) {
+        if (puntajes.entraEnLaTabla(r.puntaje())) {
             TextField nombre = new TextField();
             nombre.setPromptText(t("fin.nuevoRecord"));
             HBox.setHgrow(nombre, Priority.ALWAYS);
@@ -64,8 +90,7 @@ final class PantallaFin extends VBox {
             HBox fila = new HBox(8, nombre, guardar);
             Runnable accion = () -> {
                 String texto = nombre.getText().isBlank() ? t("fin.anonimo") : nombre.getText().trim();
-                String nivel = partida.nivel().nombre() + (partida.ajustes().contrarreloj() ? " · " + t("regla.contrarreloj").toLowerCase() : "");
-                Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, partida.puntaje(), nivel);
+                Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, r.puntaje(), r.nivelRecord());
                 tabla.getChildren().setAll(new TablaPuntajes(puntajes.guardar(e), e));
                 tarjeta.getChildren().remove(fila);
             };

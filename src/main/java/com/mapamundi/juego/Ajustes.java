@@ -12,13 +12,21 @@ import java.util.Set;
  * @param contrarreloj un solo cronómetro para toda la partida y sin corazones
  * @param frioCaliente la pieza cambia de color según lo cerca que esté de su lugar
  * @param piezaGirada  modo experto: la pieza aparece girada y hay que enderezarla
+ * @param clasico      se juega como el Mapamundi original de 2000 ({@link PartidaClasica}) con los
+ *                     continentes elegidos; las reglas extra no se usan
  */
 public record Ajustes(Velocidad velocidad, Modo modo, int nivelInicial, Set<Continente> continentes, boolean mostrarDatos,
-                      boolean contrarreloj, boolean frioCaliente, boolean piezaGirada) {
+                      boolean contrarreloj, boolean frioCaliente, boolean piezaGirada, boolean clasico) {
 
     /** Partida clásica, sin reglas extra. */
     public Ajustes(Velocidad velocidad, Modo modo, int nivelInicial, Set<Continente> continentes, boolean mostrarDatos) {
-        this(velocidad, modo, nivelInicial, continentes, mostrarDatos, false, false, false);
+        this(velocidad, modo, nivelInicial, continentes, mostrarDatos, false, false, false, false);
+    }
+
+    /** Partida moderna con sus reglas extra. */
+    public Ajustes(Velocidad velocidad, Modo modo, int nivelInicial, Set<Continente> continentes, boolean mostrarDatos,
+                   boolean contrarreloj, boolean frioCaliente, boolean piezaGirada) {
+        this(velocidad, modo, nivelInicial, continentes, mostrarDatos, contrarreloj, frioCaliente, piezaGirada, false);
     }
 
     public static Ajustes porDefecto() {
