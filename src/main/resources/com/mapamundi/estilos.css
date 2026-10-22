@@ -216,6 +216,31 @@
 .ficha-nivel-detalle { -fx-font-size: 12px; -fx-text-fill: -tinta-suave; }
 .caja-continentes { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
 
+/* Configuración (paso 1) e inicio de partida (paso 2). */
+.paso-indicador { -fx-background-color: -sol; -fx-text-fill: -tinta; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 12px;
+    -fx-padding: 3 10 3 10; -fx-background-radius: 10; }
+.titulo-paso { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 26px; -fx-text-fill: -crema; }
+.aviso-config { -fx-text-fill: -rojo-texto; -fx-font-family: "Nunito ExtraBold"; }
+.marca-continente { -fx-background-color: -tinta; -fx-text-fill: -sol; -fx-font-family: "Nunito ExtraBold";
+    -fx-font-size: 13px; -fx-padding: 1 6 1 6; -fx-background-radius: 8; }
+.tarjeta-estilo {
+    -fx-background-color: -papel-2;
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(29, 43, 79, 0.25);
+    -fx-border-width: 2;
+    -fx-border-radius: 16;
+    -fx-padding: 10 14 10 12;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+}
+.tarjeta-estilo:hover { -fx-border-color: -fondo; }
+.tarjeta-estilo:selected { -fx-background-color: -sol-claro; -fx-border-color: -sol; -fx-border-width: 3;
+    -fx-effect: dropshadow(gaussian, rgba(16, 30, 50, 0.25), 6, 0, 0, 2); }
+.estilo-icono { -fx-background-color: -tinta; -fx-text-fill: -sol; -fx-background-radius: 23; -fx-font-size: 22px; }
+.estilo-nombre { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -tinta; }
+.ficha-partida { -fx-background-color: -papel-2; -fx-background-radius: 12; -fx-padding: 12 14 12 14; }
+.ficha-partida-valor { -fx-font-family: "Nunito SemiBold"; -fx-font-size: 14px; }
+
 /* Modo clásico (2000): el país cae por un "cielo" color mar hacia los cinco continentes. */
 .insignia-clasico { -fx-background-color: -tinta; -fx-text-fill: -sol; -fx-font-family: "Baloo 2 ExtraBold";
     -fx-font-size: 14px; -fx-padding: 1 10 1 10; -fx-background-radius: 10; }

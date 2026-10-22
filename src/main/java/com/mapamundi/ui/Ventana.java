@@ -76,7 +76,10 @@ public final class Ventana {
         if (ctx.preferencias().pantallaCompleta) escenario.setFullScreen(true);
     }
 
-    /** Cada vez que se abre el programa: primero el idioma, después el menú con el tutorial. */
+    /**
+     * Cada vez que se abre el programa: primero el idioma, después la configuración de la partida con el
+     * tutorial encima, luego la pantalla de inicio de partida y, por fin, el juego.
+     */
     private void elegirIdioma() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         Idioma ultimo = Idioma.deCodigo(ctx.preferencias().idioma);
@@ -85,17 +88,23 @@ public final class Ventana {
             ctx.preferencias().idioma = idioma.codigo();
             ctx.preferencias().guardar();
             escenario.setFullScreenExitHint(Textos.t("ventana.salirPantallaCompleta"));
-            menu(true);
+            configurar(true);
         }));
     }
 
-    private void menu() {
-        menu(false);
+    /** Paso 1: configurar la partida. */
+    private void configurar(boolean conTutorial) {
+        ctx.sonidos().musica(Sonidos.Musica.MENU);
+        cambiarA(new PantallaConfiguracion(ctx, ajustes, elegidos -> {
+            ajustes = elegidos;
+            menu();
+        }, () -> configurar(false), conTutorial));
     }
 
-    private void menu(boolean conTutorial) {
+    /** Paso 2: la pantalla de inicio de partida (también a la que se vuelve al salir de una partida). */
+    private void menu() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
-        cambiarA(new PantallaMenu(ctx, ajustes, this::jugar, this::menu, conTutorial));
+        cambiarA(new PantallaInicio(ctx, ajustes, this::jugar, () -> configurar(false), this::menu));
     }
 
     private void jugar(Ajustes elegidos) {

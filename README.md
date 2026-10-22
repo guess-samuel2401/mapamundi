@@ -24,6 +24,19 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 
 ## Cómo se juega
 
+Al abrir el programa: **idioma** → **configuración de la partida** (paso 1, con el tutorial encima) →
+**inicio de partida** (paso 2) → juego.
+
+- **Paso 1 · Configura tu partida:** el estilo (Moderno o Clásico 2000, en dos tarjetas grandes), el nivel o los
+  continentes (tarjetas con su mapa), el modo de juego, las reglas extra y si se muestra la ficha del país.
+  **Continuar** (o Enter) lleva al paso 2.
+- **Paso 2 · ¡Todo listo!:** el mapa con los países de la partida en color, la ficha "Tu partida" con todo lo
+  elegido, el récord a batir y el botón **JUGAR** (o Enter). **Cambiar configuración** (o Esc) vuelve al paso 1.
+- Al salir de una partida (desde la pausa o al terminar) se vuelve al paso 2, con la configuración guardada.
+- Récords, Logros, Cómo se juega (?) y Ajustes (⚙) están arriba a la derecha en los dos pasos.
+
+En la partida:
+
 1. **Continente:** aparece un país (nombre + silueta). Elige su continente con las flechas + Enter,
    las teclas 1–5 o un clic. Tienes 5 intentos: +100 puntos.
 2. **Ubicación:** arrastra la pieza del país sobre el mapa en blanco y confirma antes de que acabe el tiempo.
@@ -67,7 +80,7 @@ Solo nombre de la capital · Solo datos del país.
 
 ### Estilo clásico (2000)
 
-En *Configura tu partida*, arriba a la derecha, se elige el estilo: **Moderno** (todo lo anterior) o
+En *Configura tu partida* se elige el estilo: **Moderno** (todo lo anterior) o
 **Clásico (2000)**, que recrea la jugabilidad del Mapamundi original a partir de su código fuente en Visual FoxPro
 (`frmprincipal`, `frmafrica`… y `errores.prg`):
 
@@ -94,7 +107,7 @@ Como en el original, se eligen los continentes con los que jugar, la ficha del p
 
 Cada vez que se abre el programa, lo primero es elegir el **idioma: español o inglés** (con un clic, ← → y Enter,
 o las teclas 1 y 2; viene marcado el último usado). Después aparece el **tutorial** de 5 pasos, que se puede
-saltar y volver a ver desde el botón **?** del menú o desde Ajustes. Durante la primera partida salen, además,
+saltar y volver a ver desde el botón **?** o desde Ajustes. Durante la primera partida salen, además,
 consejos breves en la parte de abajo.
 
 Todo el juego está traducido: menús, reglas, logros y los datos de los 197 países (nombres, capitales, idiomas,
@@ -106,7 +119,7 @@ interfaz están en `src/main/resources/com/mapamundi/i18n/textos_es.properties` 
 25 insignias de bronce, plata y oro: rachas de 5, 10 y 20 aciertos seguidos, puntería (a menos de 25 km),
 rapidez (menos del 20 % del tiempo, y menos de 3 segundos), capitales, modo "solo datos", completar un nivel sin fallar, 10 países en una partida contrarreloj,
 10 aciertos con la pieza girada, llegar a niveles y puntuaciones, ubicar 25, 100 o los 197 países y completar
-cada continente. Se ven en **★ Logros** del menú, con el avance de
+cada continente. Se ven en **★ Logros** (arriba a la derecha en la configuración y en el inicio), con el avance de
 las que faltan; al conseguir una aparece un aviso durante la partida y un resumen al final.
 
 ### Ajustes (⚙)
@@ -181,7 +194,7 @@ src/main/java/com/mapamundi/
   modelo/                     Continente, Pais, Atlas (carga datos/paises.json)
   juego/                      reglas y estado de la partida (sin interfaz: se prueba con JUnit);
                               Partida (estilo moderno) y PartidaClasica (el juego de 2000)
-  ui/                         pantallas JavaFX (menú, fases, resultado, fin)
+  ui/                         pantallas JavaFX (idioma, configuración, inicio de partida, fases, resultado, fin)
   ui/mapa/                    dibujo del mapa en Canvas, zoom, arrastre
 src/main/resources/com/mapamundi/
   datos/paises.json           generado (fronteras + datos)
