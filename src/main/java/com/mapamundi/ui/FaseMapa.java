@@ -4,9 +4,13 @@ import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Pista;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.ui.mapa.MapaLienzo;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -14,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -27,6 +32,9 @@ final class FaseMapa extends HBox {
 
     private final Partida partida;
     private final MapaLienzo mapa;
+    /** El mapa y, encima, el recuadro del acierto. */
+    private final StackPane zonaMapa;
+    private PanelResultado sobreMapa;
     private final VBox lateral = new VBox(12);
     private final VBox controles;
     private final BotonesPista pistas;
@@ -36,7 +44,8 @@ final class FaseMapa extends HBox {
         this.partida = partida;
         setSpacing(18);
         mapa = new MapaLienzo(atlas);
-        HBox.setHgrow(mapa, Priority.ALWAYS);
+        zonaMapa = new StackPane(mapa);
+        HBox.setHgrow(zonaMapa, Priority.ALWAYS);
 
         lateral.getStyleClass().add("panel");
         lateral.setPrefWidth(320);
@@ -44,7 +53,7 @@ final class FaseMapa extends HBox {
         lateral.setMaxHeight(USE_PREF_SIZE);
         pistas = new BotonesPista(partida, Pista.ZONA, Pista.VECINOS);
         controles = construirControles();
-        getChildren().addAll(lateral, mapa);
+        getChildren().addAll(lateral, zonaMapa);
         actualizar();
     }
 
@@ -159,11 +168,38 @@ final class FaseMapa extends HBox {
     void actualizar() {
         if (partida.fase() != faseMostrada) {
             faseMostrada = partida.fase();
-            lateral.getChildren().setAll(faseMostrada == Partida.Fase.RESULTADO
-                    ? new PanelResultado(partida)
-                    : controles);
+            zonaMapa.getChildren().remove(sobreMapa);
+            sobreMapa = null;
+            controles.setDisable(false);
+            if (faseMostrada != Partida.Fase.RESULTADO) {
+                lateral.getChildren().setAll(controles);
+            } else if (partida.resultado().acierto()) {
+                // El acierto se celebra en medio del mapa; un fallo va al lateral para no tapar el ★ ni las marcas.
+                sobreMapa = new PanelResultado(partida);
+                sobreMapa.getStyleClass().add("panel");
+                sobreMapa.setAlignment(Pos.CENTER);
+                sobreMapa.setMaxSize(380, USE_PREF_SIZE);
+                zonaMapa.getChildren().add(sobreMapa);
+                controles.setDisable(true);
+                lateral.getChildren().setAll(controles);
+                aparecer(sobreMapa);
+            } else {
+                lateral.getChildren().setAll(new PanelResultado(partida));
+            }
         }
         pistas.actualizar();
         mapa.mostrar(partida);
+    }
+
+    private static void aparecer(Node n) {
+        FadeTransition f = new FadeTransition(Duration.millis(220), n);
+        f.setFromValue(0);
+        f.setToValue(1);
+        ScaleTransition s = new ScaleTransition(Duration.millis(220), n);
+        s.setFromX(0.85);
+        s.setFromY(0.85);
+        s.setToX(1);
+        s.setToY(1);
+        new ParallelTransition(f, s).play();
     }
 }

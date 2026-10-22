@@ -13,7 +13,7 @@ import javafx.util.Duration;
 
 import static com.mapamundi.i18n.Textos.t;
 
-/** Resultado de la ronda; ocupa el panel lateral para no tapar el mapa. */
+/** Resultado de la ronda: el acierto, en medio del mapa; el fallo, en el panel lateral para no tapar el mapa. */
 final class PanelResultado extends VBox {
 
     /** Sin la ficha de datos, el resultado se muestra 3,5 s y pasa solo al siguiente país. */
