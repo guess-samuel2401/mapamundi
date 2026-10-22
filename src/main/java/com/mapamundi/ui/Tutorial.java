@@ -125,7 +125,7 @@ final class Tutorial {
 
     /** El tutorial completo, con los dos estilos de juego. */
     static void mostrar(StackPane contenedor, Atlas atlas, Runnable alTerminar) {
-        mostrar(contenedor, alTerminar, true, List.of(
+        mostrar(contenedor, alTerminar, null, true, List.of(
                 new Paso(0, "bienvenida", () -> bienvenida(atlas)),
                 new Paso(0, "pasos", () -> dosPasos(atlas)),
                 new Paso(0, "modos", () -> cincoModos(atlas)),
@@ -143,8 +143,8 @@ final class Tutorial {
     }
 
     /** La versión sencilla: cinco pasos sobre su única forma de jugar, sin pestañas de capítulo. */
-    static void mostrarSencillo(StackPane contenedor, Atlas atlas, Runnable alTerminar) {
-        mostrar(contenedor, alTerminar, false, List.of(
+    static void mostrarSencillo(StackPane contenedor, Atlas atlas, Runnable alTerminar, Runnable practicar) {
+        mostrar(contenedor, alTerminar, practicar, false, List.of(
                 new Paso(0, "s.bienvenida", () -> bienvenida(atlas)),
                 new Paso(0, "s.c1", Tutorial::clasicoIntro),
                 new Paso(0, "s.c2", () -> caidaClasica(atlas)),
@@ -152,7 +152,9 @@ final class Tutorial {
                 new Paso(0, "s.c4", () -> puntosClasicos(atlas))));
     }
 
-    private static void mostrar(StackPane contenedor, Runnable alTerminar, boolean conCapitulos, List<Paso> pasos) {
+    /** @param practicar si no es null, un botón «Practicar jugando» cierra la guía y empieza la partida de práctica */
+    private static void mostrar(StackPane contenedor, Runnable alTerminar, Runnable practicar, boolean conCapitulos,
+                                List<Paso> pasos) {
         int[] actual = {0};
         Escena[] escena = {null};
 
@@ -206,6 +208,8 @@ final class Tutorial {
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
         HBox botones = new HBox(10, saltar, hueco, numero, atras, siguiente);
+        Button jugarPractica = new Button("🎮  " + t("practica.boton"));
+        if (practicar != null) botones.getChildren().add(1, jugarPractica);
         botones.setAlignment(Pos.CENTER);
 
         VBox caja = new VBox(12, barra, titulo, lamina, texto, puntitos, botones);
@@ -262,6 +266,11 @@ final class Tutorial {
             }
         });
         saltar.setOnAction(e -> cerrar.run());
+        jugarPractica.setOnAction(e -> {
+            if (escena[0] != null) escena[0].detener();
+            contenedor.getChildren().remove(capa);
+            practicar.run();
+        });
         capa.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ESCAPE -> cerrar.run();

@@ -29,6 +29,8 @@ public final class MapaClasico extends Region {
     private final Canvas canvas = new Canvas();
     private final Atlas atlas;
     private PartidaClasica partida;
+    /** Partida de práctica: un círculo amarillo marca a dónde hay que llevar la pieza. */
+    private boolean guia;
 
     public MapaClasico(Atlas atlas) {
         this.atlas = atlas;
@@ -37,6 +39,10 @@ public final class MapaClasico extends Region {
         setMinSize(200, 200);
         widthProperty().addListener(o -> dibujar());
         heightProperty().addListener(o -> dibujar());
+    }
+
+    public void guia(boolean activa) {
+        guia = activa;
     }
 
     public void mostrar(PartidaClasica p) {
@@ -73,6 +79,16 @@ public final class MapaClasico extends Region {
             gc.setEffect(new DropShadow(10, Pintor.SOL));
             Pintor.forma(gc, f.anillos(), vueltas, 0, t, Pintor.colorDe(actual), Pintor.BORDE, 1.6);
             gc.setEffect(null);
+        }
+        if (guia && partida.fase() == PartidaClasica.Fase.UBICACION) {
+            // Un anillo que late, sobre el lugar del país.
+            double gx = t.x(f.anclaU() + vueltas), gy = t.y(f.anclaV());
+            double r = 26 + 6 * Math.sin(System.nanoTime() / 1.6e8);
+            gc.setStroke(Pintor.SOL);
+            gc.setLineWidth(4);
+            gc.setLineDashes(10, 6);
+            gc.strokeOval(gx - r, gy - r, 2 * r, 2 * r);
+            gc.setLineDashes();
         }
         if (!acierto) dibujarPieza(gc, t, actual, f, vueltas + partida.despU(), partida.despV(), resultado);
         if (resultado && !acierto && partida.resultado().tieneDistancia()) {

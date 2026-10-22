@@ -10,6 +10,7 @@ import com.mapamundi.juego.Puntajes;
 import com.mapamundi.juego.Velocidad;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Continente;
+import com.mapamundi.modelo.Pais;
 import com.mapamundi.ui.mapa.Pintor;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -91,12 +92,14 @@ public final class Ventana {
             ctx.preferencias().idioma = idioma.codigo();
             ctx.preferencias().guardar();
             escenario.setFullScreenExitHint(Textos.t("ventana.salirPantallaCompleta"));
-            continentes();
+            // La primera vez se aprende jugando: una partida de práctica guiada con tres países.
+            if (ctx.preferencias().primeraVez("practica")) practicar();
+            else continentes();
         }));
     }
 
     /** Pregunta 1: ¿con qué continente quieres jugar? (también a donde se vuelve al salir de una partida) */
-    private void continentes() {
+    private PantallaEleccion continentes() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         PantallaEleccion[] p = {null};
         p[0] = PantallaEleccion.continentes(ctx, zona, elegida -> {
@@ -104,6 +107,7 @@ public final class Ventana {
             retos();
         }, this::continentes, () -> aprender(p[0]));
         cambiarA(p[0]);
+        return p[0];
     }
 
     /** Pregunta 2: ¿qué reto quieres? Al elegirlo empieza la partida. */
@@ -112,12 +116,30 @@ public final class Ventana {
         p[0] = PantallaEleccion.retos(ctx, zona, modo, elegido -> {
             modo = elegido;
             jugar();
-        }, this::continentes, this::retos, () -> aprender(p[0]));
+        }, () -> continentes(), this::retos, () -> aprender(p[0]));
         cambiarA(p[0]);
     }
 
     private void aprender(StackPane sobre) {
-        Tutorial.mostrarSencillo(sobre, ctx.atlas(), sobre::requestFocus);
+        Tutorial.mostrarSencillo(sobre, ctx.atlas(), sobre::requestFocus, this::practicar);
+    }
+
+    /** Partida de práctica: Brasil, Egipto y Australia, con una guía que dice qué hacer en cada momento. */
+    private void practicar() {
+        ctx.sonidos().musica(Sonidos.Musica.JUEGO);
+        Set<String> faciles = Set.of("BR", "EG", "AU");
+        List<Pais> paises = ctx.atlas().paises().stream().filter(p -> faciles.contains(p.iso())).toList();
+        Set<Continente> suyos = EnumSet.noneOf(Continente.class);
+        paises.forEach(p -> suyos.add(p.continente()));
+        Ajustes ajustes = new Ajustes(Velocidad.NORMAL, Modo.MAPA_PAIS, -1, suyos, false, false, false, false, true);
+        PartidaClasica partida = new PartidaClasica(ajustes, paises, new Random());
+        clasica = new PantallaClasica(partida, ctx, this::terminarPractica, pc -> terminarPractica(), this::terminarPractica);
+        cambiarA(clasica);
+    }
+
+    private void terminarPractica() {
+        PantallaEleccion p = continentes();
+        Consejo.mostrar(p, Textos.t("practica.fin"));
     }
 
     /** El juego tal como era en 2000: el país cae, la pieza no se detiene y hay 5 errores. */
@@ -125,17 +147,19 @@ public final class Ventana {
         ctx.sonidos().musica(Sonidos.Musica.JUEGO);
         Ajustes ajustes = new Ajustes(Velocidad.NORMAL, modo, -1, zona, false, false, false, false, true);
         PartidaClasica partida = new PartidaClasica(ajustes, ctx.atlas().paises(), new Random());
-        clasica = new PantallaClasica(partida, ctx, this::continentes, pc -> fin(PantallaFin.Resumen.de(pc)));
+        clasica = new PantallaClasica(partida, ctx, () -> continentes(), pc -> fin(PantallaFin.Resumen.de(pc)));
         cambiarA(clasica);
     }
 
     private void fin(PantallaFin.Resumen resumen) {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         // Con la tabla de récords llena no cabe en pantallas bajas: se puede desplazar.
-        StackPane centrada = new StackPane(new PantallaFin(resumen, ctx.puntajes(), List.of(), this::continentes, this::jugar));
-        centrada.setAlignment(Pos.TOP_CENTER);
+        StackPane centrada = new StackPane(new PantallaFin(resumen, ctx.puntajes(), List.of(), () -> continentes(), this::jugar));
+        centrada.setAlignment(Pos.CENTER);
+        centrada.getStyleClass().add("pantalla-idioma");
         ScrollPane desplazable = new ScrollPane(centrada);
         desplazable.setFitToWidth(true);
+        desplazable.setFitToHeight(true);
         cambiarA(desplazable);
     }
 

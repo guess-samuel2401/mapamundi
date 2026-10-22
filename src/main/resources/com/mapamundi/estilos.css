@@ -484,3 +484,10 @@
 .casilla-eleccion.marcada { -fx-background-color: -tinta; -fx-text-fill: -sol; }
 .tarjeta-idioma.enfocada { -fx-border-color: -coral; }
 .boton-continuar-eleccion { -fx-font-size: 22px; -fx-padding: 12 46 12 46; }
+/* Partida de práctica y pantalla final sencilla. */
+.practica-globo { -fx-border-color: -sol; -fx-border-width: 3; -fx-border-radius: 18; -fx-padding: 12 22 10 22; }
+.practica-paso { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 15px; -fx-text-fill: -coral; }
+.practica-texto { -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 17px; -fx-text-fill: -tinta; -fx-text-alignment: center; }
+.practica-mano { -fx-font-size: 46px; -fx-text-fill: -sol; -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, -tinta, 4, 0.9, 0, 0); }
+.fin-puntaje { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 64px; -fx-text-fill: -rojo; }

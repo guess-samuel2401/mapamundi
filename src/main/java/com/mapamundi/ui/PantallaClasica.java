@@ -84,12 +84,22 @@ final class PantallaClasica extends StackPane {
     private PartidaClasica.Resultado mostrado;
     private Pais paisMostrado;
     private Fase faseAnterior;
-    private Consejo consejo;
+    /** Partida de práctica: una guía a la derecha dice qué hacer y una flecha señala el continente. */
+    private final boolean practica;
+    private VBox guia;
+    private Label guiaTexto, guiaPaso, mano;
     private final EventHandler<KeyEvent> pulsar = this::tecla;
     private final EventHandler<KeyEvent> soltar = this::soltar;
 
     PantallaClasica(PartidaClasica partida, Contexto ctx, Runnable salir, Consumer<PartidaClasica> alTerminar) {
+        this(partida, ctx, salir, alTerminar, null);
+    }
+
+    /** @param saltarPractica si no es null, es una partida de práctica guiada y esto la abandona */
+    PantallaClasica(PartidaClasica partida, Contexto ctx, Runnable salir, Consumer<PartidaClasica> alTerminar,
+                    Runnable saltarPractica) {
         this.partida = partida;
+        this.practica = saltarPractica != null;
         this.ctx = ctx;
         this.sonidos = ctx.sonidos();
         this.ritmo = PartidaClasica.RITMO;
@@ -107,6 +117,7 @@ final class PantallaClasica extends StackPane {
         cuerpo.setCenter(fila);
         capaPausa = construirPausa(salir);
         getChildren().addAll(cuerpo, capaPausa);
+        if (practica) construirGuia(saltarPractica);
 
         caida = reloj(ritmo.caida(), partida::ticCaida);
         movimiento = reloj(ritmo.movimiento(), partida::ticMovimiento);
@@ -284,7 +295,7 @@ final class PantallaClasica extends StackPane {
             colocarPieza();
             actualizarTarjetas();
         }
-        if (fase != faseAnterior) consejoDeLaFase(fase);
+        if (practica) actualizarGuia(fase);
         faseAnterior = fase == Fase.RESULTADO ? faseAnterior : fase;
 
         PartidaClasica.Resultado r = fase == Fase.RESULTADO ? partida.resultado() : null;
@@ -333,8 +344,6 @@ final class PantallaClasica extends StackPane {
     private void armarLateral(boolean enMapa) {
         Pais p = partida.actual();
         lateral.getChildren().setAll(FichaPais.etiqueta(t(enMapa ? "clasico.lateral.mapa" : "clasico.lateral.caida"), "subtitulo-rojo"));
-        Label ayuda = FichaPais.etiqueta(t(enMapa ? "clasico.ayuda.mapa" : "clasico.ayuda.caida"), "texto-suave");
-        ayuda.setWrapText(true);
         if (partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS) {
             lateral.getChildren().add(FichaPais.pista(p, partida.ajustes().modo(), false));
         } else if (partida.ajustes().mostrarDatos()) {
@@ -345,8 +354,6 @@ final class PantallaClasica extends StackPane {
         } else {
             lateral.getChildren().add(FichaPais.pista(p, partida.ajustes().modo(), false));
         }
-        lateral.getChildren().addAll(ayuda, FichaPais.etiqueta(t("clasico.puntosPorPais",
-                PartidaClasica.puntosPorPais(partida.ajustes().modo())), "negrita"));
     }
 
     /** El mensaje de cada intento (FrmGano, FrmPerdio, FrmEscogeMal… del original), encima de todo. */
@@ -363,13 +370,14 @@ final class PantallaClasica extends StackPane {
         caja.getChildren().addAll(titulo, FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
         if (r.tieneDistancia()) caja.getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
         if (r.acierto()) caja.getChildren().add(FichaPais.etiqueta("+" + r.puntos(), "tutorial-puntos"));
-        if (r.completado() != null) caja.getChildren().add(FichaPais.etiqueta(t("clasico.completado", r.completado().nombre()), "acierto"));
+        if (r.completado() != null && !practica) caja.getChildren().add(FichaPais.etiqueta(t("clasico.completado", r.completado().nombre()), "acierto"));
         if (!r.acierto()) {
             String quedan = partida.terminada() ? t("clasico.sinErrores") : t("clasico.quedanErrores", PartidaClasica.ERRORES_MAX - partida.errores());
             caja.getChildren().add(FichaPais.etiqueta(quedan, "negrita"));
         }
         boolean fin = partida.terminada();
-        Button seguir = new Button(t(fin ? "resultado.verFinal" : r.acierto() ? "resultado.siguiente" : "clasico.otraVez") + " (Enter)");
+        String clave = fin ? (practica ? "practica.terminar" : "resultado.verFinal") : r.acierto() ? "resultado.siguiente" : "clasico.otraVez";
+        Button seguir = new Button(t(clave) + " (Enter)");
         seguir.getStyleClass().add("boton-principal");
         seguir.setFocusTraversable(false);
         seguir.setOnAction(e -> partida.siguiente());
@@ -392,13 +400,58 @@ final class PantallaClasica extends StackPane {
         }
     }
 
-    private void consejoDeLaFase(Fase fase) {
-        Consejo.quitar(this, consejo);
-        consejo = null;
-        String clave = fase == Fase.CAIDA ? "clasico.caida" : fase == Fase.UBICACION ? "clasico.mapa" : null;
-        if (clave == null || !ctx.preferencias().primeraVez(clave)) return;
-        // En la caída, por encima de las tarjetas de continente, que es donde hay que hacer clic.
-        consejo = Consejo.mostrar(this, t("consejo." + clave), fase == Fase.CAIDA ? 175 : 22);
+    // ------------------------------------------------------------------ práctica guiada
+
+    /** A la derecha, un globo con el paso y qué hacer; encima de todo, una flecha que señala el continente correcto. */
+    private void construirGuia(Runnable saltar) {
+        guiaPaso = FichaPais.etiqueta("", "practica-paso");
+        guiaTexto = FichaPais.etiqueta("", "practica-texto");
+        guiaTexto.setWrapText(true);
+        Button saltarBoton = new Button(t("practica.saltar"));
+        saltarBoton.getStyleClass().add("boton-discreto");
+        saltarBoton.setFocusTraversable(false);
+        saltarBoton.setOnAction(e -> {
+            desconectar();
+            saltar.run();
+        });
+        guia = new VBox(4, guiaPaso, guiaTexto, saltarBoton);
+        guia.getStyleClass().addAll("panel", "practica-globo");
+        guia.setAlignment(Pos.CENTER);
+        guia.setMaxSize(320, USE_PREF_SIZE);
+        // En la columna de la derecha, debajo de la ficha: no tapa ni el país que cae ni el mapa.
+        StackPane.setAlignment(guia, Pos.TOP_RIGHT);
+        StackPane.setMargin(guia, new Insets(250, 16, 0, 0));
+
+        mano = FichaPais.etiqueta("▼", "practica-mano");
+        mano.setMouseTransparent(true);
+        mano.setManaged(false);
+        Pane capaMano = new Pane(mano);
+        capaMano.setMouseTransparent(true);
+        TranslateTransition rebote = new TranslateTransition(Duration.millis(450), mano);
+        rebote.setByY(14);
+        rebote.setAutoReverse(true);
+        rebote.setCycleCount(TranslateTransition.INDEFINITE);
+        rebote.play();
+        // Debajo de los mensajes y de la pausa.
+        getChildren().add(1, guia);
+        getChildren().add(2, capaMano);
+        mapa.guia(true);
+    }
+
+    private void actualizarGuia(Fase fase) {
+        Pais p = partida.actual();
+        guiaPaso.setText(t("practica.paso", partida.ubicados().size() + 1, partida.totalPaises()));
+        boolean cae = fase == Fase.CAIDA;
+        guia.setVisible(fase != Fase.RESULTADO);
+        guiaTexto.setText(cae ? t("practica.caida", p.nombre(), p.continente().nombre()) : t("practica.mapa"));
+        mano.setVisible(cae);
+        if (cae) {
+            // Sobre la tarjeta del continente correcto (cuando ya está colocada en pantalla).
+            Button tarjeta = tarjetas.get(p.continente());
+            javafx.geometry.Bounds b = tarjeta.localToScene(tarjeta.getBoundsInLocal());
+            javafx.geometry.Point2D punto = mano.getParent().sceneToLocal(b.getCenterX(), b.getMinY());
+            mano.resizeRelocate(punto.getX() - 28, punto.getY() - 62, 56, 56);
+        }
     }
 
     // ------------------------------------------------------------------ teclado

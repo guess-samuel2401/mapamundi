@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Logros.Logro;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.PartidaClasica;
@@ -19,52 +20,60 @@ import java.util.List;
 
 import static com.mapamundi.i18n.Textos.t;
 
-/** Fin de la partida: si el puntaje entra en el top 10 se pide el nombre (FrmIngresoDatos del original). */
+/**
+ * Fin de la partida, sencillo: un mensaje según cómo fue, el puntaje en grande, los países ubicados y dos
+ * botones (jugar otra vez o cambiar los continentes). Solo si el puntaje entra en el top 10 se pide el nombre
+ * (FrmIngresoDatos del original).
+ */
 final class PantallaFin extends VBox {
 
     /**
      * Lo que se muestra al final, venga de una partida moderna o clásica.
      *
-     * @param tercera     la tercera cifra (mejor racha en la moderna, errores en la clásica): {clave, valor}
+     * @param ganada      se completaron todos los mapas (estilo clásico)
      * @param nivelRecord lo que se guarda como "nivel" en la tabla de récords
      */
-    record Resumen(String titulo, int puntaje, int ubicados, String[] tercera, String nivel, String nivelRecord) {
+    record Resumen(int puntaje, int ubicados, boolean ganada, String nivelRecord) {
 
         static Resumen de(Partida p) {
             String nivel = p.nivel().nombre();
-            return new Resumen(t("fin.titulo"), p.puntaje(), p.ubicados().size(),
-                    new String[]{t("fin.mejorRacha"), String.valueOf(p.mejorRacha())}, nivel,
+            return new Resumen(p.puntaje(), p.ubicados().size(), false,
                     nivel + (p.ajustes().contrarreloj() ? " · " + t("regla.contrarreloj").toLowerCase() : ""));
         }
 
         static Resumen de(PartidaClasica p) {
-            String estilo = PantallaEleccion.zona(p.enJuego());
-            return new Resumen(t(p.ganada() ? "clasico.fin.ganada" : "fin.titulo"), p.puntaje(), p.ubicados().size(),
-                    new String[]{t("hud.errores"), p.errores() + "/" + PartidaClasica.ERRORES_MAX}, estilo,
-                    estilo + " · " + p.ajustes().modo().nombre());
+            return new Resumen(p.puntaje(), p.ubicados().size(), p.ganada(),
+                    PantallaEleccion.zona(p.enJuego()) + " · " + p.ajustes().modo().nombre());
+        }
+
+        /** Un mensaje (y su dibujo) según lo bien que fue. */
+        String[] mensaje() {
+            if (ganada) return new String[]{"🏆", t("clasico.fin.ganada")};
+            if (ubicados == 0) return new String[]{"💪", t("fin.mensaje.0")};
+            if (ubicados < 5) return new String[]{"🙂", t("fin.mensaje.1")};
+            if (ubicados < 15) return new String[]{"😃", t("fin.mensaje.2")};
+            return new String[]{"🌟", t("fin.mensaje.3")};
         }
     }
 
-    PantallaFin(Resumen r, Puntajes puntajes, List<Logro> insignias, Runnable menu, Runnable otraVez) {
+    PantallaFin(Resumen r, Puntajes puntajes, List<Logro> insignias, Runnable cambiar, Runnable otraVez) {
         super(14);
-        setPadding(new Insets(20, 32, 24, 32));
-        setAlignment(Pos.TOP_CENTER);
-        setMaxWidth(720);
+        setPadding(new Insets(24, 32, 24, 32));
+        setAlignment(Pos.CENTER);
+        setMaxWidth(560);
 
-        Label globo = FichaPais.etiqueta("🌍", "");
-        globo.setStyle("-fx-font-size: 54px;");
-        HBox cifras = new HBox(10,
-                cifra(t("fin.puntaje"), String.valueOf(r.puntaje())),
-                cifra(t("fin.ubicados"), String.valueOf(r.ubicados())),
-                cifra(r.tercera()[0], r.tercera()[1]),
-                cifra(t("hud.nivel"), r.nivel()));
-        cifras.setAlignment(Pos.CENTER);
-
-        Label titulo = FichaPais.etiqueta(r.titulo(), "titulo-mapa-grande");
+        String[] mensaje = r.mensaje();
+        Label dibujo = FichaPais.etiqueta(mensaje[0], "");
+        dibujo.setStyle("-fx-font-size: 60px;");
+        Label titulo = FichaPais.etiqueta(mensaje[1], "titulo-mapa-grande");
         titulo.setWrapText(true);
-        VBox tarjeta = new VBox(12, globo, titulo, cifras);
+        Label puntos = FichaPais.etiqueta(Textos.entero(r.puntaje()), "fin-puntaje");
+        Label clave = FichaPais.etiqueta(t("fin.puntaje").toUpperCase(Textos.idioma().locale()), "hud-clave");
+        Label ubicados = FichaPais.etiqueta(t("fin.paisesUbicados", r.ubicados()), "negrita");
+        VBox tarjeta = new VBox(10, dibujo, titulo, clave, puntos, ubicados);
         tarjeta.getStyleClass().add("panel");
         tarjeta.setAlignment(Pos.CENTER);
+        tarjeta.setPadding(new Insets(24, 34, 24, 34));
         if (!insignias.isEmpty()) {
             FlowPane lista = new FlowPane(14, 8);
             lista.setAlignment(Pos.CENTER);
@@ -76,11 +85,10 @@ final class PantallaFin extends VBox {
             tarjeta.getChildren().addAll(FichaPais.etiqueta(t("fin.insignias"), "titulo-seccion"), lista);
         }
 
-        VBox tabla = new VBox(new TablaPuntajes(puntajes.leer(), null));
-
         if (puntajes.entraEnLaTabla(r.puntaje())) {
+            Label record = FichaPais.etiqueta("🏆 " + t("fin.nuevoRecord"), "acierto");
             TextField nombre = new TextField();
-            nombre.setPromptText(t("fin.nuevoRecord"));
+            nombre.setPromptText(t("fin.tuNombre"));
             HBox.setHgrow(nombre, Priority.ALWAYS);
             nombre.textProperty().addListener((o, a, b) -> {
                 if (b.length() > 20) nombre.setText(b.substring(0, 20));
@@ -88,34 +96,28 @@ final class PantallaFin extends VBox {
             Button guardar = new Button(t("fin.guardar"));
             guardar.getStyleClass().add("boton-principal");
             HBox fila = new HBox(8, nombre, guardar);
+            VBox pedir = new VBox(6, record, fila);
+            pedir.setAlignment(Pos.CENTER);
             Runnable accion = () -> {
                 String texto = nombre.getText().isBlank() ? t("fin.anonimo") : nombre.getText().trim();
-                Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, r.puntaje(), r.nivelRecord());
-                tabla.getChildren().setAll(new TablaPuntajes(puntajes.guardar(e), e));
-                tarjeta.getChildren().remove(fila);
+                puntajes.guardar(Puntajes.Entrada.nueva(texto, r.puntaje(), r.nivelRecord()));
+                pedir.getChildren().setAll(FichaPais.etiqueta("✓ " + t("fin.guardado"), "acierto"));
             };
             guardar.setOnAction(e -> accion.run());
             nombre.setOnAction(e -> accion.run());
-            tarjeta.getChildren().add(fila);
+            tarjeta.getChildren().add(pedir);
             Platform.runLater(nombre::requestFocus);
         }
 
-        Button otra = new Button("▶ " + t("fin.otraVez"));
-        otra.getStyleClass().add("boton-principal");
+        Button otra = new Button("▶  " + t("fin.otraVez"));
+        otra.getStyleClass().addAll("boton-principal", "boton-continuar-eleccion");
         otra.setOnAction(e -> otraVez.run());
-        Button volver = new Button(t("fin.menu"));
-        volver.setOnAction(e -> menu.run());
-        HBox botones = new HBox(10, otra, volver);
+        Button volver = new Button(t("fin.cambiar"));
+        volver.setOnAction(e -> cambiar.run());
+        VBox botones = new VBox(10, otra, volver);
         botones.setAlignment(Pos.CENTER);
         tarjeta.getChildren().add(botones);
 
-        getChildren().addAll(tarjeta, tabla);
-    }
-
-    private static VBox cifra(String clave, String valor) {
-        VBox v = new VBox(2, FichaPais.etiqueta(clave.toUpperCase(), "hud-clave"), FichaPais.etiqueta(valor, "titulo-mapa"));
-        v.setAlignment(Pos.CENTER);
-        v.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 8 18 8 18;");
-        return v;
+        getChildren().add(tarjeta);
     }
 }
