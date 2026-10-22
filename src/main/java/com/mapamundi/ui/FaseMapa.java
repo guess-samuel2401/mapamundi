@@ -173,8 +173,8 @@ final class FaseMapa extends HBox {
             controles.setDisable(false);
             if (faseMostrada != Partida.Fase.RESULTADO) {
                 lateral.getChildren().setAll(controles);
-            } else if (partida.resultado().acierto()) {
-                // El acierto se celebra en medio del mapa; un fallo va al lateral para no tapar el ★ ni las marcas.
+            } else {
+                // El resultado (acierto o fallo), en medio del mapa.
                 sobreMapa = new PanelResultado(partida);
                 sobreMapa.getStyleClass().add("panel");
                 sobreMapa.setAlignment(Pos.CENTER);
@@ -183,8 +183,6 @@ final class FaseMapa extends HBox {
                 controles.setDisable(true);
                 lateral.getChildren().setAll(controles);
                 aparecer(sobreMapa);
-            } else {
-                lateral.getChildren().setAll(new PanelResultado(partida));
             }
         }
         pistas.actualizar();

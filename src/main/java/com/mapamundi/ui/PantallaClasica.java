@@ -376,14 +376,8 @@ final class PantallaClasica extends StackPane {
         caja.getChildren().add(seguir);
         mensaje = new StackPane(caja);
         mensaje.setPickOnBounds(false);
-        // El acierto, en medio de la pantalla; un fallo, sobre el panel de la derecha para que el ★ de dónde
-        // estaba el país quede a la vista.
-        if (r.acierto()) {
-            StackPane.setAlignment(caja, Pos.CENTER);
-        } else {
-            StackPane.setAlignment(caja, Pos.TOP_RIGHT);
-            StackPane.setMargin(caja, new Insets(92, 16, 0, 0));
-        }
+        // En medio de la pantalla, tanto el acierto como el fallo.
+        StackPane.setAlignment(caja, Pos.CENTER);
         getChildren().add(getChildren().indexOf(capaPausa), mensaje);
         TranslateTransition entra = new TranslateTransition(Duration.millis(220), caja);
         entra.setFromY(-30);
