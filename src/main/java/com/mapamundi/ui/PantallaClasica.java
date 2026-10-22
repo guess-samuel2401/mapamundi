@@ -146,7 +146,7 @@ final class PantallaClasica extends StackPane {
 
     private VBox cabecera() {
         Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-hud");
-        Label estilo = FichaPais.etiqueta(t("clasico.nombre"), "insignia-clasico");
+        Label estilo = FichaPais.etiqueta(PantallaEleccion.zona(partida.enJuego()), "insignia-clasico");
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
         Label modo = FichaPais.etiqueta(partida.ajustes().modo().nombre(), "texto-suave");

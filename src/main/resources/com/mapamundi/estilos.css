@@ -461,3 +461,18 @@
 .tabla-puntajes .fila-oro { -fx-background-color: rgba(255, 210, 63, 0.22); }
 .tabla-puntajes .fila-plata { -fx-background-color: rgba(163, 170, 181, 0.18); }
 .tabla-puntajes .fila-cobre { -fx-background-color: rgba(181, 101, 45, 0.13); }
+
+/* Versión sencilla: pantallas de continente y reto, y la pestaña «Aprende a jugar». */
+.eleccion-titulo { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 34px; -fx-text-fill: -crema; -fx-text-alignment: center; }
+.eleccion-nombre { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 21px; -fx-text-fill: -rojo; -fx-text-alignment: center; }
+.tarjeta-eleccion { -fx-padding: 12 12 10 12; }
+.pestana-aprender {
+    -fx-background-color: -tinta, -coral;
+    -fx-background-insets: 0, 0 0 4 4;
+    -fx-background-radius: 16 0 0 16;
+    -fx-padding: 22 12 22 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 14, 0.2, -2, 3);
+}
+.pestana-aprender:hover { -fx-background-color: -tinta, -sol; }
+.pestana-aprender-texto { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -tinta; }

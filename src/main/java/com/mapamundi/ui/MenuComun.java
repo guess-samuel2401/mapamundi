@@ -35,6 +35,11 @@ final class MenuComun {
      * @param verTutorial abre la guía de bienvenida
      */
     static HBox botones(StackPane contenedor, Contexto ctx, Runnable refrescar, Runnable verTutorial) {
+        return botones(contenedor, ctx, refrescar, verTutorial, false);
+    }
+
+    /** @param sencillo solo récords, música y ajustes (la versión sencilla no tiene insignias y su ayuda va en una pestaña) */
+    static HBox botones(StackPane contenedor, Contexto ctx, Runnable refrescar, Runnable verTutorial, boolean sencillo) {
         Button records = new Button("🏆  " + t("menu.records"));
         records.getStyleClass().add("boton-fantasma");
         records.setOnAction(e -> Dialogo.mostrar(contenedor, t("menu.records.titulo"), tablaPuntajes(ctx.puntajes())));
@@ -76,7 +81,7 @@ final class MenuComun {
         Animaciones.alPasar(ajustes, 1.1, 3);
         // Sin foco de teclado: si no, el primero sale resaltado nada más abrir la pantalla.
         for (Button b : new Button[]{records, logros, ayuda, musica, ajustes}) b.setFocusTraversable(false);
-        HBox h = new HBox(10, records, logros, ayuda, musica, ajustes);
+        HBox h = sencillo ? new HBox(10, records, musica, ajustes) : new HBox(10, records, logros, ayuda, musica, ajustes);
         h.setAlignment(Pos.CENTER_RIGHT);
         return h;
     }

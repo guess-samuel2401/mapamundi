@@ -4,12 +4,12 @@ import com.mapamundi.i18n.Idioma;
 import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Ajustes;
 import com.mapamundi.juego.Logros;
-import com.mapamundi.juego.Logros.Logro;
-import com.mapamundi.juego.Nivel;
-import com.mapamundi.juego.Partida;
+import com.mapamundi.juego.Modo;
 import com.mapamundi.juego.PartidaClasica;
 import com.mapamundi.juego.Puntajes;
+import com.mapamundi.juego.Velocidad;
 import com.mapamundi.modelo.Atlas;
+import com.mapamundi.modelo.Continente;
 import com.mapamundi.ui.mapa.Pintor;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -23,9 +23,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 /** La ventana del juego: carga el atlas y las preferencias, y cambia entre menú, partida y fin. */
 public final class Ventana {
@@ -33,8 +35,8 @@ public final class Ventana {
     private final Stage escenario;
     private final Contexto ctx;
     private final StackPane raiz = new StackPane();
-    private Ajustes ajustes = Ajustes.porDefecto();
-    private PantallaJuego juego;
+    private Set<Continente> zona = EnumSet.allOf(Continente.class);
+    private Modo modo = Modo.MAPA_PAIS;
     private PantallaClasica clasica;
 
     public Ventana(Stage escenario) {
@@ -77,8 +79,9 @@ public final class Ventana {
     }
 
     /**
-     * Cada vez que se abre el programa: primero el idioma, después la configuración de la partida con el
-     * tutorial encima, luego la pantalla de inicio de partida y, por fin, el juego.
+     * Versión sencilla: cada vez que se abre el programa, el idioma; después, con qué continente se juega y
+     * qué reto se quiere, y a jugar. El tutorial no sale solo: está siempre a mano en la pestaña
+     * «Aprende a jugar».
      */
     private void elegirIdioma() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
@@ -88,44 +91,48 @@ public final class Ventana {
             ctx.preferencias().idioma = idioma.codigo();
             ctx.preferencias().guardar();
             escenario.setFullScreenExitHint(Textos.t("ventana.salirPantallaCompleta"));
-            configurar(true);
+            continentes();
         }));
     }
 
-    /** Paso 1: configurar la partida. */
-    private void configurar(boolean conTutorial) {
+    /** Pregunta 1: ¿con qué continente quieres jugar? (también a donde se vuelve al salir de una partida) */
+    private void continentes() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
-        cambiarA(new PantallaConfiguracion(ctx, ajustes, elegidos -> {
-            ajustes = elegidos;
-            menu();
-        }, () -> configurar(false), conTutorial));
+        PantallaEleccion[] p = {null};
+        p[0] = PantallaEleccion.continentes(ctx, zona, elegida -> {
+            zona = elegida;
+            retos();
+        }, this::continentes, () -> aprender(p[0]));
+        cambiarA(p[0]);
     }
 
-    /** Paso 2: la pantalla de inicio de partida (también a la que se vuelve al salir de una partida). */
-    private void menu() {
-        ctx.sonidos().musica(Sonidos.Musica.MENU);
-        cambiarA(new PantallaInicio(ctx, ajustes, this::jugar, () -> configurar(false), this::menu));
+    /** Pregunta 2: ¿qué reto quieres? Al elegirlo empieza la partida. */
+    private void retos() {
+        PantallaEleccion[] p = {null};
+        p[0] = PantallaEleccion.retos(ctx, zona, modo, elegido -> {
+            modo = elegido;
+            jugar();
+        }, this::continentes, this::retos, () -> aprender(p[0]));
+        cambiarA(p[0]);
     }
 
-    private void jugar(Ajustes elegidos) {
-        ajustes = elegidos;
+    private void aprender(StackPane sobre) {
+        Tutorial.mostrarSencillo(sobre, ctx.atlas(), sobre::requestFocus);
+    }
+
+    /** El juego tal como era en 2000: el país cae, la pieza no se detiene y hay 5 errores. */
+    private void jugar() {
         ctx.sonidos().musica(Sonidos.Musica.JUEGO);
-        if (elegidos.clasico()) {
-            // El juego tal como era en 2000.
-            PartidaClasica partida = new PartidaClasica(elegidos, ctx.atlas().paises(), new Random());
-            clasica = new PantallaClasica(partida, ctx, this::menu, p -> fin(PantallaFin.Resumen.de(p), List.of()));
-            cambiarA(clasica);
-            return;
-        }
-        Partida partida = new Partida(elegidos, Nivel.progresion(ctx.atlas()), Nivel.personalizado(ctx.atlas(), elegidos.continentes()), new Random());
-        juego = new PantallaJuego(partida, ctx, this::menu, (p, insignias) -> fin(PantallaFin.Resumen.de(p), insignias));
-        cambiarA(juego);
+        Ajustes ajustes = new Ajustes(Velocidad.NORMAL, modo, -1, zona, false, false, false, false, true);
+        PartidaClasica partida = new PartidaClasica(ajustes, ctx.atlas().paises(), new Random());
+        clasica = new PantallaClasica(partida, ctx, this::continentes, pc -> fin(PantallaFin.Resumen.de(pc)));
+        cambiarA(clasica);
     }
 
-    private void fin(PantallaFin.Resumen resumen, List<Logro> insignias) {
+    private void fin(PantallaFin.Resumen resumen) {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         // Con la tabla de récords llena no cabe en pantallas bajas: se puede desplazar.
-        StackPane centrada = new StackPane(new PantallaFin(resumen, ctx.puntajes(), insignias, this::menu, () -> jugar(ajustes)));
+        StackPane centrada = new StackPane(new PantallaFin(resumen, ctx.puntajes(), List.of(), this::continentes, this::jugar));
         centrada.setAlignment(Pos.TOP_CENTER);
         ScrollPane desplazable = new ScrollPane(centrada);
         desplazable.setFitToWidth(true);
@@ -133,10 +140,6 @@ public final class Ventana {
     }
 
     private void cambiarA(Parent pantalla) {
-        if (juego != null && pantalla != juego) {
-            juego.desconectar();
-            juego = null;
-        }
         if (clasica != null && pantalla != clasica) {
             clasica.desconectar();
             clasica = null;

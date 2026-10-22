@@ -123,8 +123,9 @@ final class Tutorial {
     private Tutorial() {
     }
 
+    /** El tutorial completo, con los dos estilos de juego. */
     static void mostrar(StackPane contenedor, Atlas atlas, Runnable alTerminar) {
-        List<Paso> pasos = List.of(
+        mostrar(contenedor, alTerminar, true, List.of(
                 new Paso(0, "bienvenida", () -> bienvenida(atlas)),
                 new Paso(0, "pasos", () -> dosPasos(atlas)),
                 new Paso(0, "modos", () -> cincoModos(atlas)),
@@ -138,8 +139,20 @@ final class Tutorial {
                 new Paso(2, "c2", () -> caidaClasica(atlas)),
                 new Paso(2, "c3", () -> mapaClasico(atlas)),
                 new Paso(2, "c4", () -> puntosClasicos(atlas)),
-                new Paso(3, "controles", Tutorial::controles));
+                new Paso(3, "controles", Tutorial::controles)));
+    }
 
+    /** La versión sencilla: cinco pasos sobre su única forma de jugar, sin pestañas de capítulo. */
+    static void mostrarSencillo(StackPane contenedor, Atlas atlas, Runnable alTerminar) {
+        mostrar(contenedor, alTerminar, false, List.of(
+                new Paso(0, "s.bienvenida", () -> bienvenida(atlas)),
+                new Paso(0, "s.c1", Tutorial::clasicoIntro),
+                new Paso(0, "s.c2", () -> caidaClasica(atlas)),
+                new Paso(0, "s.c3", () -> mapaClasico(atlas)),
+                new Paso(0, "s.c4", () -> puntosClasicos(atlas))));
+    }
+
+    private static void mostrar(StackPane contenedor, Runnable alTerminar, boolean conCapitulos, List<Paso> pasos) {
         int[] actual = {0};
         Escena[] escena = {null};
 
@@ -148,6 +161,8 @@ final class Tutorial {
         List<Button> pestanas = new ArrayList<>();
         HBox barra = new HBox(8);
         barra.setAlignment(Pos.CENTER);
+        barra.setVisible(conCapitulos);
+        barra.setManaged(conCapitulos);
         Runnable[] ir = new Runnable[1];
         for (int c = 0; c < capitulos.length; c++) {
             int cap = c;
@@ -1015,7 +1030,7 @@ final class Tutorial {
             iconos.add(icono);
             fila.getChildren().add(carta);
         }
-        VBox v = new VBox(12, lbl(t("clasico.nombre"), "insignia-clasico"), fila);
+        VBox v = new VBox(12, lbl(t("tut.l.insigniaClasico"), "insignia-clasico"), fila);
         v.setAlignment(Pos.CENTER);
         v.setPrefSize(W, H);
         e.poner(v, 0, 0);

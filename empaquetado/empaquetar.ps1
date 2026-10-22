@@ -18,7 +18,7 @@ $raiz = Split-Path -Parent $PSScriptRoot
 Set-Location $raiz
 if (-not $env:JAVA_HOME) { $env:JAVA_HOME = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'Machine') }
 $jpackage = Join-Path $env:JAVA_HOME 'bin\jpackage.exe'
-$version = '2.3.0'
+$version = '3.0.0'
 
 # Una copia abierta del programa empaquetado bloquearía la limpieza de target\.
 $abiertos = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -like (Join-Path $raiz 'target\*') }
@@ -71,13 +71,13 @@ if ($Publicar) {
     if (-not $iscc) { throw 'Falta Inno Setup 6 (winget install JRSoftware.InnoSetup)' }
     & $iscc /Q "/DVersion=$version" (Join-Path $PSScriptRoot 'instalador.iss')
     if ($LASTEXITCODE -ne 0) { throw 'Falló Inno Setup' }
-    $zip = Join-Path $salida "Mapamundi-$version-windows-portable.zip"
+    $zip = Join-Path $salida "Mapamundi-Sencillo-$version-windows-portable.zip"
     if (Test-Path $zip) { Remove-Item $zip }
     Compress-Archive -Path $app -DestinationPath $zip -CompressionLevel Optimal
     Get-ChildItem $salida | ForEach-Object { Write-Host ("     {0}  ({1} MB)" -f $_.Name, [math]::Round($_.Length / 1MB, 1)) }
 } elseif ($Instalar) {
     Write-Host '3/3  Instalando para este usuario...'
-    $instalado = Join-Path $env:LOCALAPPDATA 'Programs\Mapamundi'
+    $instalado = Join-Path $env:LOCALAPPDATA 'Programs\Mapamundi Sencillo'
     Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "$instalado\*" } | Stop-Process -Force
     if (Test-Path $instalado) { Remove-Item $instalado -Recurse -Force }
     Copy-Item $app $instalado -Recurse
@@ -89,7 +89,7 @@ if ($Publicar) {
         (Join-Path ([Environment]::GetFolderPath('Programs')) '')
     )
     foreach ($carpeta in $carpetas) {
-        $acceso = $shell.CreateShortcut((Join-Path $carpeta 'Mapamundi.lnk'))
+        $acceso = $shell.CreateShortcut((Join-Path $carpeta 'Mapamundi Sencillo.lnk'))
         $acceso.TargetPath = $exe
         $acceso.WorkingDirectory = $instalado
         $acceso.IconLocation = "$exe,0"

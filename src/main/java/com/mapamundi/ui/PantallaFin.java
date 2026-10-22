@@ -38,7 +38,7 @@ final class PantallaFin extends VBox {
         }
 
         static Resumen de(PartidaClasica p) {
-            String estilo = t("clasico.nombre");
+            String estilo = PantallaEleccion.zona(p.enJuego());
             return new Resumen(t(p.ganada() ? "clasico.fin.ganada" : "fin.titulo"), p.puntaje(), p.ubicados().size(),
                     new String[]{t("hud.errores"), p.errores() + "/" + PartidaClasica.ERRORES_MAX}, estilo,
                     estilo + " · " + p.ajustes().modo().nombre());
