@@ -10,10 +10,10 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 
 1. Entra en **[Descargas (Releases)](https://github.com/guess-samuel2401/mapamundi/releases/latest)**.
 2. Descarga una de las dos opciones:
-   - **`Mapamundi-2.2.0-instalador.exe`** (recomendado): ábrelo y sigue el asistente. Crea accesos directos
+   - **`Mapamundi-2.3.0-instalador.exe`** (recomendado): ábrelo y sigue el asistente. Crea accesos directos
      en el menú Inicio (y, si quieres, en el Escritorio) y se puede desinstalar desde
      *Configuración → Aplicaciones*. No pide permisos de administrador.
-   - **`Mapamundi-2.2.0-windows-portable.zip`**: descomprímelo donde quieras y abre `Mapamundi\Mapamundi.exe`.
+   - **`Mapamundi-2.3.0-windows-portable.zip`**: descomprímelo donde quieras y abre `Mapamundi\Mapamundi.exe`.
      No instala nada.
 3. No hace falta tener Java: el programa lo lleva incluido. Tampoco necesita internet para jugar.
 
@@ -181,7 +181,7 @@ Para publicar una versión nueva (requiere [Inno Setup 6](https://jrsoftware.org
 
 ```bash
 .\empaquetado\empaquetar.ps1 -Publicar
-gh release create v2.2.0 target\publicar\* --title "Mapamundi 2.2.0"
+gh release create v2.3.0 target\publicar\* --title "Mapamundi 2.3.0"
 ```
 
 `-Publicar` deja en `target\publicar` el instalador (`empaquetado/instalador.iss`) y el ZIP portable.
