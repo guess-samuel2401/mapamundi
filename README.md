@@ -28,7 +28,8 @@ Al abrir el programa: **idioma** → **configuración de la partida** (paso 1, c
 **inicio de partida** (paso 2) → juego.
 
 - **Paso 1 · Configura tu partida:** el estilo (Moderno o Clásico 2000, en dos tarjetas grandes), el nivel o los
-  continentes (tarjetas con su mapa), el modo de juego, las reglas extra y si se muestra la ficha del país.
+  continentes (tarjetas con su mapa), el modo de juego (cinco opciones a la vista, con su explicación y su
+  dificultad de ● a ●●●●●), las reglas extra y si se muestra la ficha del país.
   **Continuar** (o Enter) lleva al paso 2.
 - **Paso 2 · ¡Todo listo!:** el mapa con los países de la partida en color, la ficha "Tu partida" con todo lo
   elegido, el récord a batir y el botón **JUGAR** (o Enter). **Cambiar configuración** (o Esc) vuelve al paso 1.

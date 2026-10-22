@@ -18,9 +18,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -58,7 +56,7 @@ final class PantallaConfiguracion extends StackPane {
     private final List<Nivel> niveles;
     private final ToggleGroup grupoNivel = new ToggleGroup();
     private final ToggleGroup grupoEstilo = new ToggleGroup();
-    private final ComboBox<Modo> modo = new ComboBox<>();
+    private final ToggleGroup grupoModo = new ToggleGroup();
     private final CheckBox mostrarDatos = new CheckBox(t("menu.mostrarDatos"));
     private final ToggleButton contrarreloj = interruptor("◷  " + t("regla.contrarreloj"),
             t("regla.contrarreloj.ayuda", Partida.SEGUNDOS_CONTRARRELOJ, Partida.SEGUNDOS_POR_ACIERTO));
@@ -106,7 +104,7 @@ final class PantallaConfiguracion extends StackPane {
 
         // Enter = Continuar, aunque el foco esté en una tarjeta (que si no se queda la tecla).
         addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.ENTER && !modo.isShowing() && getChildren().size() == 1) {
+            if (e.getCode() == KeyCode.ENTER && getChildren().size() == 1) {
                 continuar();
                 e.consume();
             }
@@ -224,21 +222,23 @@ final class PantallaConfiguracion extends StackPane {
     // ------------------------------------------------------------------ derecha: modo, reglas y continuar
 
     private VBox panelDerecho(Ajustes inicial, BooleanBinding clasico) {
-        modo.getItems().setAll(Modo.values());
-        modo.setValue(inicial.modo());
-        modo.setMaxWidth(Double.MAX_VALUE);
-        modo.setCellFactory(l -> celdaModo());
-        modo.setButtonCell(celdaModo());
-        Label ayudaModo = FichaPais.etiqueta("", "texto-suave");
-        ayudaModo.setWrapText(true);
-        ayudaModo.textProperty().bind(modo.valueProperty().map(Modo::ayuda));
+        // Modo de juego: las cinco opciones a la vista, de la más fácil a la más difícil.
+        VBox modos = new VBox(6);
+        for (Modo m : Modo.values()) modos.getChildren().add(opcionModo(m, m == inicial.modo()));
+        grupoModo.selectedToggleProperty().addListener((o, antes, ahora) -> {
+            if (ahora == null) antes.setSelected(true);
+        });
 
         mostrarDatos.setSelected(inicial.mostrarDatos());
+        mostrarDatos.setWrapText(true);
         contrarreloj.setSelected(inicial.contrarreloj());
         frioCaliente.setSelected(inicial.frioCaliente());
         piezaGirada.setSelected(inicial.piezaGirada());
-        VBox reglas = new VBox(8, contrarreloj, frioCaliente, piezaGirada);
-        for (ToggleButton b : List.of(contrarreloj, frioCaliente, piezaGirada)) b.setMaxWidth(Double.MAX_VALUE);
+        HBox reglas = new HBox(6, contrarreloj, frioCaliente, piezaGirada);
+        for (ToggleButton b : List.of(contrarreloj, frioCaliente, piezaGirada)) {
+            b.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(b, Priority.ALWAYS);
+        }
         Node seccionReglas = MenuComun.seccion(t("menu.reglas"), t("menu.reglas.nota"));
         mostrarSi(seccionReglas, clasico.not());
         mostrarSi(reglas, clasico.not());
@@ -256,12 +256,45 @@ final class PantallaConfiguracion extends StackPane {
         siguiente.setOnAction(e -> continuar());
         Animaciones.alPasar(siguiente, 1.04, 3, MenuComun.latir(siguiente));
 
-        VBox v = new VBox(10, MenuComun.seccion(t("menu.modo"), null), modo, ayudaModo,
+        VBox v = new VBox(10, MenuComun.seccion(t("menu.modo"), null), modos,
                 seccionReglas, reglas, mostrarDatos, empuje, aviso, siguiente);
         v.getStyleClass().add("panel");
-        v.setPrefWidth(430);
-        v.setMinWidth(380);
+        // Ancho fijo: si no, cambia un poco al pasar de Moderno a Clásico.
+        v.setPrefWidth(450);
+        v.setMinWidth(450);
+        v.setMaxWidth(450);
         return v;
+    }
+
+    /** Una opción de modo: el círculo de selección, el nombre, la explicación y la dificultad (● a ●●●●●). */
+    private ToggleButton opcionModo(Modo m, boolean elegida) {
+        Region circulo = new Region();
+        circulo.getStyleClass().add("radio-modo");
+        circulo.setMinSize(18, 18);
+        circulo.setMaxSize(18, 18);
+        VBox textos = MenuComun.dosLineas(m.nombre(), m.ayuda(), "opcion-modo-nombre", "opcion-modo-ayuda");
+        HBox.setHgrow(textos, Priority.ALWAYS);
+        int nivel = m.ordinal() + 1;
+        Label dificultad = FichaPais.etiqueta("●".repeat(nivel) + "○".repeat(Modo.values().length - nivel), "dificultad-modo");
+        Tooltip ayuda = new Tooltip(t("config.dificultad", nivel, Modo.values().length));
+        ayuda.setShowDelay(Duration.millis(250));
+        Tooltip.install(dificultad, ayuda);
+        HBox contenido = new HBox(10, circulo, textos, dificultad);
+        contenido.setAlignment(Pos.CENTER_LEFT);
+        ToggleButton b = new ToggleButton();
+        b.setGraphic(contenido);
+        b.getStyleClass().setAll("opcion-modo");
+        b.setToggleGroup(grupoModo);
+        b.setUserData(m);
+        b.setSelected(elegida);
+        b.setMaxWidth(Double.MAX_VALUE);
+        contenido.prefWidthProperty().bind(b.widthProperty().subtract(24));
+        Animaciones.alPasar(b, 1.02, 2);
+        return b;
+    }
+
+    private Modo modoElegido() {
+        return (Modo) grupoModo.getSelectedToggle().getUserData();
     }
 
     private static ToggleButton interruptor(String texto, String ayuda) {
@@ -274,16 +307,6 @@ final class PantallaConfiguracion extends StackPane {
         b.setTooltip(t);
         Animaciones.alPasar(b, 1.03, 2);
         return b;
-    }
-
-    private static ListCell<Modo> celdaModo() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(Modo m, boolean vacio) {
-                super.updateItem(m, vacio);
-                setText(vacio || m == null ? null : m.nombre());
-            }
-        };
     }
 
     private static void mostrarSi(Node nodo, ObservableValue<Boolean> condicion) {
@@ -307,7 +330,7 @@ final class PantallaConfiguracion extends StackPane {
             return;
         }
         // El nivel se guarda aunque el clásico no lo use, para que siga elegido al volver al estilo moderno.
-        continuar.accept(new Ajustes(VELOCIDAD, modo.getValue(), nivel,
+        continuar.accept(new Ajustes(VELOCIDAD, modoElegido(), nivel,
                 elegidos.isEmpty() ? EnumSet.allOf(Continente.class) : elegidos,
                 mostrarDatos.isSelected(), contrarreloj.isSelected(), frioCaliente.isSelected(), piezaGirada.isSelected(), clasico));
     }
