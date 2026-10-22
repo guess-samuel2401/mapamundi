@@ -68,13 +68,7 @@ final class PanelAjustes extends VBox {
         Label ayudaDaltonico = FichaPais.etiqueta(t("ajustes.daltonico.ayuda"), "texto-suave");
         ayudaDaltonico.setWrapText(true);
         daltonico.selectedProperty().addListener((o, a, b) -> {
-            pref.daltonico = b;
-            pref.guardar();
-            Pintor.daltonico(b);
-            if (ctx.escenario().getScene() != null) {
-                ctx.escenario().getScene().getRoot().getStyleClass().remove("daltonico");
-                if (b) ctx.escenario().getScene().getRoot().getStyleClass().add("daltonico");
-            }
+            aplicarDaltonico(ctx, b);
             alCambiarAspecto.run();
         });
 
@@ -92,6 +86,18 @@ final class PanelAjustes extends VBox {
             getChildren().addAll(seccion(t("ajustes.ayuda")), tutorial);
         }
         setPrefWidth(460);
+    }
+
+    /** Activa o quita el modo daltónico y lo guarda (desde Ajustes o desde la pantalla de idioma). */
+    static void aplicarDaltonico(Contexto ctx, boolean activo) {
+        Preferencias pref = ctx.preferencias();
+        pref.daltonico = activo;
+        pref.guardar();
+        Pintor.daltonico(activo);
+        if (ctx.escenario().getScene() != null) {
+            ctx.escenario().getScene().getRoot().getStyleClass().remove("daltonico");
+            if (activo) ctx.escenario().getScene().getRoot().getStyleClass().add("daltonico");
+        }
     }
 
     private static Slider deslizador(double valor) {

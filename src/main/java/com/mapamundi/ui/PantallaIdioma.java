@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 /**
  * Lo primero que aparece al abrir el programa: elegir entre español e inglés. Viene marcado el último
  * idioma usado; se elige con un clic, con ← → y Enter o con las teclas 1 y 2. Los textos van en los dos
- * idiomas, porque todavía no se sabe cuál lee el jugador.
+ * idiomas, porque todavía no se sabe cuál lee el jugador. Abajo se puede activar el modo daltónico.
  */
 final class PantallaIdioma extends StackPane {
 
@@ -32,14 +33,10 @@ final class PantallaIdioma extends StackPane {
     private Idioma marcado;
     private boolean elegido;
 
-    PantallaIdioma(Atlas atlas, Idioma inicial, Consumer<Idioma> alElegir) {
+    PantallaIdioma(Contexto ctx, Idioma inicial, Consumer<Idioma> alElegir) {
         this.alElegir = alElegir;
         this.marcado = inicial;
-
-        // De fondo, el mapa del mundo apagado.
-        MapaDecorativo mapa = new MapaDecorativo(atlas);
-        mapa.setOpacity(0.18);
-        mapa.setMouseTransparent(true);
+        Atlas atlas = ctx.atlas();
 
         Label logo = Logotipo.crear("Mapamundi");
         Label titulo = FichaPais.etiqueta("Elige tu idioma  ·  Choose your language", "idioma-titulo");
@@ -52,10 +49,24 @@ final class PantallaIdioma extends StackPane {
 
         Label ayuda = FichaPais.etiqueta("← →  ·  Enter  ·  1 / 2", "idioma-ayuda");
 
-        VBox centro = new VBox(26, logo, titulo, fila, ayuda);
+        // Modo daltónico: se aplica al momento (también al mapa del fondo) y se guarda, igual que en Ajustes.
+        ToggleButton daltonico = new ToggleButton();
+        daltonico.getStyleClass().setAll("boton-fantasma", "interruptor-daltonico");
+        daltonico.setFocusTraversable(false);
+        daltonico.setSelected(ctx.preferencias().daltonico);
+        Runnable rotulo = () -> daltonico.setText((daltonico.isSelected() ? "✓  " : "◐  ")
+                + "Modo daltónico  ·  Colour-blind mode");
+        rotulo.run();
+        daltonico.selectedProperty().addListener((o, antes, activo) -> {
+            PanelAjustes.aplicarDaltonico(ctx, activo);
+            rotulo.run();
+            getChildren().set(0, fondo(atlas));
+        });
+
+        VBox centro = new VBox(26, logo, titulo, fila, ayuda, daltonico);
         centro.setAlignment(Pos.CENTER);
         centro.setPadding(new Insets(24));
-        getChildren().addAll(mapa, centro);
+        getChildren().addAll(fondo(atlas), centro);
         getStyleClass().add("pantalla-idioma");
 
         setOnKeyPressed(e -> {
@@ -75,6 +86,14 @@ final class PantallaIdioma extends StackPane {
         entrada.setFromValue(0);
         entrada.setToValue(1);
         entrada.play();
+    }
+
+    /** De fondo, el mapa del mundo apagado (se rehace al cambiar el modo daltónico). */
+    private static MapaDecorativo fondo(Atlas atlas) {
+        MapaDecorativo mapa = new MapaDecorativo(atlas);
+        mapa.setOpacity(0.18);
+        mapa.setMouseTransparent(true);
+        return mapa;
     }
 
     private Button tarjeta(Idioma idioma, String codigo, String detalle, int tecla) {

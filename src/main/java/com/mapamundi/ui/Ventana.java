@@ -86,7 +86,7 @@ public final class Ventana {
     private void elegirIdioma() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         Idioma ultimo = Idioma.deCodigo(ctx.preferencias().idioma);
-        cambiarA(new PantallaIdioma(ctx.atlas(), ultimo, idioma -> {
+        cambiarA(new PantallaIdioma(ctx, ultimo, idioma -> {
             Textos.usar(idioma);
             ctx.preferencias().idioma = idioma.codigo();
             ctx.preferencias().guardar();
