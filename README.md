@@ -100,7 +100,7 @@ En *Configura tu partida* se elige el estilo: **Arrastra y ubica** (todo lo ante
    original, para dar tiempo a pensar); las flechas cambian su dirección y, **mientras están pulsadas**, la pieza
    va más rápido (160 %); al soltarlas sigue en esa dirección, otra vez despacio. Rebota en los bordes y
    **Ctrl + flecha** la mueve muy rápido. Enter la suelta: vale si cae sobre el país
-   (o a menos de 150 km, para los países diminutos). Una barra de tiempo se llena en unos 38 s.
+   (o a menos de 250 km de su lugar). Una barra de tiempo se llena en unos 38 s.
 3. **5 errores para toda la partida** (continente equivocado, país que llega abajo, pieza mal soltada o tiempo
    agotado); tras un error el **mismo país** vuelve a caer.
 4. Cada país vale **10, 20, 30, 40 o 50 puntos** según el modo (de "Mapa y nombre del país" a "Solo datos"), sin

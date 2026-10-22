@@ -73,8 +73,8 @@ public final class PartidaClasica {
      * de tiempo del mapa se llena en unos 38 s.
      */
     public static final Ritmo RITMO = new Ritmo(450, 130, 150);
-    /** Margen para los países diminutos: vale soltar la pieza a menos de esto de su lugar. */
-    public static final int MARGEN_KM = 150;
+    /** Margen de acierto: vale soltar la pieza dentro del país o a menos de esto de su lugar. */
+    public static final int MARGEN_KM = 250;
 
     public enum Motivo {
         UBICADO, LEJOS, TIEMPO_CAIDA, CONTINENTE_EQUIVOCADO, TIEMPO_MAPA;
