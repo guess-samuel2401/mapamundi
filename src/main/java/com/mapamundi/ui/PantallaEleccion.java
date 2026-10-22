@@ -177,7 +177,8 @@ final class PantallaEleccion extends StackPane {
             opciones.add(new Opcion(muestra(ejemplo, m), m.nombre(),
                     dificultad + "   +" + PartidaClasica.puntosPorPais(m) + " " + t("eleccion.porPais")));
         }
-        return new PantallaEleccion(ctx, t("eleccion.reto.titulo", zona(zona)), t("eleccion.reto.ayuda"), opciones, 5, 212,
+        String titulo = zona.size() == 1 ? t("eleccion.reto.titulo", zona(zona)) : t("eleccion.reto.tituloMundo");
+        return new PantallaEleccion(ctx, titulo, t("eleccion.reto.ayuda"), opciones, 5, 212,
                 inicial.ordinal(), i -> alElegir.accept(Modo.values()[i]), atras, refrescar, aprender);
     }
 

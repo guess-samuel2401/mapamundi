@@ -8,7 +8,7 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 
 > **Rama `version-sencilla` (Mapamundi Sencillo 3.0.0, en pruebas).** Una versión aparte, más simple, que vuelve
 > a la forma de jugar del original. Al abrirla, primero se elige el idioma, después **¿con qué continente quieres
-> jugar?** y luego **¿qué reto quieres?**. El reto es uno de los cinco modos y, al elegirlo, empieza la partida.
+> jugar?** y luego **¿cómo te gustaría jugar?**. El reto es uno de los cinco modos y, al elegirlo, empieza la partida.
 > El país cae mientras eliges su continente, la pieza del mapa nunca se detiene y hay 5 errores. El tutorial
 > no sale solo: está en la pestaña **«Aprende a jugar»**, siempre visible a la derecha. Se instala como un
 > programa distinto («Mapamundi Sencillo»), así que convive con Mapamundi 2.3.0, que sigue en la rama `main`.
