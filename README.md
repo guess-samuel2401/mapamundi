@@ -77,8 +77,10 @@ En *Configura tu partida*, arriba a la derecha, se elige el estilo: **Moderno** 
 1. **El país cae** desde arriba, un paso por tic y con un "bip" (cada 700, 450 o 200 ms según la velocidad).
    Hay que elegir su continente antes de que llegue abajo: ← → y Enter, las teclas 1–5, o clic para marcar y
    doble clic para elegir.
-2. **En el mapa, la pieza no se detiene:** sale de arriba y del centro bajando; las flechas solo cambian su
-   dirección, rebota en los bordes y **Ctrl + flecha** la mueve rápido. Enter la suelta: vale si cae sobre el país
+2. **En el mapa, la pieza no se detiene:** sale de arriba y del centro bajando despacio (al 60 % del ritmo
+   original, para dar tiempo a pensar); las flechas cambian su dirección y, **mientras están pulsadas**, la pieza
+   va más rápido (160 %); al soltarlas sigue en esa dirección, otra vez despacio. Rebota en los bordes y
+   **Ctrl + flecha** la mueve muy rápido. Enter la suelta: vale si cae sobre el país
    (o a menos del margen de la velocidad). Una barra de tiempo se llena en unos 100, 38 o 23 s.
 3. **5 errores para toda la partida** (continente equivocado, país que llega abajo, pieza mal soltada o tiempo
    agotado); tras un error el **mismo país** vuelve a caer.

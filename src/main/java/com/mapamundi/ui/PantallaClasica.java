@@ -47,6 +47,13 @@ import static com.mapamundi.i18n.Textos.t;
  */
 final class PantallaClasica extends StackPane {
 
+    /**
+     * Velocidad de la pieza en el mapa respecto al ritmo del original: a la deriva (sin tocar nada) va más
+     * despacio, para dar tiempo a pensar, y con una flecha pulsada, algo más rápido.
+     */
+    private static final double VELOCIDAD_DERIVA = 0.6;
+    private static final double VELOCIDAD_CON_FLECHA = 1.6;
+
     private final PartidaClasica partida;
     private final Contexto ctx;
     private final Sonidos sonidos;
@@ -103,6 +110,7 @@ final class PantallaClasica extends StackPane {
 
         caida = reloj(ritmo.caida(), partida::ticCaida);
         movimiento = reloj(ritmo.movimiento(), partida::ticMovimiento);
+        movimiento.setRate(VELOCIDAD_DERIVA);
         reloj = reloj(ritmo.reloj(), partida::ticReloj);
 
         partida.alSonar(sonidos::reproducir);
@@ -435,17 +443,15 @@ final class PantallaClasica extends StackPane {
         actualizarTarjetas();
     }
 
-    /** Las flechas cambian la dirección; con Ctrl, además, la pieza va rápido (como en el original). */
+    /**
+     * Las flechas cambian la dirección. Mientras una flecha está pulsada la pieza va algo más rápido que a la
+     * deriva, y con Ctrl, muy rápido (como en el original).
+     */
     private void teclaMapa(KeyEvent e) {
-        Direccion d = switch (e.getCode()) {
-            case UP -> Direccion.ARRIBA;
-            case DOWN -> Direccion.ABAJO;
-            case LEFT -> Direccion.IZQUIERDA;
-            case RIGHT -> Direccion.DERECHA;
-            default -> null;
-        };
+        Direccion d = direccionDe(e.getCode());
         if (d != null) {
-            movimiento.setRate(e.isControlDown() ? (double) ritmo.movimiento() / PartidaClasica.Ritmo.MOVIMIENTO_RAPIDO : 1);
+            movimiento.setRate(e.isControlDown() ? (double) ritmo.movimiento() / PartidaClasica.Ritmo.MOVIMIENTO_RAPIDO
+                    : VELOCIDAD_CON_FLECHA);
             partida.cambiarDireccion(d);
             e.consume();
         } else if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
@@ -454,8 +460,19 @@ final class PantallaClasica extends StackPane {
         }
     }
 
+    /** Al soltar la flecha (o Ctrl), la pieza sigue en esa dirección, pero otra vez despacio. */
     private void soltar(KeyEvent e) {
-        if (e.getCode() == KeyCode.CONTROL) movimiento.setRate(1);
+        if (e.getCode() == KeyCode.CONTROL || direccionDe(e.getCode()) != null) movimiento.setRate(VELOCIDAD_DERIVA);
+    }
+
+    private static Direccion direccionDe(KeyCode k) {
+        return switch (k) {
+            case UP -> Direccion.ARRIBA;
+            case DOWN -> Direccion.ABAJO;
+            case LEFT -> Direccion.IZQUIERDA;
+            case RIGHT -> Direccion.DERECHA;
+            default -> null;
+        };
     }
 
     /** El siguiente continente que se puede elegir a partir de {@code desde}, avanzando en {@code paso}. */
