@@ -161,7 +161,15 @@ final class PantallaEleccion extends StackPane {
     /** «¿Qué reto quieres en …?»: los cinco modos, de más fácil a más difícil, con un ejemplo de la pieza. */
     static PantallaEleccion retos(Contexto ctx, Set<Continente> zona, Modo inicial, Consumer<Modo> alElegir,
                                   Runnable atras, Runnable refrescar, Runnable aprender) {
-        Pais ejemplo = ctx.atlas().paises().stream().filter(p -> p.iso().equals("PE")).findFirst()
+        // El ejemplo es un país conocido del continente elegido (con todo el mundo, Perú).
+        String iso = zona.size() != 1 ? "PE" : switch (zona.iterator().next()) {
+            case AFRICA -> "EG";
+            case AMERICA -> "PE";
+            case EUROPA -> "FR";
+            case ASIA -> "JP";
+            case OCEANIA -> "AU";
+        };
+        Pais ejemplo = ctx.atlas().paises().stream().filter(p -> p.iso().equals(iso)).findFirst()
                 .orElse(ctx.atlas().paises().getFirst());
         List<Opcion> opciones = new ArrayList<>();
         for (Modo m : Modo.values()) {
