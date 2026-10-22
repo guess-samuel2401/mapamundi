@@ -30,15 +30,22 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.mapamundi.i18n.Textos.t;
 
 /**
- * Las dos preguntas antes de jugar, cada una en su pantalla y con tarjetas grandes: con qué continente se
- * juega y qué reto (modo de juego) se quiere. Se elige con un clic, con ← → y Enter o con las teclas de número;
- * Esc vuelve atrás. A la derecha siempre está la pestaña «Aprende a jugar».
+ * Las dos preguntas antes de jugar, cada una en su pantalla y con tarjetas grandes: con qué continentes se
+ * juega y cómo (el reto, es decir, el modo de juego). A la derecha siempre está la pestaña «Aprende a jugar».
+ *
+ * <ul>
+ *   <li><b>Continentes:</b> las tarjetas son casillas: un clic (o su número, o Espacio) marca o desmarca cada
+ *       continente, y la última, «Todo el mundo», los marca o desmarca todos. «Continuar» (o Enter) pasa a los
+ *       retos cuando hay al menos uno marcado.</li>
+ *   <li><b>Retos:</b> se elige uno con un clic, con ← → y Enter o con su número, y empieza la partida.
+ *       Esc vuelve a los continentes.</li>
+ * </ul>
  */
 final class PantallaEleccion extends StackPane {
 
@@ -47,19 +54,29 @@ final class PantallaEleccion extends StackPane {
     }
 
     private final List<Button> tarjetas = new ArrayList<>();
+    private final List<Label> palomitas = new ArrayList<>();
+    /** Una sola elección (retos); null si las tarjetas son casillas. */
     private final Consumer<Integer> alElegir;
-    private int marcada;
+    /** Casillas marcadas (continentes); la última tarjeta no se guarda aquí: marca o desmarca todas. */
+    private final Set<Integer> marcadas = new TreeSet<>();
+    private Button continuar;
+    /** La tarjeta resaltada con el ratón o las flechas. */
+    private int cursor;
     private boolean elegida;
 
     /**
-     * @param atras      vuelve a la pantalla anterior (null si no hay)
-     * @param refrescar  rehace la pantalla (tras cambiar el modo daltónico en Ajustes)
-     * @param aprender   abre el tutorial
+     * @param alElegir    recibe la tarjeta elegida (una sola elección), o null para casillas
+     * @param alConfirmar con casillas, recibe las marcadas al pulsar «Continuar»
+     * @param atras       vuelve a la pantalla anterior (null si no hay)
+     * @param refrescar   rehace la pantalla (tras cambiar el modo daltónico en Ajustes)
+     * @param aprender    abre el tutorial
      */
-    private PantallaEleccion(Contexto ctx, String titulo, String ayuda, List<Opcion> opciones, int columnas, double ancho, int inicial,
-                             Consumer<Integer> alElegir, Runnable atras, Runnable refrescar, Runnable aprender) {
+    private PantallaEleccion(Contexto ctx, String titulo, String ayuda, List<Opcion> opciones, int columnas, double ancho,
+                             int inicial, Set<Integer> marcadasIniciales, Consumer<Integer> alElegir,
+                             Consumer<Set<Integer>> alConfirmar, Runnable atras, Runnable refrescar, Runnable aprender) {
         this.alElegir = alElegir;
-        this.marcada = Math.max(0, Math.min(inicial, opciones.size() - 1));
+        this.cursor = Math.max(0, Math.min(inicial, opciones.size() - 1));
+        boolean casillas = alConfirmar != null;
 
         MapaDecorativo mapa = new MapaDecorativo(ctx.atlas());
         mapa.setOpacity(0.14);
@@ -88,10 +105,20 @@ final class PantallaEleccion extends StackPane {
         rejilla.setVgap(18);
         rejilla.setAlignment(Pos.CENTER);
         for (int i = 0; i < opciones.size(); i++) {
-            rejilla.add(tarjeta(opciones.get(i), i, ancho), i % columnas, i / columnas);
+            rejilla.add(tarjeta(opciones.get(i), i, ancho, casillas), i % columnas, i / columnas);
         }
         Label pie = FichaPais.etiqueta(ayuda, "idioma-ayuda");
-        VBox centro = new VBox(22, pregunta, rejilla, pie);
+        VBox centro = new VBox(casillas ? 16 : 22, pregunta, rejilla);
+        if (casillas) {
+            continuar = new Button(t("eleccion.continuar") + "  ›");
+            continuar.getStyleClass().addAll("boton-principal", "boton-continuar-eleccion");
+            continuar.setFocusTraversable(false);
+            continuar.setOnAction(e -> {
+                if (!marcadas.isEmpty()) alConfirmar.accept(Set.copyOf(marcadas));
+            });
+            centro.getChildren().add(continuar);
+        }
+        centro.getChildren().add(pie);
         centro.setAlignment(Pos.CENTER);
         VBox.setVgrow(centro, Priority.ALWAYS);
 
@@ -115,22 +142,30 @@ final class PantallaEleccion extends StackPane {
             if (getChildren().size() > 3) return; // hay una ventana encima (tutorial, ajustes…)
             KeyCode k = e.getCode();
             int n = tarjetas.size();
-            if (k == KeyCode.RIGHT || k == KeyCode.TAB) marcar((marcada + 1) % n);
-            else if (k == KeyCode.LEFT) marcar((marcada + n - 1) % n);
-            else if (k == KeyCode.DOWN) marcar(Math.min(n - 1, marcada + columnas));
-            else if (k == KeyCode.UP) marcar(Math.max(0, marcada - columnas));
-            else if (k == KeyCode.ENTER || k == KeyCode.SPACE) elegir(marcada);
-            else if (k == KeyCode.ESCAPE && atras != null) atras.run();
+            if (k == KeyCode.RIGHT || k == KeyCode.TAB) resaltar((cursor + 1) % n);
+            else if (k == KeyCode.LEFT) resaltar((cursor + n - 1) % n);
+            else if (k == KeyCode.DOWN) resaltar(Math.min(n - 1, cursor + columnas));
+            else if (k == KeyCode.UP) resaltar(Math.max(0, cursor - columnas));
+            else if (k == KeyCode.SPACE) pulsar(cursor);
+            else if (k == KeyCode.ENTER) {
+                if (casillas) continuar.fire();
+                else pulsar(cursor);
+            } else if (k == KeyCode.ESCAPE && atras != null) atras.run();
             else if (k.isDigitKey() && !k.getName().isEmpty()) {
                 int numero = Character.getNumericValue(k.getName().charAt(k.getName().length() - 1));
                 if (numero < 1 || numero > n) return;
-                elegir(numero - 1);
+                resaltar(numero - 1);
+                pulsar(numero - 1);
             } else return;
             e.consume();
         });
         setFocusTraversable(true);
         Platform.runLater(this::requestFocus);
-        marcar(marcada);
+        if (casillas) {
+            marcadas.addAll(marcadasIniciales);
+            pintarCasillas();
+        }
+        resaltar(cursor);
 
         FadeTransition entrada = new FadeTransition(Duration.millis(300), centro);
         entrada.setFromValue(0);
@@ -140,30 +175,36 @@ final class PantallaEleccion extends StackPane {
 
     // ------------------------------------------------------------------ las dos pantallas
 
-    /** «¿Con qué continente quieres jugar?»: los cinco continentes y, al final, todo el mundo. */
+    /**
+     * «¿Con qué continentes quieres jugar?»: los cinco continentes como casillas y, al final, «Todo el mundo»,
+     * que los marca todos. Vienen marcados los de la última partida.
+     */
     static PantallaEleccion continentes(Contexto ctx, Set<Continente> inicial, Consumer<Set<Continente>> alElegir,
                                         Runnable refrescar, Runnable aprender) {
         Atlas atlas = ctx.atlas();
-        List<Set<Continente>> zonas = new ArrayList<>();
         List<Opcion> opciones = new ArrayList<>();
+        Set<Integer> marcadas = new TreeSet<>();
         for (Continente c : Continente.values()) {
-            zonas.add(EnumSet.of(c));
             long n = atlas.paises().stream().filter(p -> p.continente() == c).count();
-            opciones.add(new Opcion(Miniatura.continente(atlas, c, 230, 130), c.nombre(), t("menu.paises", n)));
+            opciones.add(new Opcion(Miniatura.continente(atlas, c, 230, 112), c.nombre(), t("menu.paises", n)));
+            if (inicial.contains(c)) marcadas.add(c.ordinal());
         }
-        // Todo el mundo, al final.
-        zonas.add(EnumSet.allOf(Continente.class));
-        opciones.add(new Opcion(Miniatura.region(atlas, Region.deGrados(-170, 190, -56, 78), p -> true, 230, 130),
+        opciones.add(new Opcion(Miniatura.region(atlas, Region.deGrados(-170, 190, -56, 78), p -> true, 230, 112),
                 t("eleccion.mundo"), t("menu.paises", atlas.paises().size())));
         return new PantallaEleccion(ctx, t("eleccion.continente.titulo"), t("eleccion.continente.ayuda"), opciones, 3, 250,
-                Math.max(0, zonas.indexOf(inicial)), i -> alElegir.accept(zonas.get(i)), null, refrescar, aprender);
+                0, marcadas, null, elegidas -> {
+                    Set<Continente> zona = EnumSet.noneOf(Continente.class);
+                    elegidas.forEach(i -> zona.add(Continente.values()[i]));
+                    alElegir.accept(zona);
+                }, null, refrescar, aprender);
     }
 
-    /** «¿Qué reto quieres en …?»: los cinco modos, de más fácil a más difícil, con un ejemplo de la pieza. */
+    /** «¿Cómo te gustaría jugar en …?»: los cinco modos, de más fácil a más difícil, con un ejemplo de la pieza. */
     static PantallaEleccion retos(Contexto ctx, Set<Continente> zona, Modo inicial, Consumer<Modo> alElegir,
                                   Runnable atras, Runnable refrescar, Runnable aprender) {
-        // El ejemplo es un país conocido del continente elegido (con todo el mundo, Perú).
-        String iso = zona.size() != 1 ? "PE" : switch (zona.iterator().next()) {
+        boolean mundo = zona.isEmpty() || zona.size() == Continente.values().length;
+        // El ejemplo es un país conocido del (primer) continente elegido; con todo el mundo, Perú.
+        String iso = mundo ? "PE" : switch (zona.iterator().next()) {
             case AFRICA -> "EG";
             case AMERICA -> "PE";
             case EUROPA -> "FR";
@@ -178,15 +219,17 @@ final class PantallaEleccion extends StackPane {
             opciones.add(new Opcion(muestra(ejemplo, m), m.nombre(),
                     dificultad + "   +" + PartidaClasica.puntosPorPais(m) + " " + t("eleccion.porPais")));
         }
-        String titulo = zona.size() == 1 ? t("eleccion.reto.titulo", zona(zona)) : t("eleccion.reto.tituloMundo");
+        String titulo = mundo ? t("eleccion.reto.tituloMundo") : t("eleccion.reto.titulo", zona(zona));
         return new PantallaEleccion(ctx, titulo, t("eleccion.reto.ayuda"), opciones, 5, 212,
-                inicial.ordinal(), i -> alElegir.accept(Modo.values()[i]), atras, refrescar, aprender);
+                inicial.ordinal(), Set.of(), i -> alElegir.accept(Modo.values()[i]), null, atras, refrescar, aprender);
     }
 
-    /** "Todo el mundo" o los nombres de los continentes elegidos. */
+    /** "Todo el mundo" o los continentes elegidos: "Europa", "África y Asia", "América, Europa y Asia". */
     static String zona(Set<Continente> continentes) {
         if (continentes.isEmpty() || continentes.size() == Continente.values().length) return t("eleccion.mundo");
-        return continentes.stream().map(Continente::nombre).collect(Collectors.joining(", "));
+        List<String> nombres = continentes.stream().map(Continente::nombre).toList();
+        if (nombres.size() == 1) return nombres.getFirst();
+        return String.join(", ", nombres.subList(0, nombres.size() - 1)) + " " + t("eleccion.y") + " " + nombres.getLast();
     }
 
     /** Cómo se ve la pieza en cada reto: la silueta o un círculo de color, con el nombre, la capital o una interrogación. */
@@ -205,7 +248,7 @@ final class PantallaEleccion extends StackPane {
 
     // ------------------------------------------------------------------ tarjetas
 
-    private Button tarjeta(Opcion o, int i, double ancho) {
+    private Button tarjeta(Opcion o, int i, double ancho, boolean casilla) {
         Label nombre = FichaPais.etiqueta(o.nombre(), "eleccion-nombre");
         nombre.setWrapText(true);
         Label detalle = FichaPais.etiqueta(o.detalle(), "idioma-detalle");
@@ -214,6 +257,16 @@ final class PantallaEleccion extends StackPane {
         contenido.setAlignment(Pos.CENTER);
         StackPane capa = new StackPane(contenido, numero);
         StackPane.setAlignment(numero, Pos.TOP_LEFT);
+        if (casilla) {
+            // La casilla: vacía o con su ✓, arriba a la derecha.
+            Label palomita = FichaPais.etiqueta("✓", "casilla-eleccion");
+            palomita.setMinSize(34, 34);
+            palomita.setMaxSize(34, 34);
+            palomita.setAlignment(Pos.CENTER);
+            StackPane.setAlignment(palomita, Pos.TOP_RIGHT);
+            capa.getChildren().add(palomita);
+            palomitas.add(palomita);
+        }
 
         Button b = new Button(null, capa);
         b.getStyleClass().setAll("tarjeta-idioma", "tarjeta-eleccion");
@@ -222,25 +275,63 @@ final class PantallaEleccion extends StackPane {
         // Todas las tarjetas de una fila, del mismo alto.
         b.setMaxHeight(Double.MAX_VALUE);
         b.setFocusTraversable(false);
-        b.setOnAction(e -> elegir(i));
-        b.setOnMouseEntered(e -> marcar(i));
+        b.setOnAction(e -> pulsar(i));
+        b.setOnMouseEntered(e -> resaltar(i));
         Animaciones.alPasar(b, 1.04, 3);
         tarjetas.add(b);
         return b;
     }
 
-    private void marcar(int i) {
-        marcada = i;
+    /** El ratón o las flechas: con casillas, un borde; con una sola elección, la tarjeta marcada. */
+    private void resaltar(int i) {
+        cursor = i;
+        String clase = alElegir == null ? "enfocada" : "seleccionada";
         for (int j = 0; j < tarjetas.size(); j++) {
-            tarjetas.get(j).getStyleClass().remove("seleccionada");
-            if (j == i) tarjetas.get(j).getStyleClass().add("seleccionada");
+            tarjetas.get(j).getStyleClass().remove(clase);
+            if (j == i) tarjetas.get(j).getStyleClass().add(clase);
         }
+    }
+
+    /** Clic, número o Espacio sobre una tarjeta: la elige o marca/desmarca su casilla. */
+    private void pulsar(int i) {
+        if (alElegir == null) alternar(i);
+        else elegir(i);
+    }
+
+    private void alternar(int i) {
+        int continentes = tarjetas.size() - 1;
+        if (i == continentes) {
+            // «Todo el mundo»: si ya estaban todos, se desmarcan; si no, se marcan todos.
+            if (marcadas.size() == continentes) marcadas.clear();
+            else for (int j = 0; j < continentes; j++) marcadas.add(j);
+        } else if (!marcadas.remove(i)) {
+            marcadas.add(i);
+        }
+        pintarCasillas();
+        ScaleTransition pulso = new ScaleTransition(Duration.millis(90), tarjetas.get(i));
+        pulso.setToX(0.97);
+        pulso.setToY(0.97);
+        pulso.setAutoReverse(true);
+        pulso.setCycleCount(2);
+        pulso.play();
+    }
+
+    private void pintarCasillas() {
+        int continentes = tarjetas.size() - 1;
+        for (int j = 0; j < tarjetas.size(); j++) {
+            boolean marcada = j == continentes ? marcadas.size() == continentes : marcadas.contains(j);
+            tarjetas.get(j).getStyleClass().remove("seleccionada");
+            if (marcada) tarjetas.get(j).getStyleClass().add("seleccionada");
+            palomitas.get(j).getStyleClass().remove("marcada");
+            if (marcada) palomitas.get(j).getStyleClass().add("marcada");
+        }
+        continuar.setDisable(marcadas.isEmpty());
     }
 
     private void elegir(int i) {
         if (elegida) return;
         elegida = true;
-        marcar(i);
+        resaltar(i);
         ScaleTransition pulso = new ScaleTransition(Duration.millis(130), tarjetas.get(i));
         pulso.setToX(0.95);
         pulso.setToY(0.95);

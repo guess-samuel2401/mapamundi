@@ -478,3 +478,9 @@
 .pestana-aprender-texto { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -tinta; }
 .interruptor-daltonico { -fx-font-size: 13px; -fx-padding: 7 16 7 16; }
 .interruptor-daltonico:selected { -fx-background-color: rgba(255, 210, 63, 0.18); -fx-border-color: -sol; -fx-text-fill: -sol; }
+/* Casillas de la pantalla de continentes y su botón Continuar. */
+.casilla-eleccion { -fx-background-color: white; -fx-background-radius: 9; -fx-border-color: -tinta; -fx-border-width: 2.5;
+    -fx-border-radius: 9; -fx-text-fill: transparent; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 20px; }
+.casilla-eleccion.marcada { -fx-background-color: -tinta; -fx-text-fill: -sol; }
+.tarjeta-idioma.enfocada { -fx-border-color: -coral; }
+.boton-continuar-eleccion { -fx-font-size: 22px; -fx-padding: 12 46 12 46; }
