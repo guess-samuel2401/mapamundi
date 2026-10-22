@@ -1,27 +1,25 @@
 package com.mapamundi.juego;
 
+import com.mapamundi.i18n.Textos;
+
 /** Ayudas que el jugador puede pedir durante una ronda; su costo se descuenta de los puntos de esa ronda. */
 public enum Pista {
-    DESCARTAR("Descartar 2", "Tacha dos continentes equivocados.", 50),
-    ZONA("Zona", "Marca en el mapa un círculo donde está el país.", 100),
-    VECINOS("Vecinos", "Pinta los países que lo rodean.", 150);
+    DESCARTAR(50),
+    ZONA(100),
+    VECINOS(150);
 
-    private final String nombre;
-    private final String descripcion;
     private final int costo;
 
-    Pista(String nombre, String descripcion, int costo) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
+    Pista(int costo) {
         this.costo = costo;
     }
 
     public String nombre() {
-        return nombre;
+        return Textos.t("pista." + name() + ".nombre");
     }
 
     public String descripcion() {
-        return descripcion;
+        return Textos.t("pista." + name() + ".descripcion");
     }
 
     public int costo() {

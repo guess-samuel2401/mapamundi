@@ -17,6 +17,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** Fase 2: mover la pieza sobre el mapa y confirmar antes de que acabe el tiempo. */
 final class FaseMapa extends HBox {
 
@@ -48,11 +50,11 @@ final class FaseMapa extends HBox {
 
     private VBox construirControles() {
         var p = partida.actual();
-        Label continente = FichaPais.etiqueta("Continente: " + p.continente().nombre(), "negrita");
-        Label margen = FichaPais.etiqueta("Margen: ±" + partida.ajustes().velocidad().toleranciaKm() + " km ("
-                + partida.ajustes().velocidad().nombre() + ")", "");
+        Label continente = FichaPais.etiqueta(t("mapa.continente", p.continente().nombre()), "negrita");
+        Label margen = FichaPais.etiqueta(t("mapa.margen", partida.ajustes().velocidad().toleranciaKm(),
+                partida.ajustes().velocidad().nombre()), "");
 
-        Button confirmar = new Button("Confirmar\n(Enter)");
+        Button confirmar = new Button(t("mapa.confirmar") + "\n(Enter)");
         confirmar.getStyleClass().add("boton-principal");
         confirmar.setStyle("-fx-font-size: 16px; -fx-padding: 10 14 10 14;");
         confirmar.setMinWidth(USE_PREF_SIZE);
@@ -61,14 +63,12 @@ final class FaseMapa extends HBox {
         HBox acciones = new HBox(16, cruceta(), confirmar);
         acciones.setAlignment(Pos.CENTER);
 
-        Button centrar = new Button("⟲ Ver todo el mapa");
+        Button centrar = new Button("⟲ " + t("mapa.verTodo"));
         centrar.setFocusTraversable(false);
         centrar.setOnAction(e -> mapa.restablecerZoom());
 
         boolean girada = partida.ajustes().piezaGirada();
-        Label ayuda = FichaPais.etiqueta("Arrastra el país con el ratón. Flechas: 1 px · Shift + flechas: 8 px. "
-                + "Rueda del ratón: zoom · arrastrar el mar: mover el mapa."
-                + (girada ? " Q / E o clic derecho: girar." : ""), "texto-suave");
+        Label ayuda = FichaPais.etiqueta(t("mapa.ayuda") + (girada ? " " + t("mapa.ayudaGiro") : ""), "texto-suave");
         ayuda.setWrapText(true);
         VBox v = new VBox(9, FichaPais.pista(p, partida.ajustes().modo(), false), continente, margen, acciones);
         if (girada) v.getChildren().add(controlesGiro());
@@ -88,7 +88,7 @@ final class FaseMapa extends HBox {
         }
         izquierda.setOnAction(e -> partida.girar(-1));
         derecha.setOnAction(e -> partida.girar(1));
-        HBox h = new HBox(6, FichaPais.etiqueta("Girar", "negrita"), izquierda, derecha);
+        HBox h = new HBox(6, FichaPais.etiqueta(t("mapa.girar"), "negrita"), izquierda, derecha);
         h.setAlignment(Pos.CENTER_LEFT);
         return h;
     }

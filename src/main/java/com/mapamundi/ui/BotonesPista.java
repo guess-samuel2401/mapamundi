@@ -13,6 +13,8 @@ import javafx.util.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** Los botones de pistas de una fase, con su costo; cada pista se puede pedir una vez por ronda. */
 final class BotonesPista extends VBox {
 
@@ -30,14 +32,14 @@ final class BotonesPista extends VBox {
             b.setFocusTraversable(false);
             b.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(b, Priority.ALWAYS);
-            Tooltip ayuda = new Tooltip(p.descripcion() + " Cuesta " + p.costo() + " puntos de esta ronda.");
+            Tooltip ayuda = new Tooltip(p.descripcion() + " " + t("pista.cuesta", p.costo()));
             ayuda.setShowDelay(Duration.millis(300));
             b.setTooltip(ayuda);
             b.setOnAction(e -> partida.pedirPista(p));
             botones.put(p, b);
             fila.getChildren().add(b);
         }
-        getChildren().addAll(FichaPais.etiqueta("PISTAS · CUESTAN PUNTOS", "titulo-seccion"), fila);
+        getChildren().addAll(FichaPais.etiqueta(t("pista.titulo"), "titulo-seccion"), fila);
         actualizar();
     }
 

@@ -1,5 +1,7 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Idioma;
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Ajustes;
 import com.mapamundi.juego.Logros;
 import com.mapamundi.juego.Logros.Logro;
@@ -57,7 +59,7 @@ public final class Ventana {
         }
         escenario.setMinWidth(Math.min(980, pantalla.getWidth()));
         escenario.setMinHeight(Math.min(660, pantalla.getHeight()));
-        escenario.setFullScreenExitHint("Pulsa F11 para salir de la pantalla completa");
+        escenario.setFullScreenExitHint(Textos.t("ventana.salirPantallaCompleta"));
         escena.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.F11) {
                 escenario.setFullScreen(!escenario.isFullScreen());
@@ -67,14 +69,31 @@ public final class Ventana {
             }
         });
         escenario.setScene(escena);
-        menu();
+        elegirIdioma();
         escenario.show();
         if (ctx.preferencias().pantallaCompleta) escenario.setFullScreen(true);
     }
 
-    private void menu() {
+    /** Cada vez que se abre el programa: primero el idioma, después el menú con el tutorial. */
+    private void elegirIdioma() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
-        cambiarA(new PantallaMenu(ctx, ajustes, this::jugar, this::menu));
+        Idioma ultimo = Idioma.deCodigo(ctx.preferencias().idioma);
+        cambiarA(new PantallaIdioma(ctx.atlas(), ultimo, idioma -> {
+            Textos.usar(idioma);
+            ctx.preferencias().idioma = idioma.codigo();
+            ctx.preferencias().guardar();
+            escenario.setFullScreenExitHint(Textos.t("ventana.salirPantallaCompleta"));
+            menu(true);
+        }));
+    }
+
+    private void menu() {
+        menu(false);
+    }
+
+    private void menu(boolean conTutorial) {
+        ctx.sonidos().musica(Sonidos.Musica.MENU);
+        cambiarA(new PantallaMenu(ctx, ajustes, this::jugar, this::menu, conTutorial));
     }
 
     private void jugar(Ajustes elegidos) {

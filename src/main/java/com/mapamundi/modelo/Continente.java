@@ -1,25 +1,25 @@
 package com.mapamundi.modelo;
 
 import com.mapamundi.geo.Region;
+import com.mapamundi.i18n.Textos;
 
 /** Los cinco continentes del juego original, con la parte del mapa que muestra cada uno. */
 public enum Continente {
-    AFRICA("África", Region.deGrados(-26, 60, -37, 38)),
-    AMERICA("América", Region.deGrados(-170, -25, -57, 74)),
-    EUROPA("Europa", Region.deGrados(-26, 62, 33, 72)),
-    ASIA("Asia", Region.deGrados(25, 150, -11, 56)),
-    OCEANIA("Oceanía", Region.deGrados(110, 200, -50, 10));
+    AFRICA(Region.deGrados(-26, 60, -37, 38)),
+    AMERICA(Region.deGrados(-170, -25, -57, 74)),
+    EUROPA(Region.deGrados(-26, 62, 33, 72)),
+    ASIA(Region.deGrados(25, 150, -11, 56)),
+    OCEANIA(Region.deGrados(110, 200, -50, 10));
 
-    private final String nombre;
     private final Region vista;
 
-    Continente(String nombre, Region vista) {
-        this.nombre = nombre;
+    Continente(Region vista) {
         this.vista = vista;
     }
 
+    /** El nombre en el idioma del juego. */
     public String nombre() {
-        return nombre;
+        return Textos.t("continente." + name());
     }
 
     public Region vista() {

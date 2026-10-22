@@ -1,5 +1,7 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Textos;
+
 import com.mapamundi.juego.Puntajes;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -46,9 +48,9 @@ final class TablaPuntajes extends VBox {
     TablaPuntajes(List<Puntajes.Entrada> lista, Puntajes.Entrada nueva) {
         super(8);
         getStyleClass().addAll("panel", "tabla-puntajes");
-        getChildren().add(FichaPais.etiqueta("PUNTUACIONES MÁS ALTAS", "subtitulo-rojo"));
+        getChildren().add(FichaPais.etiqueta(Textos.t("menu.records.titulo").toUpperCase(Textos.idioma().locale()), "subtitulo-rojo"));
         if (lista.isEmpty()) {
-            getChildren().add(FichaPais.etiqueta("Todavía no hay puntuaciones. ¡Sé el primero!", "texto-suave"));
+            getChildren().add(FichaPais.etiqueta(Textos.t("records.vacio"), "texto-suave"));
             return;
         }
         GridPane g = new GridPane();
@@ -62,7 +64,8 @@ final class TablaPuntajes extends VBox {
         ColumnConstraints puesto = new ColumnConstraints(52);
         puesto.setHalignment(HPos.CENTER);
         g.getColumnConstraints().addAll(puesto, nombre, derecha, new ColumnConstraints(), new ColumnConstraints());
-        g.addRow(0, cab("#"), cab("Nombre"), cab("Puntaje"), cab("Nivel"), cab("Fecha"));
+        g.addRow(0, cab("#"), cab(Textos.t("records.nombre")), cab(Textos.t("fin.puntaje")), cab(Textos.t("hud.nivel")),
+                cab(Textos.t("records.fecha")));
         for (int i = 0; i < lista.size(); i++) {
             Puntajes.Entrada e = lista.get(i);
             Medalla medalla = Medalla.delPuesto(i);

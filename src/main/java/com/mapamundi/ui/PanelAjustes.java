@@ -10,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** Ajustes del juego: música, efectos, pantalla completa, modo daltónico y tutorial. Se aplican al momento. */
 final class PanelAjustes extends VBox {
 
@@ -23,7 +25,7 @@ final class PanelAjustes extends VBox {
         Sonidos sonidos = ctx.sonidos();
 
         // Música
-        CheckBox musica = new CheckBox("Música de fondo");
+        CheckBox musica = new CheckBox(t("ajustes.musica"));
         musica.setSelected(pref.musica);
         Slider volumenMusica = deslizador(pref.volumenMusica);
         volumenMusica.disableProperty().bind(musica.selectedProperty().not());
@@ -51,7 +53,7 @@ final class PanelAjustes extends VBox {
         });
 
         // Pantalla completa
-        CheckBox completa = new CheckBox("Pantalla completa (F11)");
+        CheckBox completa = new CheckBox(t("ajustes.pantallaCompleta") + " (F11)");
         completa.setSelected(ctx.escenario().isFullScreen());
         completa.selectedProperty().addListener((o, a, b) -> {
             ctx.escenario().setFullScreen(b);
@@ -61,11 +63,9 @@ final class PanelAjustes extends VBox {
         ctx.escenario().fullScreenProperty().addListener((o, a, b) -> completa.setSelected(b));
 
         // Daltónico
-        CheckBox daltonico = new CheckBox("Modo daltónico");
+        CheckBox daltonico = new CheckBox(t("ajustes.daltonico"));
         daltonico.setSelected(pref.daltonico);
-        Label ayudaDaltonico = FichaPais.etiqueta(
-                "Colores pensados para el daltonismo y una trama distinta en cada país, para no depender solo del color.",
-                "texto-suave");
+        Label ayudaDaltonico = FichaPais.etiqueta(t("ajustes.daltonico.ayuda"), "texto-suave");
         ayudaDaltonico.setWrapText(true);
         daltonico.selectedProperty().addListener((o, a, b) -> {
             pref.daltonico = b;
@@ -79,17 +79,17 @@ final class PanelAjustes extends VBox {
         });
 
         getChildren().addAll(
-                seccion("SONIDO"),
-                musica, fila("Volumen de la música", volumenMusica),
-                fila("Volumen de los efectos", volumenEfectos),
-                seccion("PANTALLA"),
+                seccion(t("ajustes.sonido")),
+                musica, fila(t("ajustes.volumenMusica"), volumenMusica),
+                fila(t("ajustes.volumenEfectos"), volumenEfectos),
+                seccion(t("ajustes.pantalla")),
                 completa,
-                seccion("ACCESIBILIDAD"),
+                seccion(t("ajustes.accesibilidad")),
                 daltonico, ayudaDaltonico);
         if (verTutorial != null) {
-            Button tutorial = new Button("🎓  Ver el tutorial otra vez");
+            Button tutorial = new Button("🎓  " + t("ajustes.tutorial"));
             tutorial.setOnAction(e -> verTutorial.run());
-            getChildren().addAll(seccion("AYUDA"), tutorial);
+            getChildren().addAll(seccion(t("ajustes.ayuda")), tutorial);
         }
         setPrefWidth(460);
     }

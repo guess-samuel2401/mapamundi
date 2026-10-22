@@ -31,7 +31,9 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-/** Guía de bienvenida en 5 pasos ilustrados, que se muestra la primera vez que se abre el juego. */
+import static com.mapamundi.i18n.Textos.t;
+
+/** Guía de bienvenida en 5 pasos ilustrados, que se muestra cada vez que se abre el juego (tras elegir el idioma). */
 final class Tutorial {
 
     private record Paso(String titulo, String texto, Node ilustracion) {
@@ -42,25 +44,11 @@ final class Tutorial {
 
     static void mostrar(StackPane contenedor, Atlas atlas, Runnable alTerminar) {
         List<Paso> pasos = List.of(
-                new Paso("¡Bienvenido a Mapamundi!",
-                        "Aprende dónde está cada uno de los 197 países del mundo jugando. Te lo explicamos en 4 pasos.",
-                        mundo(atlas)),
-                new Paso("1. Elige el continente",
-                        "Aparece un país con su silueta. Elige a qué continente pertenece con un clic o con las teclas 1 a 5. "
-                                + "Tienes 5 intentos.",
-                        continentes(atlas)),
-                new Paso("2. Colócalo en el mapa",
-                        "Arrastra el país con el ratón (o muévelo con las flechas) hasta su lugar y pulsa Confirmar o Enter "
-                                + "antes de que se acabe el tiempo. La rueda del ratón hace zoom.",
-                        colocar(atlas)),
-                new Paso("3. Suma puntos y cuida tus corazones",
-                        "Cuanto más cerca y más rápido, más puntos. Si fallas o se acaba el tiempo pierdes un corazón; "
-                                + "sin corazones, termina la partida.",
-                        puntos()),
-                new Paso("4. Gana insignias",
-                        "Consigue insignias por rachas de aciertos, puntería, rapidez y por completar continentes. "
-                                + "Las verás en el botón «Logros» del menú. ¡A jugar!",
-                        insignias()));
+                new Paso(t("tutorial.0.titulo"), t("tutorial.0.texto"), mundo(atlas)),
+                new Paso(t("tutorial.1.titulo"), t("tutorial.1.texto"), continentes(atlas)),
+                new Paso(t("tutorial.2.titulo"), t("tutorial.2.texto"), colocar(atlas)),
+                new Paso(t("tutorial.3.titulo"), t("tutorial.3.texto"), puntos()),
+                new Paso(t("tutorial.4.titulo"), t("tutorial.4.texto"), insignias()));
 
         int[] actual = {0};
         Label titulo = FichaPais.etiqueta("", "titulo-config");
@@ -76,10 +64,10 @@ final class Tutorial {
         HBox puntitos = new HBox(8);
         puntitos.setAlignment(Pos.CENTER);
 
-        Button saltar = new Button("Saltar");
+        Button saltar = new Button(t("tutorial.saltar"));
         saltar.getStyleClass().add("boton-discreto");
-        Button atras = new Button("‹ Atrás");
-        Button siguiente = new Button("Siguiente ›");
+        Button atras = new Button("‹ " + t("tutorial.atras"));
+        Button siguiente = new Button(t("tutorial.siguiente") + " ›");
         siguiente.getStyleClass().add("boton-principal");
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
@@ -115,7 +103,7 @@ final class Tutorial {
             }
             atras.setDisable(actual[0] == 0);
             boolean ultimo = actual[0] == pasos.size() - 1;
-            siguiente.setText(ultimo ? "¡A jugar!" : "Siguiente ›");
+            siguiente.setText(ultimo ? t("tutorial.aJugar") : t("tutorial.siguiente") + " ›");
             saltar.setVisible(!ultimo);
         };
         siguiente.setOnAction(e -> {
@@ -223,7 +211,7 @@ final class Tutorial {
         corazones.setScaleY(1.6);
         corazones.setAlignment(Pos.CENTER);
         Label puntos = FichaPais.etiqueta("+860", "tutorial-puntos");
-        Label ejemplo = FichaPais.etiqueta("Distancia: 26 km  ·  +500 ubicación  ·  +360 bonus de tiempo", "negrita");
+        Label ejemplo = FichaPais.etiqueta(t("tutorial.ejemploPuntos"), "negrita");
         VBox v = new VBox(18, puntos, ejemplo, corazones);
         v.setAlignment(Pos.CENTER);
         return v;
@@ -236,7 +224,7 @@ final class Tutorial {
                 new Insignia(Logro.RACHA_20, true, 34),
                 new Insignia(Logro.DUENO_DEL_MUNDO, false, 34));
         fila.setAlignment(Pos.CENTER);
-        VBox v = new VBox(14, fila, FichaPais.etiqueta("Bronce · Plata · Oro", "texto-suave"));
+        VBox v = new VBox(14, fila, FichaPais.etiqueta(t("tutorial.categorias"), "texto-suave"));
         v.setAlignment(Pos.CENTER);
         return v;
     }

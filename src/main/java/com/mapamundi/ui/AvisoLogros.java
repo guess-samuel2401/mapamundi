@@ -41,7 +41,7 @@ final class AvisoLogros extends VBox {
 
     private void mostrar(Logro l, Duration retraso) {
         Insignia insignia = new Insignia(l, true, 22);
-        VBox texto = new VBox(0, FichaPais.etiqueta("¡INSIGNIA CONSEGUIDA!", "titulo-seccion"),
+        VBox texto = new VBox(0, FichaPais.etiqueta(com.mapamundi.i18n.Textos.t("logros.aviso"), "titulo-seccion"),
                 FichaPais.etiqueta(l.nombre(), "logro-nombre"));
         HBox tarjeta = new HBox(10, insignia, texto);
         tarjeta.setAlignment(Pos.CENTER_LEFT);

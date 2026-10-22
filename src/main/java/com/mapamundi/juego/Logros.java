@@ -2,6 +2,7 @@ package com.mapamundi.juego;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Continente;
 import com.mapamundi.modelo.Pais;
@@ -29,46 +30,44 @@ public final class Logros {
     public enum Categoria { BRONCE, PLATA, ORO }
 
     public enum Logro {
-        PRIMER_PAIS("¡Primer país!", "Ubica tu primer país.", "✔", Categoria.BRONCE, 1),
-        RACHA_5("En racha", "Acierta 5 países seguidos en una partida.", "5×", Categoria.BRONCE, 5),
-        RACHA_10("Imparable", "Acierta 10 países seguidos en una partida.", "10×", Categoria.PLATA, 10),
-        RACHA_20("Leyenda viva", "Acierta 20 países seguidos en una partida.", "20×", Categoria.ORO, 20),
-        PUNTERIA("Puntería perfecta", "Ubica un país a menos de 25 km de su lugar.", "◎", Categoria.PLATA, 1),
-        RELAMPAGO("Relámpago", "Acierta usando menos del 20 % del tiempo.", "⚡", Categoria.PLATA, 1),
-        VELOCISTA("Velocista", "Acierta un país en velocidad Rápida.", "»", Categoria.BRONCE, 1),
-        CAPITALES("Experto en capitales", "Acierta 10 países jugando por la capital.", "♛", Categoria.PLATA, 10),
-        DETECTIVE("Detective", "Acierta 10 países en el modo «Solo datos».", "?", Categoria.ORO, 10),
-        SIN_RASGUNO("Sin un rasguño", "Supera un nivel sin fallar ningún país.", "♥", Categoria.PLATA, 1),
-        CONTRARRELOJ("Contra el reloj", "Ubica 10 países en una partida contrarreloj.", "◷", Categoria.PLATA, 10),
-        GIROS("Mano maestra", "Acierta 10 países con la pieza girada.", "⟳", Categoria.ORO, 10),
-        NIVEL_3("Explorador", "Llega al nivel 3 (Europa).", "3", Categoria.BRONCE, 1),
-        NIVEL_MUNDO("Ciudadano del mundo", "Llega al nivel «Todo el mundo».", "7", Categoria.ORO, 1),
-        PUNTOS_5000("Gran puntuación", "Consigue 5.000 puntos en una partida.", "5K", Categoria.PLATA, 5000),
-        PUNTOS_15000("Récord histórico", "Consigue 15.000 puntos en una partida.", "15K", Categoria.ORO, 15000),
-        VIAJERO("Viajero", "Ubica 25 países distintos.", "25", Categoria.BRONCE, 25),
-        TROTAMUNDOS("Trotamundos", "Ubica 100 países distintos.", "100", Categoria.PLATA, 100),
-        DUENO_DEL_MUNDO("Dueño del mundo", "Ubica los 197 países.", "197", Categoria.ORO, 197),
-        SUDAMERICA("Sudamérica completa", "Ubica todos los países de Sudamérica.", "SA", Categoria.PLATA, 0),
-        AMERICA("América completa", "Ubica todos los países de América.", "AM", Categoria.ORO, 0),
-        EUROPA("Europa completa", "Ubica todos los países de Europa.", "EU", Categoria.ORO, 0),
-        AFRICA("África completa", "Ubica todos los países de África.", "AF", Categoria.ORO, 0),
-        ASIA("Asia completa", "Ubica todos los países de Asia.", "AS", Categoria.ORO, 0),
-        OCEANIA("Oceanía completa", "Ubica todos los países de Oceanía.", "OC", Categoria.PLATA, 0);
+        PRIMER_PAIS("✔", Categoria.BRONCE, 1),
+        RACHA_5("5×", Categoria.BRONCE, 5),
+        RACHA_10("10×", Categoria.PLATA, 10),
+        RACHA_20("20×", Categoria.ORO, 20),
+        PUNTERIA("◎", Categoria.PLATA, 1),
+        RELAMPAGO("⚡", Categoria.PLATA, 1),
+        VELOCISTA("»", Categoria.BRONCE, 1),
+        CAPITALES("♛", Categoria.PLATA, 10),
+        DETECTIVE("?", Categoria.ORO, 10),
+        SIN_RASGUNO("♥", Categoria.PLATA, 1),
+        CONTRARRELOJ("◷", Categoria.PLATA, 10),
+        GIROS("⟳", Categoria.ORO, 10),
+        NIVEL_3("3", Categoria.BRONCE, 1),
+        NIVEL_MUNDO("7", Categoria.ORO, 1),
+        PUNTOS_5000("5K", Categoria.PLATA, 5000),
+        PUNTOS_15000("15K", Categoria.ORO, 15000),
+        VIAJERO("25", Categoria.BRONCE, 25),
+        TROTAMUNDOS("100", Categoria.PLATA, 100),
+        DUENO_DEL_MUNDO("197", Categoria.ORO, 197),
+        SUDAMERICA("SA", Categoria.PLATA, 0),
+        AMERICA("AM", Categoria.ORO, 0),
+        EUROPA("EU", Categoria.ORO, 0),
+        AFRICA("AF", Categoria.ORO, 0),
+        ASIA("AS", Categoria.ORO, 0),
+        OCEANIA("OC", Categoria.PLATA, 0);
 
-        private final String nombre, descripcion, icono;
+        private final String icono;
         private final Categoria categoria;
         private final int objetivo;
 
-        Logro(String nombre, String descripcion, String icono, Categoria categoria, int objetivo) {
-            this.nombre = nombre;
-            this.descripcion = descripcion;
+        Logro(String icono, Categoria categoria, int objetivo) {
             this.icono = icono;
             this.categoria = categoria;
             this.objetivo = objetivo;
         }
 
-        public String nombre() { return nombre; }
-        public String descripcion() { return descripcion; }
+        public String nombre() { return Textos.t("logro." + name() + ".nombre"); }
+        public String descripcion() { return Textos.t("logro." + name() + ".descripcion"); }
         public String icono() { return icono; }
         public Categoria categoria() { return categoria; }
     }

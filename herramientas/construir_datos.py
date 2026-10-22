@@ -34,6 +34,19 @@ NOMBRES = {'Republic of China': 'Taiwán', 'Taiwan': 'Taiwán', 'eSwatini': 'Esu
            'Suazilandia': 'Esuatini', 'Myanmar': 'Myanmar (Birmania)', 'Czechia': 'Chequia', 'Timor-Leste': 'Timor Oriental'}
 # Monedas que Wikidata nombra de forma ambigua ("Peso") y no estaban en el juego original.
 MONEDAS = {'MX': 'Peso mexicano', 'CU': 'Peso cubano'}
+# Idiomas que Wikidata da mal (EE. UU. solo con lenguas de sus territorios; Antigua y Barbuda con español).
+IDIOMAS = {'US': 'Inglés', 'AG': 'Inglés'}
+
+# ---- Versión en inglés (datos_wikidata_en.json + traducciones_en.json)
+WIKIDATA_EN = os.path.join(AQUI, 'datos_wikidata_en.json')
+TRADUCCIONES_EN = os.path.join(AQUI, 'traducciones_en.json')
+# Nombres de Natural Earth (NAME_EN) que no son los habituales en inglés.
+NOMBRES_EN = {'CN': 'China', 'CZ': 'Czechia', 'MM': 'Myanmar (Burma)', 'US': 'United States', 'TW': 'Taiwan',
+              'BS': 'Bahamas', 'GM': 'Gambia'}
+# Datos que Wikidata no tiene en inglés o nombra de forma ambigua.
+CAPITALES_EN = {'AG': "Saint John's"}
+MONEDAS_EN = {'MX': 'Mexican peso', 'CU': 'Cuban peso'}
+IDIOMAS_EN = {'UY': 'Spanish', 'CN': 'Standard Chinese', 'US': 'English', 'AG': 'English'}
 
 # Nombre en el juego original -> nombre de Natural Earth (NAME_ES).
 ALIAS_ORIGINAL = {
@@ -164,6 +177,14 @@ def main():
         wikidata, consultado = contenido['paises'], contenido['consultado']
     else:
         print('Aviso: falta herramientas/datos_wikidata.json (python -I herramientas/actualizar_datos.py)')
+    ingles = json.load(open(WIKIDATA_EN, encoding='utf-8'))['paises'] if os.path.exists(WIKIDATA_EN) else {}
+    traducciones = json.load(open(TRADUCCIONES_EN, encoding='utf-8')) if os.path.exists(TRADUCCIONES_EN) else {}
+    sin_traducir = set()
+
+    def traducir(texto):
+        if texto and texto not in traducciones:
+            sin_traducir.add(texto)
+        return traducciones.get(texto, texto)
 
     paises, otras, sin_datos = [], [], []
     for f in ne:
@@ -201,6 +222,8 @@ def main():
         if ' ' not in moneda and norm(texto('MONEDA')).startswith(norm(moneda) + ' '):
             moneda = texto('MONEDA')
         moneda = MONEDAS.get(iso, moneda)
+        en = ingles.get(iso, {})
+        religion, exporta = texto('RELIGION'), texto('EXPORTA')
         paises.append({
             'iso': iso,
             'nombre': nombre,
@@ -209,12 +232,21 @@ def main():
             'capital': capital,
             'poblacion': actual.get('poblacion') or f"{miles(p['POP_EST'])} habs. ({p['POP_YEAR']})",
             'superficie': superficie,
-            'idioma': actual.get('idioma') or texto('IDIOMA'),
+            'idioma': IDIOMAS.get(iso) or actual.get('idioma') or texto('IDIOMA'),
             'moneda': moneda,
             'pibPerCapita': actual.get('pibPerCapita') or (f"{texto('PERCAPITA')} (2003)" if texto('PERCAPITA') else ''),
             # Wikidata no tiene estos dos completos: se conservan del original, marcados como de 2003.
-            'religion': texto('RELIGION'),
-            'exporta': texto('EXPORTA'),
+            'religion': religion,
+            'exporta': exporta,
+            # Lo mismo en inglés; las cifras (población, superficie, PIB) las convierte el juego al mostrarlas.
+            'en': {
+                'nombre': NOMBRES_EN.get(iso, p['NAME_EN']),
+                'capital': CAPITALES_EN.get(iso) or en.get('capital', ''),
+                'idioma': IDIOMAS_EN.get(iso) or en.get('idioma', ''),
+                'moneda': MONEDAS_EN.get(iso) or en.get('moneda', ''),
+                'religion': traducir(religion),
+                'exporta': traducir(exporta),
+            },
             'datosOriginales': original is not None,
             'color': p['MAPCOLOR7'],
             'anillos': rings,
@@ -233,6 +265,9 @@ def main():
     for c in sorted({p['continente'] for p in paises}):
         print(f"  {c}: {sum(1 for p in paises if p['continente'] == c)}")
     print('Sin capital:', sin_datos)
+    print('Sin traducir al inglés:', sorted(sin_traducir))
+    for campo in ('nombre', 'capital', 'idioma', 'moneda'):
+        print(f'  sin {campo} en inglés:', [x['iso'] for x in paises if not x['en'][campo]])
     asignados = {id(por_nombre[k]) for k in por_nombre if any(norm(x['nombre']) == k for x in paises)}
     print('Originales sin usar:', [r['NOMBRE'] for r in originales if not r['_deleted'] and id(r) not in usados | asignados])
     print(f'Tamaño: {os.path.getsize(SALIDA) / 1e6:.2f} MB')

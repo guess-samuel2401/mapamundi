@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Resultado;
 import com.mapamundi.modelo.Pais;
@@ -10,8 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import static com.mapamundi.i18n.Textos.t;
 
 /** Resultado de la ronda; ocupa el panel lateral para no tapar el mapa. */
 final class PanelResultado extends VBox {
@@ -31,37 +31,37 @@ final class PanelResultado extends VBox {
         getChildren().addAll(titulo, FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
 
         if (r.tieneDistancia()) {
-            String km = NumberFormat.getIntegerInstance(Locale.of("es")).format(Math.round(r.distanciaKm()));
-            getChildren().add(FichaPais.etiqueta("Distancia al objetivo: " + km + " km", "negrita"));
+            getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
         }
         if (r.motivo() == Resultado.Motivo.GIRADA) {
-            Label giro = FichaPais.etiqueta("Estaba en su sitio, pero girada " + Math.abs(partida.giro()) + "°.", "");
+            Label giro = FichaPais.etiqueta(t("resultado.girada", Math.abs(partida.giro())), "");
             giro.setWrapText(true);
             getChildren().add(giro);
         }
         if (r.acierto()) {
-            String desglose = "+" + r.puntos() + " ubicación" + (r.bonus() > 0 ? " · +" + r.bonus() + " tiempo" : "");
-            if (r.multiplicador() > 1) desglose += " · ×" + r.multiplicador() + " racha";
-            if (r.penalizacion() > 0) desglose += " · −" + r.penalizacion() + " pistas";
+            String desglose = t("resultado.ubicacion", r.puntos()) + (r.bonus() > 0 ? " · " + t("resultado.tiempo", r.bonus()) : "");
+            if (r.multiplicador() > 1) desglose += " · " + t("resultado.racha", r.multiplicador());
+            if (r.penalizacion() > 0) desglose += " · " + t("resultado.pistas", r.penalizacion());
             Label suma = FichaPais.etiqueta(desglose + " = " + (r.total() >= 0 ? "+" : "") + r.total(), "negrita");
             suma.setWrapText(true);
             getChildren().add(suma);
             if (partida.racha() >= 2) {
-                getChildren().add(FichaPais.etiqueta("🔥 Racha de " + partida.racha() + (Partida.multiplicador(partida.racha() + 1) > r.multiplicador()
-                        ? " · ¡el próximo acierto vale ×" + Partida.multiplicador(partida.racha() + 1) + "!" : ""), "racha"));
+                int proximo = Partida.multiplicador(partida.racha() + 1);
+                getChildren().add(FichaPais.etiqueta("🔥 " + t("resultado.rachaDe", partida.racha())
+                        + (proximo > r.multiplicador() ? " · " + t("resultado.proximo", proximo) : ""), "racha"));
             }
-            if (contrarreloj) getChildren().add(FichaPais.etiqueta("+" + Partida.SEGUNDOS_POR_ACIERTO + " segundos al reloj", "texto-suave"));
+            if (contrarreloj) getChildren().add(FichaPais.etiqueta(t("resultado.segundosExtra", Partida.SEGUNDOS_POR_ACIERTO), "texto-suave"));
         } else {
             String consecuencia;
-            if (r.motivo() == Resultado.Motivo.FIN_CONTRARRELOJ) consecuencia = "Ubicaste " + partida.aciertosPartida() + " países.";
-            else if (contrarreloj) consecuencia = "Sin puntos en esta ronda. ¡Sigue, que el reloj corre!";
-            else if (finPartida) consecuencia = "¡Sin corazones! Fin de la partida.";
-            else consecuencia = "Pierdes un corazón ♥. Te quedan " + partida.vidas() + ".";
-            if (r.penalizacion() > 0) consecuencia += " Las pistas costaron −" + r.penalizacion() + ".";
+            if (r.motivo() == Resultado.Motivo.FIN_CONTRARRELOJ) consecuencia = t("resultado.ubicaste", partida.aciertosPartida());
+            else if (contrarreloj) consecuencia = t("resultado.sinPuntos");
+            else if (finPartida) consecuencia = t("resultado.sinCorazones");
+            else consecuencia = t("resultado.pierdesCorazon", partida.vidas());
+            if (r.penalizacion() > 0) consecuencia += " " + t("resultado.costoPistas", r.penalizacion());
             Label texto = FichaPais.etiqueta(consecuencia, "");
             texto.setWrapText(true);
             getChildren().add(texto);
-            if (r.tieneDistancia()) getChildren().add(FichaPais.etiqueta("● tu posición · ★ posición real", "texto-suave"));
+            if (r.tieneDistancia()) getChildren().add(FichaPais.etiqueta(t("resultado.leyenda"), "texto-suave"));
         }
 
         boolean mostrarDatos = partida.ajustes().mostrarDatos();
@@ -72,7 +72,7 @@ final class PanelResultado extends VBox {
             getChildren().add(datos);
         }
 
-        Button siguiente = new Button((finPartida ? "Ver puntaje final" : "Siguiente país") + " (Enter)");
+        Button siguiente = new Button(t(finPartida ? "resultado.verFinal" : "resultado.siguiente") + " (Enter)");
         siguiente.getStyleClass().add("boton-principal");
         siguiente.setMaxWidth(Double.MAX_VALUE);
         siguiente.setFocusTraversable(false);

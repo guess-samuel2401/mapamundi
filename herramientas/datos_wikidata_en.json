@@ -1,0 +1,989 @@
+{
+ "consultado": "2026-10-21",
+ "fuente": "Wikidata (CC0)",
+ "paises": {
+  "AD": {
+   "capital": "Andorra la Vella",
+   "idioma": "Catalan",
+   "moneda": "Euro"
+  },
+  "AE": {
+   "capital": "Abu Dhabi",
+   "idioma": "Arabic",
+   "moneda": "United Arab Emirates dirham"
+  },
+  "AF": {
+   "capital": "Kabul",
+   "idioma": "Uzbek, Turkmen, Arabic, Balochi, Pashayi, Pashto, Nuristani, Dari and Pamir",
+   "moneda": "Afghani"
+  },
+  "AG": {
+   "idioma": "Spanish and English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "AL": {
+   "capital": "Tirana",
+   "idioma": "Albanian",
+   "moneda": "Albanian lek"
+  },
+  "AM": {
+   "capital": "Yerevan",
+   "idioma": "Armenian",
+   "moneda": "Armenian dram"
+  },
+  "AO": {
+   "capital": "Luanda",
+   "idioma": "Portuguese",
+   "moneda": "Kwanza"
+  },
+  "AR": {
+   "capital": "Buenos Aires",
+   "idioma": "Spanish",
+   "moneda": "Argentine convertible peso"
+  },
+  "AT": {
+   "capital": "Vienna",
+   "idioma": "German and Austrian Sign Language",
+   "moneda": "Euro"
+  },
+  "AU": {
+   "capital": "Canberra",
+   "idioma": "English",
+   "moneda": "Australian dollar"
+  },
+  "AZ": {
+   "capital": "Baku",
+   "idioma": "Azerbaijani and Azerbaijani Sign Language",
+   "moneda": "Azerbaijani manat"
+  },
+  "BA": {
+   "capital": "Sarajevo",
+   "idioma": "Croatian, Serbian and Bosnian",
+   "moneda": "Convertible mark and Bosnia and Herzegovina dinar"
+  },
+  "BB": {
+   "capital": "Bridgetown",
+   "idioma": "English and Bajan Creole",
+   "moneda": "Barbadian dollar"
+  },
+  "BD": {
+   "capital": "Dhaka",
+   "idioma": "Bangla",
+   "moneda": "Bangladeshi taka"
+  },
+  "BE": {
+   "capital": "Brussels",
+   "idioma": "French, German and Dutch",
+   "moneda": "Euro"
+  },
+  "BF": {
+   "capital": "Ouagadougou",
+   "idioma": "Dioula, Bissa and Mooré",
+   "moneda": "West African CFA franc"
+  },
+  "BG": {
+   "capital": "Sofia",
+   "idioma": "Bulgarian",
+   "moneda": "Euro"
+  },
+  "BH": {
+   "capital": "Manama",
+   "idioma": "Arabic",
+   "moneda": "Bahraini dinar"
+  },
+  "BI": {
+   "capital": "Gitega",
+   "idioma": "French, English and Kirundi",
+   "moneda": "Burundian franc"
+  },
+  "BJ": {
+   "capital": "Porto-Novo",
+   "idioma": "French",
+   "moneda": "West African CFA franc"
+  },
+  "BN": {
+   "capital": "Bandar Seri Begawan",
+   "idioma": "British English and Malay",
+   "moneda": "Brunei dollar"
+  },
+  "BO": {
+   "capital": "La Paz and Sucre",
+   "idioma": "Spanish, Aymara, Quechua and Guarani",
+   "moneda": "Boliviano"
+  },
+  "BR": {
+   "capital": "Brasília",
+   "idioma": "Portuguese",
+   "moneda": "Brazilian real"
+  },
+  "BS": {
+   "capital": "Nassau",
+   "idioma": "English",
+   "moneda": "Bahamian dollar"
+  },
+  "BT": {
+   "capital": "Thimphu",
+   "idioma": "Dzongkha",
+   "moneda": "Ngultrum"
+  },
+  "BW": {
+   "capital": "Gaborone",
+   "idioma": "English",
+   "moneda": "Botswana pula"
+  },
+  "BY": {
+   "capital": "Minsk",
+   "idioma": "Russian and Belarusian",
+   "moneda": "Belarusian ruble"
+  },
+  "BZ": {
+   "capital": "Belmopan",
+   "idioma": "English",
+   "moneda": "Belize dollar"
+  },
+  "CA": {
+   "capital": "Ottawa",
+   "idioma": "French and English",
+   "moneda": "Canadian dollar"
+  },
+  "CD": {
+   "capital": "Kinshasa",
+   "idioma": "French",
+   "moneda": "Congolese franc"
+  },
+  "CF": {
+   "capital": "Bangui",
+   "idioma": "French and Sango",
+   "moneda": "Central African CFA franc"
+  },
+  "CG": {
+   "capital": "Brazzaville",
+   "idioma": "French",
+   "moneda": "Central African CFA franc"
+  },
+  "CH": {
+   "capital": "Bern",
+   "idioma": "French, German, Italian and Romansh",
+   "moneda": "Swiss franc"
+  },
+  "CI": {
+   "capital": "Yamoussoukro",
+   "idioma": "French",
+   "moneda": "West African CFA franc"
+  },
+  "CL": {
+   "capital": "Santiago",
+   "idioma": "Spanish",
+   "moneda": "Chilean peso"
+  },
+  "CM": {
+   "capital": "Yaoundé",
+   "idioma": "French and English",
+   "moneda": "Central African CFA franc"
+  },
+  "CN": {
+   "capital": "Beijing",
+   "idioma": "Putonghua",
+   "moneda": "Renminbi"
+  },
+  "CO": {
+   "capital": "Bogotá",
+   "idioma": "Spanish",
+   "moneda": "Colombian peso"
+  },
+  "CR": {
+   "capital": "San José",
+   "idioma": "Spanish",
+   "moneda": "Costa Rican colón"
+  },
+  "CU": {
+   "capital": "Havana",
+   "idioma": "Spanish",
+   "moneda": "Cuban peso"
+  },
+  "CV": {
+   "capital": "Praia",
+   "idioma": "Portuguese and Cape Verdean Creole",
+   "moneda": "Cape Verdean escudo"
+  },
+  "CY": {
+   "capital": "Nicosia",
+   "idioma": "Turkish, Modern Greek and Greek",
+   "moneda": "Euro"
+  },
+  "CZ": {
+   "capital": "Prague",
+   "idioma": "Czech",
+   "moneda": "Czech koruna"
+  },
+  "DE": {
+   "capital": "Berlin",
+   "idioma": "German",
+   "moneda": "Euro"
+  },
+  "DJ": {
+   "capital": "Djibouti",
+   "idioma": "French and Arabic",
+   "moneda": "Djiboutian franc"
+  },
+  "DK": {
+   "capital": "Copenhagen",
+   "idioma": "Danish",
+   "moneda": "Danish krone"
+  },
+  "DM": {
+   "capital": "Roseau",
+   "idioma": "English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "DO": {
+   "capital": "Santo Domingo",
+   "idioma": "Spanish",
+   "moneda": "Dominican peso"
+  },
+  "DZ": {
+   "capital": "Algiers",
+   "idioma": "Arabic and Standard Algerian Berber",
+   "moneda": "Algerian dinar"
+  },
+  "EC": {
+   "capital": "Quito",
+   "idioma": "Spanish, Shuar and Northern Quichua",
+   "moneda": "United States dollar"
+  },
+  "EE": {
+   "capital": "Tallinn",
+   "idioma": "Estonian",
+   "moneda": "Euro"
+  },
+  "EG": {
+   "capital": "Cairo",
+   "idioma": "Arabic",
+   "moneda": "Egyptian pound"
+  },
+  "ER": {
+   "capital": "Asmara",
+   "idioma": "English, Arabic and Tigrinya",
+   "moneda": "Nakfa"
+  },
+  "ES": {
+   "capital": "Madrid",
+   "idioma": "Spanish",
+   "moneda": "Euro"
+  },
+  "ET": {
+   "capital": "Addis Ababa",
+   "idioma": "Amharic",
+   "moneda": "Bir"
+  },
+  "FI": {
+   "capital": "Helsinki",
+   "idioma": "Finnish and Swedish",
+   "moneda": "Euro"
+  },
+  "FJ": {
+   "capital": "Suva",
+   "idioma": "English, Fijian and Fiji Hindi",
+   "moneda": "Fijian dollar"
+  },
+  "FM": {
+   "capital": "Palikir",
+   "idioma": "English",
+   "moneda": "United States dollar"
+  },
+  "FR": {
+   "capital": "Paris",
+   "idioma": "French",
+   "moneda": "Euro and CFP Franc"
+  },
+  "GA": {
+   "capital": "Libreville",
+   "idioma": "French",
+   "moneda": "Central African CFA franc"
+  },
+  "GB": {
+   "capital": "London",
+   "idioma": "English",
+   "moneda": "Pound sterling"
+  },
+  "GD": {
+   "capital": "St. George's",
+   "idioma": "English and Grenadian Creole English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "GE": {
+   "capital": "Tbilisi",
+   "idioma": "Georgian",
+   "moneda": "Georgian lari"
+  },
+  "GH": {
+   "capital": "Accra",
+   "idioma": "English",
+   "moneda": "Ghana cedi"
+  },
+  "GM": {
+   "capital": "Banjul",
+   "idioma": "English",
+   "moneda": "Dalasi"
+  },
+  "GN": {
+   "capital": "Conakry",
+   "idioma": "French and Languages of Guinea",
+   "moneda": "Guinean franc"
+  },
+  "GQ": {
+   "capital": "Ciudad de la Paz",
+   "idioma": "French, Spanish and Portuguese",
+   "moneda": "Central African CFA franc"
+  },
+  "GR": {
+   "capital": "Athens",
+   "idioma": "Greek",
+   "moneda": "Euro"
+  },
+  "GT": {
+   "capital": "Guatemala City",
+   "idioma": "Spanish",
+   "moneda": "Quetzal"
+  },
+  "GW": {
+   "capital": "Bissau",
+   "idioma": "Portuguese",
+   "moneda": "West African CFA franc"
+  },
+  "GY": {
+   "capital": "Georgetown",
+   "idioma": "English",
+   "moneda": "Guyanese dollar"
+  },
+  "HN": {
+   "capital": "Tegucigalpa",
+   "idioma": "Spanish",
+   "moneda": "Honduran lempira"
+  },
+  "HR": {
+   "capital": "Zagreb",
+   "idioma": "Croatian",
+   "moneda": "Euro"
+  },
+  "HT": {
+   "capital": "Port-au-Prince",
+   "idioma": "French and Haitian Creole",
+   "moneda": "Gourde"
+  },
+  "HU": {
+   "capital": "Budapest",
+   "idioma": "Hungarian",
+   "moneda": "Forint"
+  },
+  "ID": {
+   "capital": "Jakarta",
+   "idioma": "Indonesian",
+   "moneda": "Rupiah"
+  },
+  "IE": {
+   "capital": "Dublin",
+   "idioma": "English and Irish",
+   "moneda": "Euro"
+  },
+  "IL": {
+   "capital": "Jerusalem",
+   "idioma": "Hebrew",
+   "moneda": "New shekel"
+  },
+  "IN": {
+   "capital": "New Delhi",
+   "idioma": "Hindi and English",
+   "moneda": "Indian rupee"
+  },
+  "IQ": {
+   "capital": "Baghdad",
+   "idioma": "Arabic and Kurdish language",
+   "moneda": "Iraqi dinar"
+  },
+  "IR": {
+   "capital": "Tehran",
+   "idioma": "Persian",
+   "moneda": "Iranian rial"
+  },
+  "IS": {
+   "capital": "Reykjavík",
+   "idioma": "Icelandic",
+   "moneda": "Icelandic króna"
+  },
+  "IT": {
+   "capital": "Rome",
+   "idioma": "Italian",
+   "moneda": "Euro"
+  },
+  "JM": {
+   "capital": "Kingston",
+   "idioma": "English and Jamaican Patois",
+   "moneda": "Jamaican dollar"
+  },
+  "JO": {
+   "capital": "Amman",
+   "idioma": "Arabic",
+   "moneda": "Jordanian dinar"
+  },
+  "JP": {
+   "capital": "Tokyo",
+   "idioma": "Japanese",
+   "moneda": "Yen"
+  },
+  "KE": {
+   "capital": "Nairobi",
+   "idioma": "English and Swahili",
+   "moneda": "Kenyan shilling"
+  },
+  "KG": {
+   "capital": "Bishkek",
+   "idioma": "Kyrgyz",
+   "moneda": "Kyrgyz som"
+  },
+  "KH": {
+   "capital": "Phnom Penh",
+   "idioma": "Khmer",
+   "moneda": "Riel"
+  },
+  "KI": {
+   "capital": "South Tarawa",
+   "idioma": "English and Gilbertese",
+   "moneda": "Australian dollar and Kiribati dollar"
+  },
+  "KM": {
+   "capital": "Moroni",
+   "idioma": "French, Arabic and Comorian",
+   "moneda": "Comorian franc"
+  },
+  "KN": {
+   "capital": "Basseterre",
+   "idioma": "English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "KP": {
+   "capital": "Pyongyang",
+   "idioma": "Korean and North Korean standard language",
+   "moneda": "North Korean won"
+  },
+  "KR": {
+   "capital": "Seoul",
+   "idioma": "Korean and Korean Sign Language",
+   "moneda": "Won and Korean mun"
+  },
+  "KW": {
+   "capital": "Kuwait City",
+   "idioma": "Arabic",
+   "moneda": "Kuwaiti dinar"
+  },
+  "KZ": {
+   "capital": "Astana",
+   "idioma": "Russian and Kazakh",
+   "moneda": "Kazakhstani tenge"
+  },
+  "LA": {
+   "capital": "Vientiane",
+   "idioma": "Lao",
+   "moneda": "Lao kip"
+  },
+  "LB": {
+   "capital": "Beirut",
+   "idioma": "Arabic",
+   "moneda": "Lebanese pound"
+  },
+  "LC": {
+   "capital": "Castries",
+   "idioma": "English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "LI": {
+   "capital": "Vaduz",
+   "idioma": "German",
+   "moneda": "Swiss franc"
+  },
+  "LK": {
+   "capital": "Colombo and Sri Jayawardenepura Kotte",
+   "idioma": "Tamil and Sinhala",
+   "moneda": "Sri Lankan rupee"
+  },
+  "LR": {
+   "capital": "Monrovia",
+   "idioma": "English",
+   "moneda": "Liberian dollar"
+  },
+  "LS": {
+   "capital": "Maseru",
+   "idioma": "English and Sesotho",
+   "moneda": "Rand and Loti"
+  },
+  "LT": {
+   "capital": "Vilnius",
+   "idioma": "Lithuanian",
+   "moneda": "Euro"
+  },
+  "LU": {
+   "capital": "Luxembourg",
+   "idioma": "French, German and Luxembourgish",
+   "moneda": "Euro"
+  },
+  "LV": {
+   "capital": "Riga",
+   "idioma": "Latvian",
+   "moneda": "Euro"
+  },
+  "LY": {
+   "capital": "Tripoli",
+   "idioma": "Arabic",
+   "moneda": "Libyan dinar"
+  },
+  "MA": {
+   "capital": "Rabat",
+   "idioma": "Arabic and Standard Moroccan Tamazight",
+   "moneda": "Moroccan dirham"
+  },
+  "MC": {
+   "capital": "Monaco",
+   "idioma": "French",
+   "moneda": "Euro"
+  },
+  "MD": {
+   "capital": "Chișinău",
+   "idioma": "Romanian",
+   "moneda": "Moldovan leu"
+  },
+  "ME": {
+   "capital": "Podgorica",
+   "idioma": "Montenegrin",
+   "moneda": "Euro"
+  },
+  "MG": {
+   "capital": "Antananarivo",
+   "idioma": "French and Malagasy",
+   "moneda": "Ariary"
+  },
+  "MH": {
+   "capital": "Majuro",
+   "idioma": "English and Marshallese",
+   "moneda": "United States dollar and SOV"
+  },
+  "MK": {
+   "capital": "Skopje",
+   "idioma": "Albanian and Macedonian",
+   "moneda": "Macedonian denar"
+  },
+  "ML": {
+   "capital": "Bamako",
+   "idioma": "Bambara, Fula, Senufo, Bozo, Maninka, Minyanka, Soninke, Kassonke, Hassaniya Arabic, Songhay, Dogon, Tamasheq and Bobo",
+   "moneda": "West African CFA franc"
+  },
+  "MM": {
+   "capital": "Naypyidaw",
+   "idioma": "Burmese",
+   "moneda": "Kyat"
+  },
+  "MN": {
+   "capital": "Ulaanbaatar",
+   "idioma": "Mongolian",
+   "moneda": "Mongolian tögrög"
+  },
+  "MR": {
+   "capital": "Nouakchott",
+   "idioma": "French and Arabic",
+   "moneda": "Mauritanian ouguiya"
+  },
+  "MT": {
+   "capital": "Valletta",
+   "idioma": "English and Maltese",
+   "moneda": "Euro"
+  },
+  "MU": {
+   "capital": "Port Louis",
+   "idioma": "French and English",
+   "moneda": "Mauritian rupee"
+  },
+  "MV": {
+   "capital": "Malé",
+   "idioma": "Maldivian",
+   "moneda": "Maldivian rufiyaa"
+  },
+  "MW": {
+   "capital": "Lilongwe",
+   "idioma": "English, Chewa and Tumbuka",
+   "moneda": "Malawian kwacha"
+  },
+  "MX": {
+   "capital": "Mexico City",
+   "idioma": "Spanish, Nahuatl and Yucatec Maya",
+   "moneda": "Peso"
+  },
+  "MY": {
+   "capital": "Kuala Lumpur",
+   "idioma": "Malay",
+   "moneda": "Malaysian ringgit"
+  },
+  "MZ": {
+   "capital": "Maputo",
+   "idioma": "Portuguese",
+   "moneda": "Mozambican metical"
+  },
+  "NA": {
+   "capital": "Windhoek",
+   "idioma": "English",
+   "moneda": "Rand and Namibian dollar"
+  },
+  "NE": {
+   "capital": "Niamey",
+   "idioma": "Hausa",
+   "moneda": "West African CFA franc"
+  },
+  "NG": {
+   "capital": "Abuja",
+   "idioma": "English",
+   "moneda": "Naira"
+  },
+  "NI": {
+   "capital": "Managua",
+   "idioma": "Spanish",
+   "moneda": "Nicaraguan córdoba"
+  },
+  "NL": {
+   "capital": "Amsterdam",
+   "idioma": "Dutch",
+   "moneda": "Euro, United States dollar, Aruban florin and Caribbean guilder"
+  },
+  "NO": {
+   "capital": "Oslo",
+   "idioma": "Norwegian, Nynorsk, Bokmål and Sámi",
+   "moneda": "Norwegian krone"
+  },
+  "NP": {
+   "capital": "Kathmandu",
+   "idioma": "Nepali",
+   "moneda": "Nepalese rupee"
+  },
+  "NR": {
+   "capital": "Yaren District",
+   "idioma": "English and Nauruan",
+   "moneda": "Australian dollar"
+  },
+  "NZ": {
+   "capital": "Wellington",
+   "idioma": "English, New Zealand Sign Language and Māori",
+   "moneda": "New Zealand dollar"
+  },
+  "OM": {
+   "capital": "Muscat",
+   "idioma": "Arabic",
+   "moneda": "Omani rial"
+  },
+  "PA": {
+   "capital": "Panama City",
+   "idioma": "Spanish",
+   "moneda": "United States dollar and Panamanian balboa"
+  },
+  "PE": {
+   "capital": "Lima",
+   "idioma": "Spanish, Aymara and Quechua",
+   "moneda": "Nuevo sol"
+  },
+  "PG": {
+   "capital": "Port Moresby",
+   "idioma": "English, Hiri Motu, Tok Pisin and Papua New Guinean Sign Language",
+   "moneda": "Kina"
+  },
+  "PH": {
+   "capital": "Manila",
+   "idioma": "English, Filipino and Taglish",
+   "moneda": "Philippine peso"
+  },
+  "PK": {
+   "capital": "Islamabad",
+   "idioma": "Urdu and English",
+   "moneda": "Pakistani rupee"
+  },
+  "PL": {
+   "capital": "Warsaw",
+   "idioma": "Polish",
+   "moneda": "Złoty"
+  },
+  "PS": {
+   "capital": "Ramallah and East Jerusalem",
+   "idioma": "Arabic",
+   "moneda": "New shekel"
+  },
+  "PT": {
+   "capital": "Lisbon",
+   "idioma": "Portuguese",
+   "moneda": "Euro"
+  },
+  "PW": {
+   "capital": "Ngerulmud",
+   "idioma": "English, Japanese and Palauan",
+   "moneda": "United States dollar"
+  },
+  "PY": {
+   "capital": "Asunción",
+   "idioma": "Spanish and Guarani",
+   "moneda": "Paraguayan guaraní"
+  },
+  "QA": {
+   "capital": "Doha",
+   "idioma": "Arabic",
+   "moneda": "Qatari riyal"
+  },
+  "RO": {
+   "capital": "Bucharest",
+   "idioma": "Romanian",
+   "moneda": "Romanian leu"
+  },
+  "RS": {
+   "capital": "Belgrade",
+   "idioma": "Serbian",
+   "moneda": "Serbian dinar"
+  },
+  "RU": {
+   "capital": "Moscow",
+   "idioma": "Russian",
+   "moneda": "Russian ruble"
+  },
+  "RW": {
+   "capital": "Kigali",
+   "idioma": "French, English, Swahili and Kinyarwanda",
+   "moneda": "Rwandan franc"
+  },
+  "SA": {
+   "capital": "Riyadh",
+   "idioma": "Arabic",
+   "moneda": "Saudi riyal"
+  },
+  "SB": {
+   "capital": "Honiara",
+   "idioma": "English",
+   "moneda": "Solomon Islands dollar"
+  },
+  "SC": {
+   "capital": "Victoria",
+   "idioma": "French, English and Seychellois Creole",
+   "moneda": "Seychellois rupee"
+  },
+  "SD": {
+   "capital": "Khartoum",
+   "idioma": "English and Arabic",
+   "moneda": "Sudanese pound"
+  },
+  "SE": {
+   "capital": "Stockholm",
+   "idioma": "Swedish",
+   "moneda": "Swedish krona"
+  },
+  "SG": {
+   "capital": "Singapore",
+   "idioma": "English, Tamil, Malay and Standard Chinese",
+   "moneda": "Singapore dollar"
+  },
+  "SI": {
+   "capital": "Ljubljana",
+   "idioma": "Slovene",
+   "moneda": "Euro"
+  },
+  "SK": {
+   "capital": "Bratislava",
+   "idioma": "Slovak",
+   "moneda": "Euro"
+  },
+  "SL": {
+   "capital": "Freetown",
+   "idioma": "English and Krio",
+   "moneda": "Leone"
+  },
+  "SM": {
+   "capital": "San Marino",
+   "idioma": "Italian",
+   "moneda": "Euro"
+  },
+  "SN": {
+   "capital": "Dakar",
+   "idioma": "French, Wolof, Balanta and Badyara",
+   "moneda": "West African CFA franc"
+  },
+  "SO": {
+   "capital": "Mogadishu",
+   "idioma": "Somali and Arabic",
+   "moneda": "Somali shilling"
+  },
+  "SR": {
+   "capital": "Paramaribo",
+   "idioma": "Dutch",
+   "moneda": "Surinamese dollar"
+  },
+  "SS": {
+   "capital": "Juba",
+   "idioma": "English",
+   "moneda": "South Sudanese pound"
+  },
+  "ST": {
+   "capital": "São Tomé",
+   "idioma": "Portuguese",
+   "moneda": "São Tomé and Príncipe dobra"
+  },
+  "SV": {
+   "capital": "San Salvador",
+   "idioma": "Spanish",
+   "moneda": "United States dollar and Bitcoin"
+  },
+  "SY": {
+   "capital": "Damascus",
+   "idioma": "Arabic",
+   "moneda": "Syrian pound"
+  },
+  "SZ": {
+   "capital": "Mbabane and Lobamba",
+   "idioma": "English and Swazi",
+   "moneda": "Lilangeni"
+  },
+  "TD": {
+   "capital": "N'Djamena",
+   "idioma": "French and Arabic",
+   "moneda": "Central African CFA franc"
+  },
+  "TG": {
+   "capital": "Lomé",
+   "idioma": "French",
+   "moneda": "West African CFA franc"
+  },
+  "TH": {
+   "capital": "Bangkok",
+   "idioma": "Thai",
+   "moneda": "Baht"
+  },
+  "TJ": {
+   "capital": "Dushanbe",
+   "idioma": "Tajik",
+   "moneda": "Tajikistani somoni"
+  },
+  "TL": {
+   "capital": "Dili",
+   "idioma": "Portuguese and Tetum",
+   "moneda": "United States dollar and East Timor centavo coins"
+  },
+  "TM": {
+   "capital": "Ashgabat",
+   "idioma": "Turkmen",
+   "moneda": "Turkmenistan new manat"
+  },
+  "TN": {
+   "capital": "Tunis",
+   "idioma": "Arabic",
+   "moneda": "Tunisian dinar"
+  },
+  "TO": {
+   "capital": "Nukuʻalofa",
+   "idioma": "English and Tongan",
+   "moneda": "Tongan paʻanga"
+  },
+  "TR": {
+   "capital": "Ankara",
+   "idioma": "Turkish",
+   "moneda": "Turkish lira"
+  },
+  "TT": {
+   "capital": "Port of Spain",
+   "idioma": "English",
+   "moneda": "Trinidad and Tobago dollar"
+  },
+  "TV": {
+   "capital": "Funafuti",
+   "idioma": "English and Tuvaluan",
+   "moneda": "Tuvaluan dollar and Australian dollar"
+  },
+  "TW": {
+   "capital": "Taipei",
+   "idioma": "Taiwanese Sign Language, Amis, Taiwanese Hokkien, Rukai, Bunun, Kanakanavu, Standard Taiwanese Mandarin, Paiwan, Yami, Atayal, Saaroa, Kavalan, Tsou, Seediq, Puyuma, Saisiyat, Sakizaya, Taiwanese Hakka, Truku, Matsu dialect, Kinmen dialect and Wuqiu dialect",
+   "moneda": "New Taiwan dollar"
+  },
+  "TZ": {
+   "capital": "Dodoma",
+   "idioma": "English and Swahili",
+   "moneda": "Tanzanian shilling"
+  },
+  "UA": {
+   "capital": "Kyiv",
+   "idioma": "Ukrainian",
+   "moneda": "Hryvnia"
+  },
+  "UG": {
+   "capital": "Kampala",
+   "idioma": "English and Swahili",
+   "moneda": "Ugandan shilling"
+  },
+  "US": {
+   "capital": "Washington, D.C.",
+   "idioma": "Spanish, Carolinian, Chamorro, Hawaiian and Samoan",
+   "moneda": "United States dollar"
+  },
+  "UY": {
+   "capital": "Montevideo",
+   "moneda": "Uruguayan peso"
+  },
+  "UZ": {
+   "capital": "Tashkent",
+   "idioma": "Uzbek",
+   "moneda": "Uzbek som"
+  },
+  "VA": {
+   "capital": "Vatican City",
+   "idioma": "Latin and Italian",
+   "moneda": "Euro"
+  },
+  "VC": {
+   "capital": "Kingstown",
+   "idioma": "English",
+   "moneda": "Eastern Caribbean dollar"
+  },
+  "VE": {
+   "capital": "Caracas",
+   "idioma": "Spanish and Venezuelan Sign Language",
+   "moneda": "Sovereign bolivar"
+  },
+  "VN": {
+   "capital": "Hanoi",
+   "idioma": "Vietnamese",
+   "moneda": "Vietnamese đồng"
+  },
+  "VU": {
+   "capital": "Port Vila",
+   "idioma": "French, English and Bislama",
+   "moneda": "Vanuatu vatus"
+  },
+  "WS": {
+   "capital": "Apia",
+   "idioma": "English and Samoan",
+   "moneda": "Samoan tālā"
+  },
+  "XK": {
+   "capital": "Pristina",
+   "idioma": "Albanian and Serbian",
+   "moneda": "Euro"
+  },
+  "YE": {
+   "capital": "Sanaa and Aden",
+   "idioma": "Arabic",
+   "moneda": "Yemeni Rial"
+  },
+  "ZA": {
+   "capital": "Pretoria, Cape Town and Bloemfontein",
+   "idioma": "English, Zulu, Xhosa, Afrikaans, Venda, Northern Sotho, Swazi, Tswana, Tsonga, Sesotho, Southern Ndebele and South African Sign Language",
+   "moneda": "Rand"
+  },
+  "ZM": {
+   "capital": "Lusaka",
+   "idioma": "English",
+   "moneda": "Zambian Kwacha"
+  },
+  "ZW": {
+   "capital": "Harare",
+   "idioma": "English, Xhosa, Ndau, Venda, Chewa, Khoisan, Kalanga, Shona, Tonga, Tswana, Tsonga, Sesotho, Northern Ndebele, Nambya, Zimbabwe Sign Language and Barwe",
+   "moneda": "Euro, United States dollar, Yen, Pound sterling, Renminbi, Indian rupee, Rand, Zimbabwean dollar, Australian dollar and Zimbabwe ZiG"
+  }
+ }
+}

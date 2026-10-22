@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** La pista del país según el modo, y la ficha "Datos del País" del original. */
 public final class FichaPais {
 
@@ -24,10 +26,10 @@ public final class FichaPais {
         VBox caja = new VBox(2);
         caja.getStyleClass().add("pista");
         if (modo == Modo.DATOS) {
-            caja.getChildren().addAll(etiqueta("¿Qué país es?", "subtitulo-rojo"), datos(p, false));
+            caja.getChildren().addAll(etiqueta(t("ficha.quePais"), "subtitulo-rojo"), datos(p, false));
             return caja;
         }
-        Label tipo = etiqueta(modo.porCapital() ? "País cuya capital es" : "País", "pista-tipo");
+        Label tipo = etiqueta(t(modo.porCapital() ? "ficha.capitalDe" : "ficha.pais"), "pista-tipo");
         Label nombre = etiqueta(modo.porCapital() ? p.capital() : p.nombre(), grande ? "titulo-mapa-grande" : "titulo-mapa-mediano");
         nombre.setWrapText(true);
         caja.getChildren().addAll(tipo, nombre);
@@ -48,16 +50,16 @@ public final class FichaPais {
     public static GridPane datos(Pais p, boolean conNombreYCapital) {
         List<String[]> filas = new ArrayList<>();
         if (conNombreYCapital) {
-            filas.add(new String[]{"País", p.nombre()});
-            filas.add(new String[]{"Capital", p.capital()});
+            filas.add(new String[]{t("ficha.pais"), p.nombre()});
+            filas.add(new String[]{t("ficha.capital"), p.capital()});
         }
-        filas.add(new String[]{"Superficie", p.superficie()});
-        filas.add(new String[]{"Población", p.poblacion()});
-        filas.add(new String[]{"Idioma", p.idioma()});
-        filas.add(new String[]{"Moneda", p.moneda()});
-        filas.add(new String[]{"PIB per cápita", p.pibPerCapita()});
-        filas.add(new String[]{"Religión (2003)", p.religion()});
-        filas.add(new String[]{"Exporta (2003)", p.exporta()});
+        filas.add(new String[]{t("ficha.superficie"), p.superficie()});
+        filas.add(new String[]{t("ficha.poblacion"), p.poblacion()});
+        filas.add(new String[]{t("ficha.idioma"), p.idioma()});
+        filas.add(new String[]{t("ficha.moneda"), p.moneda()});
+        filas.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
+        filas.add(new String[]{t("ficha.religion"), p.religion()});
+        filas.add(new String[]{t("ficha.exporta"), p.exporta()});
         GridPane g = new GridPane();
         g.getStyleClass().add("ficha");
         g.setHgap(6);
@@ -74,7 +76,7 @@ public final class FichaPais {
             g.addRow(fila++, clave, valor);
         }
         if (fechaDatos != null) {
-            Label fuente = etiqueta("Datos: Wikidata (" + fechaDatos + ") y Mapamundi original (2003).", "ficha-fuente");
+            Label fuente = etiqueta(t("ficha.fuente", fechaDatos), "ficha-fuente");
             fuente.setWrapText(true);
             g.add(fuente, 0, fila, 2, 1);
             GridPane.setMargin(fuente, new javafx.geometry.Insets(4, 0, 0, 0));

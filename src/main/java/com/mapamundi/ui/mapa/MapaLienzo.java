@@ -1,6 +1,7 @@
 package com.mapamundi.ui.mapa;
 
 import com.mapamundi.geo.Forma;
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Partida;
 import com.mapamundi.juego.Pista;
 import com.mapamundi.juego.Resultado;
@@ -243,11 +244,11 @@ public final class MapaLienzo extends Region {
     }
 
     static String textoTemperatura(double margenes) {
-        if (margenes <= 1) return "¡Te quemas!";
-        if (margenes <= 2.5) return "Caliente";
-        if (margenes <= 5) return "Templado";
-        if (margenes <= 10) return "Frío";
-        return "Helado";
+        if (margenes <= 1) return Textos.t("temperatura.quemas");
+        if (margenes <= 2.5) return Textos.t("temperatura.caliente");
+        if (margenes <= 5) return Textos.t("temperatura.templado");
+        if (margenes <= 10) return Textos.t("temperatura.frio");
+        return Textos.t("temperatura.helado");
     }
 
     /** Pista "zona": un círculo amarillo translúcido que contiene el lugar del país (relleno o borde). */

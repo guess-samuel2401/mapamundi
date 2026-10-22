@@ -216,6 +216,26 @@
 .ficha-nivel-detalle { -fx-font-size: 12px; -fx-text-fill: -tinta-suave; }
 .caja-continentes { -fx-background-color: -papel-2; -fx-background-radius: 10; -fx-padding: 8 10 8 10; }
 
+/* Pantalla de idioma del arranque. */
+.idioma-titulo { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 28px; -fx-text-fill: -crema; }
+.idioma-ayuda { -fx-font-family: "Nunito SemiBold"; -fx-font-size: 13px; -fx-text-fill: rgba(255, 247, 236, 0.7); }
+.tarjeta-idioma {
+    -fx-background-color: -tinta, -papel;
+    -fx-background-insets: 0 0 -6 0, 0;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(29, 43, 79, 0.4);
+    -fx-border-width: 4;
+    -fx-border-radius: 20;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+}
+.tarjeta-idioma.seleccionada { -fx-border-color: -sol; -fx-background-color: -tinta, -sol-claro;
+    -fx-effect: dropshadow(gaussian, rgba(255, 210, 63, 0.55), 26, 0.2, 0, 4); }
+.idioma-codigo { -fx-background-color: -tinta; -fx-background-radius: 32; -fx-text-fill: -sol;
+    -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 26px; }
+.idioma-nombre { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 30px; -fx-text-fill: -rojo; }
+.idioma-detalle { -fx-font-family: "Nunito SemiBold"; -fx-font-size: 14px; -fx-text-fill: -tinta-suave; }
+
 /* Reglas extra: interruptores redondeados; encendidos, en amarillo como la ficha de nivel elegida. */
 .interruptor {
     -fx-background-color: -papel-2;

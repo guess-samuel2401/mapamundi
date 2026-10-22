@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Logros;
 import com.mapamundi.juego.Logros.Logro;
 import javafx.geometry.Insets;
@@ -26,7 +27,7 @@ final class PanelLogros extends VBox {
         general.getStyleClass().add("barra-logros");
         general.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(general, Priority.ALWAYS);
-        HBox resumen = new HBox(12, FichaPais.etiqueta(hechos + " de " + total + " insignias", "negrita"), general);
+        HBox resumen = new HBox(12, FichaPais.etiqueta(Textos.t("logros.resumen", hechos, total), "negrita"), general);
         resumen.setAlignment(Pos.CENTER_LEFT);
 
         GridPane rejilla = new GridPane();
@@ -58,7 +59,7 @@ final class PanelLogros extends VBox {
         descripcion.setWrapText(true);
         VBox texto = new VBox(2, nombre, descripcion);
         if (conseguida) {
-            texto.getChildren().add(FichaPais.etiqueta("Conseguida el " + logros.fecha(l), "logro-fecha"));
+            texto.getChildren().add(FichaPais.etiqueta(Textos.t("logros.conseguida", logros.fecha(l)), "logro-fecha"));
         } else {
             int[] avance = logros.progreso(l);
             if (avance != null) {

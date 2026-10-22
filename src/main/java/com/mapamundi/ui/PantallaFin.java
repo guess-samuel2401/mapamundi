@@ -16,6 +16,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** Fin de la partida: si el puntaje entra en el top 10 se pide el nombre (FrmIngresoDatos del original). */
 final class PantallaFin extends VBox {
 
@@ -28,13 +30,13 @@ final class PantallaFin extends VBox {
         Label globo = FichaPais.etiqueta("🌍", "");
         globo.setStyle("-fx-font-size: 54px;");
         HBox cifras = new HBox(10,
-                cifra("Puntaje", String.valueOf(partida.puntaje())),
-                cifra("Países ubicados", String.valueOf(partida.ubicados().size())),
-                cifra("Mejor racha", String.valueOf(partida.mejorRacha())),
-                cifra("Nivel", partida.nivel().nombre()));
+                cifra(t("fin.puntaje"), String.valueOf(partida.puntaje())),
+                cifra(t("fin.ubicados"), String.valueOf(partida.ubicados().size())),
+                cifra(t("fin.mejorRacha"), String.valueOf(partida.mejorRacha())),
+                cifra(t("hud.nivel"), partida.nivel().nombre()));
         cifras.setAlignment(Pos.CENTER);
 
-        VBox tarjeta = new VBox(12, globo, FichaPais.etiqueta("Fin del juego", "titulo-mapa-grande"), cifras);
+        VBox tarjeta = new VBox(12, globo, FichaPais.etiqueta(t("fin.titulo"), "titulo-mapa-grande"), cifras);
         tarjeta.getStyleClass().add("panel");
         tarjeta.setAlignment(Pos.CENTER);
         if (!insignias.isEmpty()) {
@@ -45,24 +47,24 @@ final class PantallaFin extends VBox {
                 h.setAlignment(Pos.CENTER_LEFT);
                 lista.getChildren().add(h);
             }
-            tarjeta.getChildren().addAll(FichaPais.etiqueta("INSIGNIAS CONSEGUIDAS EN ESTA PARTIDA", "titulo-seccion"), lista);
+            tarjeta.getChildren().addAll(FichaPais.etiqueta(t("fin.insignias"), "titulo-seccion"), lista);
         }
 
         VBox tabla = new VBox(new TablaPuntajes(puntajes.leer(), null));
 
         if (puntajes.entraEnLaTabla(partida.puntaje())) {
             TextField nombre = new TextField();
-            nombre.setPromptText("¡Nuevo récord! Escribe tu nombre");
+            nombre.setPromptText(t("fin.nuevoRecord"));
             HBox.setHgrow(nombre, Priority.ALWAYS);
             nombre.textProperty().addListener((o, a, b) -> {
                 if (b.length() > 20) nombre.setText(b.substring(0, 20));
             });
-            Button guardar = new Button("Guardar");
+            Button guardar = new Button(t("fin.guardar"));
             guardar.getStyleClass().add("boton-principal");
             HBox fila = new HBox(8, nombre, guardar);
             Runnable accion = () -> {
-                String texto = nombre.getText().isBlank() ? "Anónimo" : nombre.getText().trim();
-                String nivel = partida.nivel().nombre() + (partida.ajustes().contrarreloj() ? " · contrarreloj" : "");
+                String texto = nombre.getText().isBlank() ? t("fin.anonimo") : nombre.getText().trim();
+                String nivel = partida.nivel().nombre() + (partida.ajustes().contrarreloj() ? " · " + t("regla.contrarreloj").toLowerCase() : "");
                 Puntajes.Entrada e = Puntajes.Entrada.nueva(texto, partida.puntaje(), nivel);
                 tabla.getChildren().setAll(new TablaPuntajes(puntajes.guardar(e), e));
                 tarjeta.getChildren().remove(fila);
@@ -73,10 +75,10 @@ final class PantallaFin extends VBox {
             Platform.runLater(nombre::requestFocus);
         }
 
-        Button otra = new Button("▶ Jugar de nuevo");
+        Button otra = new Button("▶ " + t("fin.otraVez"));
         otra.getStyleClass().add("boton-principal");
         otra.setOnAction(e -> otraVez.run());
-        Button volver = new Button("Menú");
+        Button volver = new Button(t("fin.menu"));
         volver.setOnAction(e -> menu.run());
         HBox botones = new HBox(10, otra, volver);
         botones.setAlignment(Pos.CENTER);

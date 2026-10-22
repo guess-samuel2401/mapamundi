@@ -1,6 +1,7 @@
 package com.mapamundi.juego;
 
 import com.mapamundi.geo.Region;
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.modelo.Atlas;
 import com.mapamundi.modelo.Continente;
 import com.mapamundi.modelo.Pais;
@@ -23,13 +24,13 @@ public record Nivel(String nombre, List<Pais> paises, Region vista) {
     /** La progresión del diseño: Sudamérica → América → Europa → África → Asia → Oceanía → Mundo. */
     public static List<Nivel> progresion(Atlas atlas) {
         return List.of(
-                new Nivel("Sudamérica", atlas.paises().stream().filter(Pais::sudamerica).toList(), VISTA_SUDAMERICA),
+                new Nivel(Textos.t("nivel.sudamerica"), atlas.paises().stream().filter(Pais::sudamerica).toList(), VISTA_SUDAMERICA),
                 continente(atlas, Continente.AMERICA),
                 continente(atlas, Continente.EUROPA),
                 continente(atlas, Continente.AFRICA),
                 continente(atlas, Continente.ASIA),
                 continente(atlas, Continente.OCEANIA),
-                new Nivel("Todo el mundo", atlas.paises(), VISTA_MUNDO));
+                new Nivel(Textos.t("nivel.mundo"), atlas.paises(), VISTA_MUNDO));
     }
 
     /** Cuántos niveles tiene la progresión (el último es "Todo el mundo"). */

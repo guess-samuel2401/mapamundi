@@ -22,6 +22,8 @@ import javafx.util.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /** Fase 1: ¿a qué continente pertenece? Flechas + Enter (el recuadro amarillo del original), teclas 1-5 o clic. */
 final class FaseContinente extends HBox {
 
@@ -45,7 +47,7 @@ final class FaseContinente extends HBox {
         izquierda.setPrefWidth(320);
         izquierda.setMinWidth(280);
         izquierda.getChildren().addAll(
-                FichaPais.etiqueta("¿A qué continente pertenece?", "subtitulo-rojo"),
+                FichaPais.etiqueta(t("continente.pregunta"), "subtitulo-rojo"),
                 FichaPais.pista(partida.actual(), partida.ajustes().modo(), true));
         if (partida.ajustes().modo().muestraForma()) {
             Canvas silueta = Miniatura.silueta(partida.actual(), 220, 170);
@@ -55,7 +57,7 @@ final class FaseContinente extends HBox {
             caida.play();
             izquierda.getChildren().add(silueta);
         }
-        Label ayuda = FichaPais.etiqueta("Usa ← → y Enter, las teclas 1–5 o haz clic.", "texto-suave");
+        Label ayuda = FichaPais.etiqueta(t("continente.ayuda"), "texto-suave");
         ayuda.setWrapText(true);
         izquierda.getChildren().addAll(intentos, ayuda, pistas);
 
@@ -126,7 +128,7 @@ final class FaseContinente extends HBox {
     }
 
     void actualizar() {
-        intentos.setText("Intentos: " + partida.erroresContinente() + "/" + Partida.INTENTOS_CONTINENTE);
+        intentos.setText(t("continente.intentos", partida.erroresContinente(), Partida.INTENTOS_CONTINENTE));
         pistas.actualizar();
         for (Continente c : Continente.values()) {
             Button b = botones.get(c);

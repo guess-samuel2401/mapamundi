@@ -24,6 +24,8 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapamundi.i18n.Textos.t;
+
 /**
  * Pantalla de juego: panel superior, la fase actual, la pausa, el cartel de nivel superado,
  * los avisos de insignias y los consejos de la primera partida.
@@ -96,21 +98,21 @@ final class PantallaJuego extends StackPane {
     }
 
     private StackPane construirPausa(Runnable salir) {
-        Button seguir = new Button("Continuar (F5)");
+        Button seguir = new Button(t("pausa.continuar") + " (F5)");
         seguir.getStyleClass().add("boton-principal");
         seguir.setMaxWidth(Double.MAX_VALUE);
         seguir.setOnAction(e -> partida.alternarPausa());
-        Button ajustes = new Button("⚙  Ajustes");
+        Button ajustes = new Button("⚙  " + t("ajustes.titulo"));
         ajustes.setMaxWidth(Double.MAX_VALUE);
         ajustes.setOnAction(e -> abrirAjustes());
-        Button menu = new Button("Salir al menú");
+        Button menu = new Button(t("pausa.salir"));
         menu.setMaxWidth(Double.MAX_VALUE);
         menu.setOnAction(e -> {
             reloj.stop();
             salir.run();
         });
-        VBox caja = new VBox(12, FichaPais.etiqueta("Pausa", "titulo-mapa-grande"),
-                FichaPais.etiqueta("El cronómetro está detenido.", ""), seguir, ajustes, menu);
+        VBox caja = new VBox(12, FichaPais.etiqueta(t("pausa.titulo"), "titulo-mapa-grande"),
+                FichaPais.etiqueta(t("pausa.detenido"), ""), seguir, ajustes, menu);
         caja.getStyleClass().add("panel");
         caja.setAlignment(Pos.CENTER);
         caja.setMaxSize(320, USE_PREF_SIZE);
@@ -121,7 +123,7 @@ final class PantallaJuego extends StackPane {
     }
 
     private void abrirAjustes() {
-        dialogo = Dialogo.mostrar(this, "Ajustes", new PanelAjustes(ctx, this::actualizar, null), 520, () -> dialogo = null);
+        dialogo = Dialogo.mostrar(this, t("ajustes.titulo"), new PanelAjustes(ctx, this::actualizar, null), 520, () -> dialogo = null);
     }
 
     private void tecla(KeyEvent e) {
@@ -169,14 +171,14 @@ final class PantallaJuego extends StackPane {
         faseAnterior = fase;
 
         String cartel = partida.nivelSuperado();
-        if (cartel != null && !cartel.equals(ultimoCartel)) mostrarCartel("¡NIVEL SUPERADO!", cartel);
+        if (cartel != null && !cartel.equals(ultimoCartel)) mostrarCartel(t("cartel.nivel"), cartel);
         ultimoCartel = cartel;
 
         // Al subir de combo (4.º y 8.º acierto seguidos), un cartel que lo celebra.
         Resultado r = partida.fase() == Partida.Fase.RESULTADO ? partida.resultado() : null;
         if (r != null && r != ultimoCombo && r.acierto()
                 && Partida.multiplicador(partida.racha()) > Partida.multiplicador(partida.racha() - 1)) {
-            mostrarCartel("¡RACHA DE " + partida.racha() + "!", "Puntos ×" + r.multiplicador());
+            mostrarCartel(t("cartel.racha", partida.racha()), t("cartel.puntos", r.multiplicador()));
         }
         if (r != null) ultimoCombo = r;
     }
@@ -192,12 +194,7 @@ final class PantallaJuego extends StackPane {
             default -> null;
         };
         if (clave == null || !ctx.preferencias().primeraVez(clave)) return;
-        String texto = switch (clave) {
-            case "continente" -> "Elige el continente del país con un clic o con las teclas 1 a 5. Si te equivocas, puedes volver a intentarlo.";
-            case "mapa" -> "Arrastra el país hasta su lugar y pulsa Enter. La rueda del ratón hace zoom y arrastrando el mar mueves el mapa.";
-            default -> "Aquí ves la distancia, los puntos y los datos del país. Pulsa Enter para seguir.";
-        };
-        consejo = Consejo.mostrar(this, texto);
+        consejo = Consejo.mostrar(this, t("consejo." + clave));
     }
 
     private void mostrarCartel(String arriba, String grande) {

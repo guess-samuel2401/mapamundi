@@ -24,7 +24,8 @@ public final class Preferencias {
     boolean musica = true;
     boolean pantallaCompleta = false;
     boolean daltonico = false;
-    boolean tutorialVisto = false;
+    /** Último idioma elegido ("es" / "en"): sale marcado en la pantalla de idioma del arranque. */
+    String idioma = "es";
     /** Consejos de la primera partida ya mostrados ("continente", "mapa", "resultado"). */
     Set<String> consejosVistos = new HashSet<>();
 

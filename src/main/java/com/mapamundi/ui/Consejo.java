@@ -24,7 +24,7 @@ final class Consejo extends HBox {
         Label mensaje = FichaPais.etiqueta(texto, "consejo-texto");
         mensaje.setWrapText(true);
         mensaje.setMaxWidth(560);
-        Button entendido = new Button("Entendido");
+        Button entendido = new Button(com.mapamundi.i18n.Textos.t("consejo.entendido"));
         entendido.getStyleClass().add("boton-principal");
         entendido.setFocusTraversable(false);
         entendido.setOnAction(e -> alCerrar.run());

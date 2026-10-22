@@ -37,8 +37,10 @@ public final class Atlas {
             Archivo archivo = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), Archivo.class);
             List<Pais> paises = new ArrayList<>();
             for (PaisJson p : archivo.paises) {
+                Pais.Ingles en = p.en == null ? null
+                        : new Pais.Ingles(p.en.nombre, p.en.capital, p.en.idioma, p.en.moneda, p.en.religion, p.en.exporta);
                 paises.add(new Pais(p.iso, p.nombre, Continente.valueOf(p.continente), p.sudamerica, p.capital,
-                        p.poblacion, p.superficie, p.idioma, p.moneda, p.pibPerCapita, p.religion, p.exporta,
+                        p.poblacion, p.superficie, p.idioma, p.moneda, p.pibPerCapita, p.religion, p.exporta, en,
                         p.datosOriginales, p.color, new Forma(p.anillos)));
             }
             List<Forma> otras = new ArrayList<>();
@@ -96,5 +98,10 @@ public final class Atlas {
         boolean sudamerica, datosOriginales;
         int color;
         List<double[]> anillos;
+        TextosEn en;
+    }
+
+    private static final class TextosEn {
+        String nombre, capital, idioma, moneda, religion, exporta;
     }
 }

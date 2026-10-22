@@ -1,6 +1,8 @@
 package com.mapamundi.ui;
 
 import com.mapamundi.juego.Partida;
+
+import static com.mapamundi.i18n.Textos.t;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -33,14 +35,14 @@ final class Hud extends VBox {
         getStyleClass().add("hud");
         setSpacing(6);
         Label titulo = FichaPais.etiqueta("Mapamundi", "titulo-hud");
-        cajaAvance = par("Avance", avance);
-        cajaVidas = par("Vidas", vidas);
+        cajaAvance = par(t("hud.avance"), avance);
+        cajaVidas = par(t("hud.vidas"), vidas);
         Region hueco = new Region();
         HBox.setHgrow(hueco, Priority.ALWAYS);
         sonido.setFocusTraversable(false);
         pausa.setFocusTraversable(false);
-        HBox fila = new HBox(18, titulo, par("Nivel", nivel), cajaAvance, par("Puntaje", puntaje), par("Errores", errores),
-                cajaVidas, par("Racha", racha), hueco, modo, sonido, pausa);
+        HBox fila = new HBox(18, titulo, par(t("hud.nivel"), nivel), cajaAvance, par(t("hud.puntaje"), puntaje),
+                par(t("hud.errores"), errores), cajaVidas, par(t("hud.racha"), racha), hueco, modo, sonido, pausa);
         fila.setAlignment(Pos.CENTER_LEFT);
 
         tiempo.getStyleClass().add("barra-tiempo");
@@ -70,7 +72,7 @@ final class Hud extends VBox {
         racha.setText(p.racha() + (combo > 1 ? "  ×" + combo : ""));
         racha.getStyleClass().remove("hud-combo");
         if (combo > 1) racha.getStyleClass().add("hud-combo");
-        String extras = (contrarreloj ? " · Contrarreloj" : "") + (p.ajustes().piezaGirada() ? " · Experto" : "");
+        String extras = (contrarreloj ? " · " + t("regla.contrarreloj") : "") + (p.ajustes().piezaGirada() ? " · " + t("hud.experto") : "");
         modo.setText(p.ajustes().modo().nombre() + " · " + p.ajustes().velocidad().nombre() + extras);
         sonido.setText(silencio ? "🔇" : "🔊");
 

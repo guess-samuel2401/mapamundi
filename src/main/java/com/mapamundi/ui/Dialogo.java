@@ -18,7 +18,7 @@ final class Dialogo {
     }
 
     static StackPane mostrar(StackPane contenedor, String titulo, Node contenido, double ancho, Runnable alCerrar) {
-        Button cerrar = new Button("Cerrar");
+        Button cerrar = new Button(com.mapamundi.i18n.Textos.t("dialogo.cerrar"));
         cerrar.getStyleClass().add("boton-principal");
         cerrar.setCancelButton(true);
         HBox pie = new HBox(cerrar);

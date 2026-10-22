@@ -1,5 +1,6 @@
 package com.mapamundi.ui;
 
+import com.mapamundi.i18n.Textos;
 import com.mapamundi.juego.Ajustes;
 import com.mapamundi.juego.Modo;
 import com.mapamundi.juego.Nivel;
@@ -34,15 +35,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.text.NumberFormat;
 import java.util.EnumMap;
-import java.util.Locale;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import static com.mapamundi.i18n.Textos.t;
 
 /**
  * Portada del juego: a la izquierda el mapa del mundo con el botón Jugar; a la derecha la configuración
@@ -57,15 +58,11 @@ final class PantallaMenu extends StackPane {
     private final ToggleGroup grupoNivel = new ToggleGroup();
     private final ToggleGroup grupoVelocidad = new ToggleGroup();
     private final ComboBox<Modo> modo = new ComboBox<>();
-    private final CheckBox mostrarDatos = new CheckBox("Mostrar los datos del país después de cada ronda");
-    private final ToggleButton contrarreloj = interruptor("◷  Contrarreloj",
-            Partida.SEGUNDOS_CONTRARRELOJ + " segundos para ubicar todos los países que puedas, sin corazones. "
-                    + "Cada acierto suma " + Partida.SEGUNDOS_POR_ACIERTO + " s al reloj.");
-    private final ToggleButton frioCaliente = interruptor("♨  Frío o caliente",
-            "Mientras arrastras, la pieza brilla de azul (lejos) a rojo (cerca de su lugar).");
-    private final ToggleButton piezaGirada = interruptor("⟳  Pieza girada",
-            "Modo experto: la pieza aparece girada y hay que enderezarla con Q / E o clic derecho. +"
-                    + Partida.PUNTOS_GIRO + " puntos por acierto.");
+    private final CheckBox mostrarDatos = new CheckBox(t("menu.mostrarDatos"));
+    private final ToggleButton contrarreloj = interruptor("◷  " + t("regla.contrarreloj"),
+            t("regla.contrarreloj.ayuda", Partida.SEGUNDOS_CONTRARRELOJ, Partida.SEGUNDOS_POR_ACIERTO));
+    private final ToggleButton frioCaliente = interruptor("♨  " + t("regla.frioCaliente"), t("regla.frioCaliente.ayuda"));
+    private final ToggleButton piezaGirada = interruptor("⟳  " + t("regla.piezaGirada"), t("regla.piezaGirada.ayuda", Partida.PUNTOS_GIRO));
     private final Map<Continente, CheckBox> casillas = new EnumMap<>(Continente.class);
     private final Label resumen = FichaPais.etiqueta("", "resumen-partida");
     private final Consumer<Ajustes> jugar;
@@ -74,9 +71,10 @@ final class PantallaMenu extends StackPane {
     private final Runnable refrescar;
 
     /**
-     * @param refrescar vuelve a construir el menú (tras cambiar el modo daltónico, para redibujar los mapas)
+     * @param refrescar       vuelve a construir el menú (tras cambiar el modo daltónico, para redibujar los mapas)
+     * @param mostrarTutorial abrir la guía de bienvenida nada más mostrar el menú (al arrancar el programa)
      */
-    PantallaMenu(Contexto ctx, Ajustes inicial, Consumer<Ajustes> jugar, Runnable refrescar) {
+    PantallaMenu(Contexto ctx, Ajustes inicial, Consumer<Ajustes> jugar, Runnable refrescar, boolean mostrarTutorial) {
         Atlas atlas = ctx.atlas();
         this.ctx = ctx;
         this.niveles = Nivel.progresion(atlas);
@@ -100,16 +98,13 @@ final class PantallaMenu extends StackPane {
         modo.valueProperty().addListener(o -> actualizarResumen());
         actualizarResumen();
 
-        // La primera vez que se abre el juego, la guía de bienvenida.
-        if (!ctx.preferencias().tutorialVisto) Platform.runLater(this::verTutorial);
+        // Cada vez que se abre el programa, tras elegir el idioma, la guía de bienvenida.
+        if (mostrarTutorial) Platform.runLater(this::verTutorial);
     }
 
     private void verTutorial() {
         getChildren().removeIf(n -> n.getStyleClass().contains("capa-dialogo"));
-        Tutorial.mostrar(this, ctx.atlas(), () -> {
-            ctx.preferencias().tutorialVisto = true;
-            ctx.preferencias().guardar();
-        });
+        Tutorial.mostrar(this, ctx.atlas(), () -> { });
     }
 
     // ------------------------------------------------------------------ portada
@@ -119,7 +114,7 @@ final class PantallaMenu extends StackPane {
         Label edicion = FichaPais.etiqueta("2.0", "insignia");
         HBox cabecera = new HBox(10, titulo, edicion);
         cabecera.setAlignment(Pos.CENTER_LEFT);
-        Label lema = FichaPais.etiqueta("Adivina el continente y coloca cada país en su lugar antes de que se acabe el tiempo.", "lema");
+        Label lema = FichaPais.etiqueta(t("menu.lema"), "lema");
         lema.setWrapText(true);
 
         MapaDecorativo mapa = new MapaDecorativo(atlas);
@@ -128,7 +123,7 @@ final class PantallaMenu extends StackPane {
         VBox.setVgrow(marco, Priority.ALWAYS);
         marco.setMinHeight(160);
 
-        Button botonJugar = new Button("▶  JUGAR");
+        Button botonJugar = new Button("▶  " + t("menu.jugar"));
         botonJugar.getStyleClass().addAll("boton-principal", "boton-jugar");
         botonJugar.setDefaultButton(true);
         botonJugar.setMaxWidth(Double.MAX_VALUE);
@@ -136,24 +131,24 @@ final class PantallaMenu extends StackPane {
         botonJugar.setOnAction(e -> empezar());
         Animaciones.alPasar(botonJugar, 1.06, 3, latir(botonJugar));
 
-        Button records = new Button("🏆  Récords");
+        Button records = new Button("🏆  " + t("menu.records"));
         records.getStyleClass().add("boton-fantasma");
-        records.setOnAction(e -> Dialogo.mostrar(this, "Puntuaciones más altas", tablaPuntajes()));
+        records.setOnAction(e -> Dialogo.mostrar(this, t("menu.records.titulo"), tablaPuntajes()));
         Animaciones.alPasar(records, 1.08, 3);
-        Button logros = new Button("★  Logros");
+        Button logros = new Button("★  " + t("menu.logros"));
         logros.getStyleClass().add("boton-fantasma");
-        logros.setOnAction(e -> Dialogo.mostrar(this, "Logros e insignias", new PanelLogros(ctx.logros()), 720, null));
+        logros.setOnAction(e -> Dialogo.mostrar(this, t("menu.logros.titulo"), new PanelLogros(ctx.logros()), 720, null));
         Animaciones.alPasar(logros, 1.08, 3);
         Button ayuda = new Button("?");
         ayuda.getStyleClass().addAll("boton-fantasma", "boton-icono");
-        ayuda.setTooltip(new Tooltip("Cómo se juega"));
-        ayuda.setOnAction(e -> Dialogo.mostrar(this, "Cómo se juega", comoSeJuega()));
+        ayuda.setTooltip(new Tooltip(t("menu.comoSeJuega")));
+        ayuda.setOnAction(e -> Dialogo.mostrar(this, t("menu.comoSeJuega"), comoSeJuega()));
         Animaciones.alPasar(ayuda, 1.1, 3);
         Button ajustes = new Button("⚙");
         ajustes.getStyleClass().addAll("boton-fantasma", "boton-icono");
-        ajustes.setTooltip(new Tooltip("Ajustes: música, pantalla completa, modo daltónico…"));
+        ajustes.setTooltip(new Tooltip(t("menu.ajustes.ayuda")));
         boolean[] cambioAspecto = {false};
-        ajustes.setOnAction(e -> Dialogo.mostrar(this, "Ajustes",
+        ajustes.setOnAction(e -> Dialogo.mostrar(this, t("ajustes.titulo"),
                 new PanelAjustes(ctx, () -> cambioAspecto[0] = true, this::verTutorial), 520,
                 () -> {
                     // Los mapas del menú están dibujados de antemano: se rehace la pantalla para el modo daltónico.
@@ -185,7 +180,7 @@ final class PantallaMenu extends StackPane {
     // ------------------------------------------------------------------ configuración
 
     private VBox configuracion(Atlas atlas, Ajustes inicial) {
-        Label titulo = FichaPais.etiqueta("Configura tu partida", "titulo-config");
+        Label titulo = FichaPais.etiqueta(t("menu.configura"), "titulo-config");
 
         // Nivel: fichas con mini-mapa
         GridPane fichas = new GridPane();
@@ -195,12 +190,12 @@ final class PantallaMenu extends StackPane {
             Nivel n = niveles.get(i);
             Set<Pais> deNivel = new HashSet<>(n.paises());
             ToggleButton ficha = fichaNivel(Miniatura.region(atlas, n.vista(), deNivel::contains, ANCHO_MINI, ALTO_MINI),
-                    (i + 1) + ". " + n.nombre(), n.paises().size() + " países", i);
+                    (i + 1) + ". " + n.nombre(), t("menu.paises", n.paises().size()), i);
             ficha.setSelected(i == inicial.nivelInicial());
             fichas.add(ficha, i % 2, i / 2);
         }
         ToggleButton personal = fichaNivel(Miniatura.region(atlas, Nivel.VISTA_MUNDO, p -> true, ANCHO_MINI, ALTO_MINI),
-                "Personalizado", "Elige continentes", -1);
+                t("menu.personalizado"), t("menu.personalizado.detalle"), -1);
         personal.setSelected(inicial.personalizado());
         fichas.add(personal, 1, 3);
         // Siempre hay un nivel elegido.
@@ -269,10 +264,10 @@ final class PantallaMenu extends StackPane {
 
         VBox v = new VBox(7,
                 titulo,
-                seccion("Nivel", "Cada 6 países bien ubicados subes al siguiente."), fichas, continentes,
-                seccion("Velocidad", null), segmentos,
-                seccion("Modo de juego", null), modo, ayudaModo,
-                seccion("Reglas extra", "Pasa el ratón para ver cada una."), reglas,
+                seccion(t("menu.nivel"), t("menu.nivel.nota", Partida.PAISES_POR_NIVEL)), fichas, continentes,
+                seccion(t("menu.velocidad"), null), segmentos,
+                seccion(t("menu.modo"), null), modo, ayudaModo,
+                seccion(t("menu.reglas"), t("menu.reglas.nota")), reglas,
                 mostrarDatos, empuje, record);
         v.getStyleClass().add("panel");
         v.setPrefWidth(ANCHO_CONFIG);
@@ -285,9 +280,9 @@ final class PantallaMenu extends StackPane {
         List<Puntajes.Entrada> lista = puntajes.leer();
         Label trofeo = FichaPais.etiqueta("🏆", "trofeo");
         Node texto = lista.isEmpty()
-                ? dosLineas("Aún no hay récords", "¡Juega una partida y sé el primero de la tabla!", "negrita", "texto-suave")
-                : dosLineas(NumberFormat.getIntegerInstance(Locale.of("es")).format(lista.getFirst().puntaje()) + " puntos",
-                "Récord de " + lista.getFirst().nombre() + " · " + lista.getFirst().nivel(), "record-puntos", "texto-suave");
+                ? dosLineas(t("menu.sinRecords"), t("menu.sinRecords.detalle"), "negrita", "texto-suave")
+                : dosLineas(t("menu.recordPuntos", Textos.entero(lista.getFirst().puntaje())),
+                t("menu.recordDe", lista.getFirst().nombre(), lista.getFirst().nivel()), "record-puntos", "texto-suave");
         HBox h = new HBox(12, trofeo, texto);
         h.setAlignment(Pos.CENTER_LEFT);
         h.getStyleClass().add("caja-record");
@@ -351,10 +346,12 @@ final class PantallaMenu extends StackPane {
         if (grupoNivel.getSelectedToggle() == null || grupoVelocidad.getSelectedToggle() == null || modo.getValue() == null) return;
         int i = (Integer) grupoNivel.getSelectedToggle().getUserData();
         Velocidad v = (Velocidad) grupoVelocidad.getSelectedToggle().getUserData();
-        String nivel = i < 0 ? "Continentes a elegir" : "Nivel " + (i + 1) + " · " + niveles.get(i).nombre();
-        String tiempo = contrarreloj.isSelected() ? "Contrarreloj (" + Partida.SEGUNDOS_CONTRARRELOJ + " s, ±" + v.toleranciaKm() + " km)"
+        String nivel = i < 0 ? t("menu.resumen.personalizado") : t("menu.resumen.nivel", i + 1, niveles.get(i).nombre());
+        String tiempo = contrarreloj.isSelected()
+                ? t("regla.contrarreloj") + " (" + Partida.SEGUNDOS_CONTRARRELOJ + " s, ±" + v.toleranciaKm() + " km)"
                 : v.nombre() + " (" + v.segundos() + " s)";
-        String extras = (frioCaliente.isSelected() ? "   ·   Frío o caliente" : "") + (piezaGirada.isSelected() ? "   ·   Pieza girada" : "");
+        String extras = (frioCaliente.isSelected() ? "   ·   " + t("regla.frioCaliente") : "")
+                + (piezaGirada.isSelected() ? "   ·   " + t("regla.piezaGirada") : "");
         resumen.setText(nivel + "   ·   " + tiempo + "   ·   " + modo.getValue().nombre() + extras);
     }
 
@@ -383,18 +380,15 @@ final class PantallaMenu extends StackPane {
 
     private Node comoSeJuega() {
         VBox pasos = new VBox(12,
-                paso("1", "Elige el continente", "Aparece un país. Elige su continente con las flechas + Enter, las teclas 1–5 o un clic. Tienes 5 intentos: +100 puntos."),
-                paso("2", "Coloca el país", "Arrástralo con el ratón (o usa las flechas; con Shift va más rápido) y pulsa Enter o Confirmar. La rueda del ratón hace zoom."),
-                paso("3", "Suma puntos", "Si queda dentro del margen (en km reales): +500 y un bonus por los segundos que sobran. Si fallas o se acaba el tiempo, pierdes un corazón ♥ (tienes 5)."),
-                paso("4", "Rachas y pistas", "Desde el 4.º acierto seguido los puntos valen ×2, y desde el 8.º, ×3. Si te atascas, pide una pista "
-                        + "(descartar continentes, zona o vecinos): su costo se resta de los puntos de esa ronda."),
-                paso("5", "Reglas extra", "Contrarreloj: " + Partida.SEGUNDOS_CONTRARRELOJ + " s para toda la partida, sin corazones. "
-                        + "Frío o caliente: la pieza cambia de color según lo cerca que esté. Pieza girada: hay que enderezarla con Q / E."),
-                paso("6", "Pausa", "F5, P o Esc detienen el cronómetro. F11: pantalla completa."));
-        Button tutorial = new Button("🎓  Ver el tutorial");
+                paso("1", t("ayuda.1.titulo"), t("ayuda.1.texto")),
+                paso("2", t("ayuda.2.titulo"), t("ayuda.2.texto")),
+                paso("3", t("ayuda.3.titulo"), t("ayuda.3.texto")),
+                paso("4", t("ayuda.4.titulo"), t("ayuda.4.texto")),
+                paso("5", t("ayuda.5.titulo"), t("ayuda.5.texto", Partida.SEGUNDOS_CONTRARRELOJ)),
+                paso("6", t("ayuda.6.titulo"), t("ayuda.6.texto")));
+        Button tutorial = new Button("🎓  " + t("ayuda.verTutorial"));
         tutorial.setOnAction(e -> verTutorial());
-        Label creditos = FichaPais.etiqueta("Fronteras: Natural Earth (dominio público). Datos de los países: Wikidata (CC0) "
-                + "y Mapamundi original (2003). Música y efectos de sonido: composiciones originales del juego.", "texto-suave");
+        Label creditos = FichaPais.etiqueta(t("ayuda.creditos"), "texto-suave");
         creditos.setWrapText(true);
         pasos.getChildren().addAll(tutorial, creditos);
         return pasos;

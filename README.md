@@ -68,8 +68,16 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 **Modos** (los del original): Mapa y nombre del país · Mapa y nombre de la capital · Solo nombre del país ·
 Solo nombre de la capital · Solo datos del país.
 
-La primera vez que se abre el juego aparece un **tutorial** de 5 pasos (se puede volver a ver desde el botón
-**?** del menú o desde Ajustes), y durante la primera partida salen consejos breves en la parte de abajo.
+### Idioma y tutorial
+
+Cada vez que se abre el programa, lo primero es elegir el **idioma: español o inglés** (con un clic, ← → y Enter,
+o las teclas 1 y 2; viene marcado el último usado). Después aparece el **tutorial** de 5 pasos, que se puede
+saltar y volver a ver desde el botón **?** del menú o desde Ajustes. Durante la primera partida salen, además,
+consejos breves en la parte de abajo.
+
+Todo el juego está traducido: menús, reglas, logros y los datos de los 197 países (nombres, capitales, idiomas,
+monedas, religión y exportaciones; las cifras se muestran con el formato de cada idioma). Los textos de la
+interfaz están en `src/main/resources/com/mapamundi/i18n/textos_es.properties` y `textos_en.properties`.
 
 ### Logros e insignias
 
@@ -87,7 +95,7 @@ las que faltan; al conseguir una aparece un aviso durante la partida y un resume
 - **Modo daltónico:** paleta de colores distinguibles con daltonismo (Okabe-Ito) y una trama distinta en cada
   color de país, para no depender solo del color. El verde y el rojo de acierto/fallo pasan a azul y naranja.
 
-Todo se guarda en `%USERPROFILE%\.mapamundi\`: `preferencias.json` (ajustes y tutorial visto), `logros.json`
+Todo se guarda en `%USERPROFILE%\.mapamundi\`: `preferencias.json` (ajustes y último idioma), `logros.json`
 y `puntajes.json` (las 10 mejores puntuaciones).
 
 ## Ejecutar
@@ -109,7 +117,7 @@ Pruebas: `.\mvnw.cmd test` (o la tarea **Pruebas**).
 
 Para probar con datos ficticios sin tocar los reales, apunta estas variables de entorno a otros archivos JSON
 antes de abrir el juego: `MAPAMUNDI_PUNTAJES` (récords), `MAPAMUNDI_LOGROS` (insignias) y
-`MAPAMUNDI_PREFERENCIAS` (ajustes; con un archivo nuevo vuelve a salir el tutorial):
+`MAPAMUNDI_PREFERENCIAS` (ajustes e idioma):
 
 ```bash
 $env:MAPAMUNDI_PUNTAJES = "C:\ruta\puntajes-de-prueba.json"; .\mvnw.cmd compile javafx:run
@@ -147,6 +155,7 @@ El icono (`empaquetado/mapamundi.ico`) se genera con `python -I herramientas/cre
 src/main/java/com/mapamundi/
   App.java, Lanzador.java     arranque (Lanzador permite el botón Run de VS Code)
   geo/                        Mercator (proyección de OpenStreetMap), regiones y formas de los países
+  i18n/                       idiomas: Idioma (español/inglés) y Textos (lee i18n/textos_*.properties)
   modelo/                     Continente, Pais, Atlas (carga datos/paises.json)
   juego/                      reglas y estado de la partida (sin interfaz: se prueba con JUnit)
   ui/                         pantallas JavaFX (menú, fases, resultado, fin)
@@ -177,8 +186,13 @@ y ejecuta (la ruta es la tabla del juego original):
 
 ```bash
 python -I herramientas/actualizar_datos.py      # datos actuales de Wikidata -> herramientas/datos_wikidata.json
+python herramientas/actualizar_ingles.py        # capital, idioma y moneda en inglés -> herramientas/datos_wikidata_en.json
 python -I herramientas/construir_datos.py "D:\Fuente Globalizacion\mapamundi\paises.DBF"
 ```
+
+Para la versión en inglés, `construir_datos.py` toma los nombres de los países de Natural Earth (`NAME_EN`), la
+capital, el idioma y la moneda de `datos_wikidata_en.json`, y la religión y las exportaciones (textos del juego
+de 2003) de `herramientas/traducciones_en.json`. Si aparece un texto nuevo sin traducir, el script lo avisa.
 
 `actualizar_datos.py` consulta Wikidata (licencia CC0) y guarda capital, población, superficie, idiomas oficiales,
 moneda y PIB nominal (el PIB per cápita se calcula con la población). Si a un país le falta un dato, se usa el del
