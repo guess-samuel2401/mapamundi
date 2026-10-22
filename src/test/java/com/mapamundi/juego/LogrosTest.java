@@ -69,7 +69,26 @@ class LogrosTest {
         for (int i = 0; i < Partida.PAISES_POR_NIVEL; i++) todos.addAll(ronda(p, logros, true));
         assertTrue(todos.contains(Logro.RACHA_5));
         assertTrue(todos.contains(Logro.SIN_RASGUNO), "6 aciertos sin fallar suben de nivel sin perder corazones");
-        assertFalse(todos.contains(Logro.VELOCISTA), "en velocidad Normal no cuenta");
+    }
+
+    @Test
+    void velocistaPideMenosDeTresSegundos() {
+        Logros logros = new Logros(carpeta.resolve("logros.json"), atlas);
+        Partida p = partida(Velocidad.NORMAL, Modo.MAPA_PAIS);
+        p.elegirContinente(p.actual().continente());
+        for (int i = 0; i < 3; i++) p.tic(); // 3 segundos
+        p.colocar(0, 0);
+        p.confirmar();
+        List<Logro> nuevos = logros.revisar(p);
+        assertTrue(nuevos.contains(Logro.RELAMPAGO), "3 s de 30 es menos del 20 % del tiempo");
+        assertFalse(nuevos.contains(Logro.VELOCISTA), "con 3 s ya no es «menos de 3 segundos»");
+        p.siguiente();
+        p.elegirContinente(p.actual().continente());
+        p.tic();
+        p.tic(); // 2 segundos
+        p.colocar(0, 0);
+        p.confirmar();
+        assertTrue(logros.revisar(p).contains(Logro.VELOCISTA));
     }
 
     @Test

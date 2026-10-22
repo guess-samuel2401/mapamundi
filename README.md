@@ -49,18 +49,15 @@ Nueva versión del juego **Mapamundi** (Visual FoxPro, año 2000), ahora como ap
 **Reglas extra** (se combinan entre sí, en *Configura tu partida*):
 
 - **Contrarreloj:** 90 segundos para toda la partida y sin corazones; cada acierto suma 5 s. No hay bonus de
-  tiempo por ronda, pero sí combos. La velocidad elegida solo fija el margen en km.
+  tiempo por ronda, pero sí combos.
 - **Frío o caliente:** mientras arrastras, la pieza brilla de azul a rojo según lo cerca que esté y un rótulo lo
   dice ("Helado", "Frío", "Templado", "Caliente", "¡Te quemas!").
 - **Pieza girada (modo experto):** la pieza aparece girada entre 45° y 180°; se endereza de 15° en 15° con
   **Q / E**, los botones ⟲ ⟳ o el clic derecho (Shift + clic derecho gira al revés). Solo vale si queda derecha,
   y cada acierto da +250 extra.
 
-| Velocidad | Tiempo | Margen  | Bonus por segundo |
-|-----------|--------|---------|-------------------|
-| Lenta     | 45 s   | ±250 km | 10                |
-| Normal    | 30 s   | ±150 km | 20                |
-| Rápida    | 15 s   | ±75 km  | 30                |
+**Tiempo y margen:** 30 s por país, ±150 km de margen y un bonus de 20 puntos por cada segundo sobrante. Ya no se
+elige la velocidad: todas las partidas (modernas y clásicas) tienen el mismo ritmo.
 
 **Niveles:** Sudamérica → América → Europa → África → Asia → Oceanía → Todo el mundo
 (cada 6 países bien ubicados se sube de nivel), o escoger los continentes a mano.
@@ -74,8 +71,8 @@ En *Configura tu partida*, arriba a la derecha, se elige el estilo: **Moderno** 
 **Clásico (2000)**, que recrea la jugabilidad del Mapamundi original a partir de su código fuente en Visual FoxPro
 (`frmprincipal`, `frmafrica`… y `errores.prg`):
 
-1. **El país cae** desde arriba, un paso por tic y con un "bip" (cada 450 ms). El estilo clásico tiene su propio
-   ritmo, el de la velocidad "Normal" del original, así que en el menú la elección de velocidad se deshabilita.
+1. **El país cae** desde arriba, un paso por tic y con un "bip" (cada 450 ms, el ritmo de la velocidad "Normal"
+   del original).
    Hay que elegir su continente antes de que llegue abajo: ← → y Enter, las teclas 1–5, o clic para marcar y
    doble clic para elegir.
 2. **En el mapa, la pieza no se detiene:** sale de arriba y del centro bajando despacio (al 60 % del ritmo
@@ -107,7 +104,7 @@ interfaz están en `src/main/resources/com/mapamundi/i18n/textos_es.properties` 
 ### Logros e insignias
 
 25 insignias de bronce, plata y oro: rachas de 5, 10 y 20 aciertos seguidos, puntería (a menos de 25 km),
-rapidez, capitales, modo "solo datos", completar un nivel sin fallar, 10 países en una partida contrarreloj,
+rapidez (menos del 20 % del tiempo, y menos de 3 segundos), capitales, modo "solo datos", completar un nivel sin fallar, 10 países en una partida contrarreloj,
 10 aciertos con la pieza girada, llegar a niveles y puntuaciones, ubicar 25, 100 o los 197 países y completar
 cada continente. Se ven en **★ Logros** del menú, con el avance de
 las que faltan; al conseguir una aparece un aviso durante la partida y un resumen al final.

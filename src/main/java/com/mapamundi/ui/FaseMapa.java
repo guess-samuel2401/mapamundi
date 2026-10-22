@@ -51,8 +51,7 @@ final class FaseMapa extends HBox {
     private VBox construirControles() {
         var p = partida.actual();
         Label continente = FichaPais.etiqueta(t("mapa.continente", p.continente().nombre()), "negrita");
-        Label margen = FichaPais.etiqueta(t("mapa.margen", partida.ajustes().velocidad().toleranciaKm(),
-                partida.ajustes().velocidad().nombre()), "");
+        Label margen = FichaPais.etiqueta(t("mapa.margen", partida.ajustes().velocidad().toleranciaKm()), "");
 
         Button confirmar = new Button(t("mapa.confirmar") + "\n(Enter)");
         confirmar.getStyleClass().add("boton-principal");

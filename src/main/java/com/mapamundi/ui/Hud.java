@@ -73,7 +73,7 @@ final class Hud extends VBox {
         racha.getStyleClass().remove("hud-combo");
         if (combo > 1) racha.getStyleClass().add("hud-combo");
         String extras = (contrarreloj ? " · " + t("regla.contrarreloj") : "") + (p.ajustes().piezaGirada() ? " · " + t("hud.experto") : "");
-        modo.setText(p.ajustes().modo().nombre() + " · " + p.ajustes().velocidad().nombre() + extras);
+        modo.setText(p.ajustes().modo().nombre() + extras);
         sonido.setText(silencio ? "🔇" : "🔊");
 
         double fraccion;

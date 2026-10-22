@@ -49,7 +49,7 @@ import static com.mapamundi.i18n.Textos.t;
 
 /**
  * Portada del juego: a la izquierda el mapa del mundo con el botón Jugar; a la derecha la configuración
- * de la partida (nivel, velocidad, modo). Récords y "Cómo se juega" se abren en ventanas superpuestas.
+ * de la partida (estilo, nivel, modo y reglas). Récords y "Cómo se juega" se abren en ventanas superpuestas.
  */
 final class PantallaMenu extends StackPane {
 
@@ -58,7 +58,8 @@ final class PantallaMenu extends StackPane {
 
     private final List<Nivel> niveles;
     private final ToggleGroup grupoNivel = new ToggleGroup();
-    private final ToggleGroup grupoVelocidad = new ToggleGroup();
+    /** Ya no se elige: todas las partidas tienen 30 s por país y ±150 km de margen. */
+    private static final Velocidad VELOCIDAD = Velocidad.NORMAL;
     private final ToggleGroup grupoEstilo = new ToggleGroup();
     private final ComboBox<Modo> modo = new ComboBox<>();
     private final CheckBox mostrarDatos = new CheckBox(t("menu.mostrarDatos"));
@@ -97,7 +98,6 @@ final class PantallaMenu extends StackPane {
         getChildren().add(desplazable);
 
         grupoNivel.selectedToggleProperty().addListener(o -> actualizarResumen());
-        grupoVelocidad.selectedToggleProperty().addListener(o -> actualizarResumen());
         modo.valueProperty().addListener(o -> actualizarResumen());
         actualizarResumen();
 
@@ -251,27 +251,6 @@ final class PantallaMenu extends StackPane {
         mostrarSi(continentes, personal.selectedProperty().or(clasico));
         mostrarSi(fichas, clasico.not());
 
-        // Velocidad: control segmentado
-        HBox segmentos = new HBox();
-        Velocidad[] velocidades = Velocidad.values();
-        for (int i = 0; i < velocidades.length; i++) {
-            Velocidad v = velocidades[i];
-            ToggleButton b = new ToggleButton();
-            b.setGraphic(dosLineas(v.nombre(), v.segundos() + " s · ±" + v.toleranciaKm() + " km", "segmento-titulo", "segmento-detalle"));
-            b.getStyleClass().setAll("segmento", i == 0 ? "segmento-izq" : i == velocidades.length - 1 ? "segmento-der" : "segmento-centro");
-            b.setToggleGroup(grupoVelocidad);
-            b.setUserData(v);
-            b.setSelected(v == inicial.velocidad());
-            b.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(b, Priority.ALWAYS);
-            // Los segmentos están pegados entre sí: crecen poco para no invadir al vecino.
-            Animaciones.alPasar(b, 1.04, 2);
-            segmentos.getChildren().add(b);
-        }
-        grupoVelocidad.selectedToggleProperty().addListener((o, antes, ahora) -> {
-            if (ahora == null) antes.setSelected(true);
-        });
-
         // Modo: lista desplegable con una línea de ayuda
         modo.getItems().setAll(Modo.values());
         modo.setValue(inicial.modo());
@@ -301,12 +280,6 @@ final class PantallaMenu extends StackPane {
         Node seccionNivel = seccion(t("menu.nivel"), t("menu.nivel.nota", Partida.PAISES_POR_NIVEL));
         Node seccionContinentes = seccion(t("menu.continentes"), null);
         Node seccionReglas = seccion(t("menu.reglas"), t("menu.reglas.nota"));
-        // El estilo clásico tiene su propio ritmo: la velocidad se ve, pero deshabilitada y con una nota.
-        Node seccionVelocidad = seccion(t("menu.velocidad"), null);
-        Node seccionVelocidadClasico = seccion(t("menu.velocidad"), t("menu.velocidad.clasico"));
-        mostrarSi(seccionVelocidad, clasico.not());
-        mostrarSi(seccionVelocidadClasico, clasico);
-        segmentos.disableProperty().bind(clasico);
         mostrarSi(seccionNivel, clasico.not());
         mostrarSi(seccionContinentes, clasico);
         mostrarSi(seccionReglas, clasico.not());
@@ -315,7 +288,6 @@ final class PantallaMenu extends StackPane {
         VBox v = new VBox(7,
                 cabecera, explicacionClasico,
                 seccionNivel, seccionContinentes, fichas, continentes,
-                seccionVelocidad, seccionVelocidadClasico, segmentos,
                 seccion(t("menu.modo"), null), modo, ayudaModo,
                 seccionReglas, reglas,
                 mostrarDatos, empuje, record);
@@ -403,9 +375,9 @@ final class PantallaMenu extends StackPane {
     // ------------------------------------------------------------------ acciones
 
     private void actualizarResumen() {
-        if (grupoNivel.getSelectedToggle() == null || grupoVelocidad.getSelectedToggle() == null || modo.getValue() == null) return;
+        if (grupoNivel.getSelectedToggle() == null || modo.getValue() == null) return;
         int i = (Integer) grupoNivel.getSelectedToggle().getUserData();
-        Velocidad v = (Velocidad) grupoVelocidad.getSelectedToggle().getUserData();
+        Velocidad v = VELOCIDAD;
         if (clasicoElegido()) {
             String elegidos = String.join(", ", casillas.entrySet().stream().filter(e -> e.getValue().isSelected())
                     .map(e -> e.getKey().nombre()).toList());
@@ -416,7 +388,7 @@ final class PantallaMenu extends StackPane {
         String nivel = i < 0 ? t("menu.resumen.personalizado") : t("menu.resumen.nivel", i + 1, niveles.get(i).nombre());
         String tiempo = contrarreloj.isSelected()
                 ? t("regla.contrarreloj") + " (" + Partida.SEGUNDOS_CONTRARRELOJ + " s, ±" + v.toleranciaKm() + " km)"
-                : v.nombre() + " (" + v.segundos() + " s)";
+                : v.segundos() + " s · ±" + v.toleranciaKm() + " km";
         String extras = (frioCaliente.isSelected() ? "   ·   " + t("regla.frioCaliente") : "")
                 + (piezaGirada.isSelected() ? "   ·   " + t("regla.piezaGirada") : "");
         resumen.setText(nivel + "   ·   " + tiempo + "   ·   " + modo.getValue().nombre() + extras);
@@ -430,7 +402,7 @@ final class PantallaMenu extends StackPane {
         });
         boolean clasico = clasicoElegido();
         jugar.accept(new Ajustes(
-                (Velocidad) grupoVelocidad.getSelectedToggle().getUserData(),
+                VELOCIDAD,
                 modo.getValue(),
                 (Integer) grupoNivel.getSelectedToggle().getUserData(),
                 elegidos.isEmpty() ? EnumSet.allOf(Continente.class) : elegidos,

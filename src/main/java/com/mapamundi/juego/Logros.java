@@ -35,8 +35,8 @@ public final class Logros {
         RACHA_10("10×", Categoria.PLATA, 10),
         RACHA_20("20×", Categoria.ORO, 20),
         PUNTERIA("◎", Categoria.PLATA, 1),
-        RELAMPAGO("⚡", Categoria.PLATA, 1),
-        VELOCISTA("»", Categoria.BRONCE, 1),
+        RELAMPAGO("⚡", Categoria.BRONCE, 1),
+        VELOCISTA("»", Categoria.PLATA, 1),
         CAPITALES("♛", Categoria.PLATA, 10),
         DETECTIVE("?", Categoria.ORO, 10),
         SIN_RASGUNO("♥", Categoria.PLATA, 1),
@@ -157,7 +157,10 @@ public final class Logros {
         comprobar(Logro.RACHA_20, p.racha() >= 20, nuevos);
         comprobar(Logro.PUNTERIA, r.distanciaKm() < 25, nuevos);
         comprobar(Logro.RELAMPAGO, tiempoRestante >= 0.8, nuevos);
-        comprobar(Logro.VELOCISTA, v == Velocidad.RAPIDA, nuevos);
+        // Antes era "acertar en velocidad Rápida"; ya no se elige la velocidad, así que ahora es acertar en menos
+        // de 3 segundos (el cronómetro baja de segundo en segundo: como mucho 2 tics). En contrarreloj no hay bonus.
+        int segundosUsados = v.segundos() - r.bonus() / v.bonusPorSegundo();
+        comprobar(Logro.VELOCISTA, r.bonus() > 0 && segundosUsados <= 2, nuevos);
         comprobar(Logro.CAPITALES, estado.aciertosCapital >= Logro.CAPITALES.objetivo, nuevos);
         comprobar(Logro.DETECTIVE, estado.aciertosDatos >= Logro.DETECTIVE.objetivo, nuevos);
         comprobar(Logro.CONTRARRELOJ, p.ajustes().contrarreloj() && p.aciertosPartida() >= Logro.CONTRARRELOJ.objetivo, nuevos);
