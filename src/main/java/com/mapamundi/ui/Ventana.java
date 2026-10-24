@@ -102,7 +102,7 @@ public final class Ventana {
     private PantallaEleccion continentes() {
         ctx.sonidos().musica(Sonidos.Musica.MENU);
         PantallaEleccion[] p = {null};
-        p[0] = PantallaEleccion.continentes(ctx, zona, elegida -> {
+        p[0] = PantallaEleccion.continentes(ctx, elegida -> {
             zona = elegida;
             retos();
         }, this::continentes, () -> aprender(p[0]));

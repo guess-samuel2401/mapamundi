@@ -476,8 +476,12 @@
 }
 .pestana-aprender:hover { -fx-background-color: -tinta, -sol; }
 .pestana-aprender-texto { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 20px; -fx-text-fill: -tinta; }
-.interruptor-daltonico { -fx-font-size: 13px; -fx-padding: 7 16 7 16; }
-.interruptor-daltonico:selected { -fx-background-color: rgba(255, 210, 63, 0.18); -fx-border-color: -sol; -fx-text-fill: -sol; }
+/* Modo daltónico en la pantalla de idioma: amarillo y bien visible. */
+.interruptor-daltonico { -fx-background-color: -tinta, -sol; -fx-background-insets: 0 0 -4 0, 0; -fx-background-radius: 14;
+    -fx-border-color: transparent; -fx-text-fill: -tinta; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 16px;
+    -fx-padding: 11 38 11 38; -fx-min-width: 420; }
+.interruptor-daltonico:hover { -fx-background-color: -tinta, -sol-claro; -fx-text-fill: -tinta; }
+.interruptor-daltonico:selected { -fx-background-color: -tinta, -coral; -fx-text-fill: -tinta; }
 /* Casillas de la pantalla de continentes y su botón Continuar. */
 .casilla-eleccion { -fx-background-color: white; -fx-background-radius: 9; -fx-border-color: -tinta; -fx-border-width: 2.5;
     -fx-border-radius: 9; -fx-text-fill: transparent; -fx-font-family: "Nunito ExtraBold"; -fx-font-size: 20px; }
@@ -491,3 +495,15 @@
 .practica-mano { -fx-font-size: 46px; -fx-text-fill: -sol; -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, -tinta, 4, 0.9, 0, 0); }
 .fin-puntaje { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 64px; -fx-text-fill: -rojo; }
+/* «Aprende a jugar»: botón rectangular abajo a la derecha. */
+.boton-aprender {
+    -fx-background-color: -tinta, -coral;
+    -fx-background-insets: 0 0 -5 0, 0;
+    -fx-background-radius: 14;
+    -fx-text-fill: -tinta;
+    -fx-font-family: "Baloo 2 ExtraBold";
+    -fx-font-size: 19px;
+    -fx-padding: 10 26 8 26;
+    -fx-cursor: hand;
+}
+.boton-aprender:hover { -fx-background-color: -tinta, -sol; }

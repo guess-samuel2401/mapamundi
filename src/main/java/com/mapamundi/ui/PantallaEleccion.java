@@ -13,7 +13,6 @@ import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,12 +36,14 @@ import static com.mapamundi.i18n.Textos.t;
 
 /**
  * Las dos preguntas antes de jugar, cada una en su pantalla y con tarjetas grandes: con qué continentes se
- * juega y cómo (el reto, es decir, el modo de juego). A la derecha siempre está la pestaña «Aprende a jugar».
+ * juega y con qué dificultad (el reto, es decir, el modo de juego). Abajo a la derecha siempre está el botón
+ * «Aprende a jugar».
  *
  * <ul>
- *   <li><b>Continentes:</b> las tarjetas son casillas: un clic (o su número, o Espacio) marca o desmarca cada
- *       continente, y la última, «Todo el mundo», los marca o desmarca todos. «Continuar» (o Enter) pasa a los
- *       retos cuando hay al menos uno marcado.</li>
+ *   <li><b>Continentes:</b> las tarjetas son casillas, que empiezan vacías: un clic (o su número, o Espacio)
+ *       marca o desmarca cada continente. La última, «Todo el mundo», va aparte: marcarla quita los continentes
+ *       sueltos, y marcar un continente la quita a ella. «Continuar» (o Enter) pasa a los retos cuando hay algo
+ *       marcado.</li>
  *   <li><b>Retos:</b> se elige uno con un clic, con ← → y Enter o con su número, y empieza la partida.
  *       Esc vuelve a los continentes.</li>
  * </ul>
@@ -57,7 +58,7 @@ final class PantallaEleccion extends StackPane {
     private final List<Label> palomitas = new ArrayList<>();
     /** Una sola elección (retos); null si las tarjetas son casillas. */
     private final Consumer<Integer> alElegir;
-    /** Casillas marcadas (continentes); la última tarjeta no se guarda aquí: marca o desmarca todas. */
+    /** Casillas marcadas (continentes, o solo la última: «Todo el mundo»). */
     private final Set<Integer> marcadas = new TreeSet<>();
     private Button continuar;
     /** La tarjeta resaltada con el ratón o las flechas. */
@@ -123,16 +124,15 @@ final class PantallaEleccion extends StackPane {
         VBox.setVgrow(centro, Priority.ALWAYS);
 
         VBox todo = new VBox(10, cabecera, centro);
-        todo.setPadding(new Insets(16, 90, 20, 26));
+        todo.setPadding(new Insets(16, 26, 20, 26));
 
-        // La pestaña «Aprende a jugar», pegada al borde derecho y bien a la vista.
-        Label texto = FichaPais.etiqueta("🎓  " + t("eleccion.aprende"), "pestana-aprender-texto");
-        texto.setRotate(-90);
-        Button pestana = new Button(null, new Group(texto));
-        pestana.getStyleClass().setAll("pestana-aprender");
+        // «Aprende a jugar»: un botón rectangular, abajo a la derecha, que se lee de un vistazo.
+        Button pestana = new Button("🎓  " + t("eleccion.aprende"));
+        pestana.getStyleClass().setAll("boton-aprender");
         pestana.setFocusTraversable(false);
         pestana.setOnAction(e -> aprender.run());
-        StackPane.setAlignment(pestana, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(pestana, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(pestana, new Insets(0, 22, 20, 0));
         MenuComun.latir(pestana);
 
         getChildren().addAll(mapa, todo, pestana);
@@ -176,30 +176,32 @@ final class PantallaEleccion extends StackPane {
     // ------------------------------------------------------------------ las dos pantallas
 
     /**
-     * «¿Con qué continentes quieres jugar?»: los cinco continentes como casillas y, al final, «Todo el mundo»,
-     * que los marca todos. Vienen marcados los de la última partida.
+     * «Marca los continentes con los que quieres jugar»: los cinco continentes como casillas (vacías al entrar)
+     * y, al final y aparte, «Todo el mundo».
      */
-    static PantallaEleccion continentes(Contexto ctx, Set<Continente> inicial, Consumer<Set<Continente>> alElegir,
-                                        Runnable refrescar, Runnable aprender) {
+    static PantallaEleccion continentes(Contexto ctx, Consumer<Set<Continente>> alElegir, Runnable refrescar,
+                                        Runnable aprender) {
         Atlas atlas = ctx.atlas();
         List<Opcion> opciones = new ArrayList<>();
-        Set<Integer> marcadas = new TreeSet<>();
         for (Continente c : Continente.values()) {
             long n = atlas.paises().stream().filter(p -> p.continente() == c).count();
             opciones.add(new Opcion(Miniatura.continente(atlas, c, 230, 112), c.nombre(), t("menu.paises", n)));
-            if (inicial.contains(c)) marcadas.add(c.ordinal());
         }
         opciones.add(new Opcion(Miniatura.region(atlas, Region.deGrados(-170, 190, -56, 78), p -> true, 230, 112),
                 t("eleccion.mundo"), t("menu.paises", atlas.paises().size())));
         return new PantallaEleccion(ctx, t("eleccion.continente.titulo"), t("eleccion.continente.ayuda"), opciones, 3, 250,
-                0, marcadas, null, elegidas -> {
+                0, Set.of(), null, elegidas -> {
+                    // «Todo el mundo» (la última tarjeta) son los cinco continentes.
                     Set<Continente> zona = EnumSet.noneOf(Continente.class);
-                    elegidas.forEach(i -> zona.add(Continente.values()[i]));
+                    for (int i : elegidas) {
+                        if (i == Continente.values().length) zona.addAll(EnumSet.allOf(Continente.class));
+                        else zona.add(Continente.values()[i]);
+                    }
                     alElegir.accept(zona);
                 }, null, refrescar, aprender);
     }
 
-    /** «¿Cómo te gustaría jugar en …?»: los cinco modos, de más fácil a más difícil, con un ejemplo de la pieza. */
+    /** «¿Con qué nivel o dificultad te gustaría jugar con …?»: los cinco modos, con un ejemplo de la pieza. */
     static PantallaEleccion retos(Contexto ctx, Set<Continente> zona, Modo inicial, Consumer<Modo> alElegir,
                                   Runnable atras, Runnable refrescar, Runnable aprender) {
         boolean mundo = zona.isEmpty() || zona.size() == Continente.values().length;
@@ -253,7 +255,8 @@ final class PantallaEleccion extends StackPane {
         nombre.setWrapText(true);
         Label detalle = FichaPais.etiqueta(o.detalle(), "idioma-detalle");
         Label numero = FichaPais.etiqueta(String.valueOf(i + 1), "numero-tecla");
-        VBox contenido = new VBox(8, o.dibujo(), nombre, detalle);
+        // Continentes: el mapa arriba. Retos: el nombre del reto arriba y, debajo, cómo se ve el país.
+        VBox contenido = casilla ? new VBox(8, o.dibujo(), nombre, detalle) : new VBox(8, nombre, o.dibujo(), detalle);
         contenido.setAlignment(Pos.CENTER);
         StackPane capa = new StackPane(contenido, numero);
         StackPane.setAlignment(numero, Pos.TOP_LEFT);
@@ -299,13 +302,15 @@ final class PantallaEleccion extends StackPane {
     }
 
     private void alternar(int i) {
-        int continentes = tarjetas.size() - 1;
-        if (i == continentes) {
-            // «Todo el mundo»: si ya estaban todos, se desmarcan; si no, se marcan todos.
-            if (marcadas.size() == continentes) marcadas.clear();
-            else for (int j = 0; j < continentes; j++) marcadas.add(j);
-        } else if (!marcadas.remove(i)) {
-            marcadas.add(i);
+        int todos = tarjetas.size() - 1;
+        if (i == todos) {
+            // «Todo el mundo» va aparte: al marcarlo se quitan los continentes sueltos.
+            boolean estaba = marcadas.contains(todos);
+            marcadas.clear();
+            if (!estaba) marcadas.add(todos);
+        } else {
+            marcadas.remove(todos);
+            if (!marcadas.remove(i)) marcadas.add(i);
         }
         pintarCasillas();
         ScaleTransition pulso = new ScaleTransition(Duration.millis(90), tarjetas.get(i));
@@ -317,9 +322,8 @@ final class PantallaEleccion extends StackPane {
     }
 
     private void pintarCasillas() {
-        int continentes = tarjetas.size() - 1;
         for (int j = 0; j < tarjetas.size(); j++) {
-            boolean marcada = j == continentes ? marcadas.size() == continentes : marcadas.contains(j);
+            boolean marcada = marcadas.contains(j);
             tarjetas.get(j).getStyleClass().remove("seleccionada");
             if (marcada) tarjetas.get(j).getStyleClass().add("seleccionada");
             palomitas.get(j).getStyleClass().remove("marcada");

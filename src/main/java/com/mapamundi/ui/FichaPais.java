@@ -26,7 +26,12 @@ public final class FichaPais {
         VBox caja = new VBox(2);
         caja.getStyleClass().add("pista");
         if (modo == Modo.DATOS) {
-            caja.getChildren().addAll(etiqueta(t("ficha.quePais"), "subtitulo-rojo"), datos(p, false));
+            // Como en el juego original: solo cifras. La moneda o el idioma delatarían el país ("Won surcoreano").
+            List<String[]> cifras = new ArrayList<>();
+            cifras.add(new String[]{t("ficha.superficie"), p.superficie()});
+            cifras.add(new String[]{t("ficha.poblacion"), p.poblacion()});
+            cifras.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
+            caja.getChildren().addAll(etiqueta(t("ficha.quePais"), "subtitulo-rojo"), ficha(cifras));
             return caja;
         }
         Label tipo = etiqueta(t(modo.porCapital() ? "ficha.capitalDe" : "ficha.pais"), "pista-tipo");
@@ -60,6 +65,11 @@ public final class FichaPais {
         filas.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
         filas.add(new String[]{t("ficha.religion"), p.religion()});
         filas.add(new String[]{t("ficha.exporta"), p.exporta()});
+        return ficha(filas);
+    }
+
+    /** Las filas {clave, valor} en dos columnas, con la fuente de los datos al pie. */
+    private static GridPane ficha(List<String[]> filas) {
         GridPane g = new GridPane();
         g.getStyleClass().add("ficha");
         g.setHgap(6);
