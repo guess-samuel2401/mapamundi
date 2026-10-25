@@ -18,7 +18,7 @@ $raiz = Split-Path -Parent $PSScriptRoot
 Set-Location $raiz
 if (-not $env:JAVA_HOME) { $env:JAVA_HOME = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'Machine') }
 $jpackage = Join-Path $env:JAVA_HOME 'bin\jpackage.exe'
-$version = '3.2.0'
+$version = '3.3.0'
 
 # Una copia abierta del programa empaquetado bloquearía la limpieza de target\.
 $abiertos = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -like (Join-Path $raiz 'target\*') }
