@@ -26,11 +26,13 @@ public final class MapaClasico extends Region {
 
     private static final double LADO_FIGURA = 22;
     /**
-     * Tamaño mínimo (en píxeles) de la pieza y del país real en el mapa. Los países diminutos (Antigua y Barbuda,
-     * Malta, Granada…) se dibujan ampliados alrededor de su punto de referencia, para que se reconozca su forma
-     * igual que en la silueta que cae. Para acertar sigue contando su lugar real.
+     * Tamaño mínimo (en píxeles) de la pieza y del país real en el mapa. Cada país se ve a su tamaño real en el
+     * mapa del continente; solo los microestados (Antigua y Barbuda, Granada, San Marino…), que serían un punto,
+     * se amplían hasta esto alrededor de su punto de referencia. Para acertar cuenta siempre su lugar real.
      */
-    private static final double LADO_MINIMO = 40;
+    private static final double LADO_MINIMO = 12;
+    /** La línea del último fallo en pantalla {x1, y1, x2, y2} (de la pieza a la ★), o null si no hay. */
+    private double[] linea;
 
     private final Canvas canvas = new Canvas();
     private final Atlas atlas;
@@ -45,6 +47,11 @@ public final class MapaClasico extends Region {
         setMinSize(200, 200);
         widthProperty().addListener(o -> dibujar());
         heightProperty().addListener(o -> dibujar());
+    }
+
+    /** La línea del fallo en coordenadas de este mapa, para colocar el recuadro sin taparla (null si no hay). */
+    public double[] lineaDelFallo() {
+        return linea;
     }
 
     public void guia(boolean activa) {
@@ -82,6 +89,7 @@ public final class MapaClasico extends Region {
         int vueltas = partida.vueltas();
         // En «Solo datos del país» el primer fallo no revela dónde estaba (ver PartidaClasica.revelaElLugar).
         boolean revelar = resultado && !acierto && partida.revelaElLugar();
+        linea = null;
         if (revelar) {
             // Dónde estaba de verdad.
             gc.setEffect(new DropShadow(10, Pintor.SOL));
@@ -102,6 +110,7 @@ public final class MapaClasico extends Region {
         if (revelar && partida.resultado().tieneDistancia()) {
             double rx = t.x(f.anclaU() + vueltas), ry = t.y(f.anclaV());
             double gx = t.x(f.anclaU() + vueltas + partida.despU()), gy = t.y(f.anclaV() + partida.despV());
+            linea = new double[]{gx, gy, rx, ry};
             gc.setStroke(Pintor.ROJO);
             gc.setLineWidth(2.5);
             gc.setLineDashes(8, 6);

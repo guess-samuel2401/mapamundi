@@ -355,8 +355,12 @@ final class PantallaClasica extends StackPane {
         pregunta.setWrapText(true);
         lateral.getChildren().setAll(pregunta);
         if (modo == com.mapamundi.juego.Modo.DATOS) {
-            // Tras el primer fallo con este país, todos sus datos (menos nombre y capital).
-            lateral.getChildren().add(partida.datosCompletos() ? FichaPais.datos(p, false) : FichaPais.cifras(p));
+            // Tras el primer fallo con este país, todos sus datos (menos nombre y capital); al revelarlo, la ficha
+            // completa, aquí al lado y no en el recuadro del fallo.
+            PartidaClasica.Resultado r = partida.resultado();
+            boolean revelado = partida.fase() == Fase.RESULTADO && r != null && !r.acierto() && partida.revelaElLugar();
+            lateral.getChildren().add(revelado ? FichaPais.datos(p, true)
+                    : partida.datosCompletos() ? FichaPais.datos(p, false) : FichaPais.cifras(p));
             return;
         }
         if (practica) return;
@@ -398,15 +402,12 @@ final class PantallaClasica extends StackPane {
         if (r.acierto() || partida.revelaElLugar()) caja.getChildren().add(FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
         if (r.tieneDistancia() && partida.revelaElLugar()) caja.getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
         if (r.acierto()) caja.getChildren().add(FichaPais.etiqueta("+" + r.puntos(), "tutorial-puntos"));
-        // «Solo datos del país»: al fallar se ven todos los datos, para aprender cuál era (como en el original).
-        if (!r.acierto() && partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS) {
-            if (partida.revelaElLugar()) caja.getChildren().add(FichaPais.datos(p, true));
-            else {
-                // Primer fallo: no se dice cuál era; en el próximo intento habrá más datos.
-                Label mas = FichaPais.etiqueta(t("clasico.masDatos"), "negrita");
-                mas.setWrapText(true);
-                caja.getChildren().add(mas);
-            }
+        // «Solo datos del país», primer fallo: no se dice cuál era; en el próximo intento habrá más datos.
+        // (Cuando sí se revela, la ficha completa sale en el panel de la derecha, no aquí.)
+        if (!r.acierto() && partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS && !partida.revelaElLugar()) {
+            Label mas = FichaPais.etiqueta(t("clasico.masDatos"), "negrita");
+            mas.setWrapText(true);
+            caja.getChildren().add(mas);
         }
         if (r.completado() != null && !practica) caja.getChildren().add(FichaPais.etiqueta(t("clasico.completado", r.completado().nombre()), "acierto"));
         if (!r.acierto()) {
@@ -434,19 +435,52 @@ final class PantallaClasica extends StackPane {
             entra.play();
             return;
         }
-        // Al fallar en el mapa: primero se ve dónde estaba el país (la línea y la ★) y, un momento después, el
-        // recuadro aparece a la derecha, sin taparlos.
-        StackPane.setAlignment(caja, Pos.TOP_RIGHT);
-        StackPane.setMargin(caja, new Insets(92, 16, 0, 0));
+        // Al fallar en el mapa: primero se ve dónde estaba el país (la línea y la ★) y, un momento después, un
+        // recuadro compacto aparece dentro del mapa, en la esquina que no tapa la línea.
+        caja.setPrefWidth(290);
+        caja.setMaxSize(290, USE_PREF_SIZE);
         StackPane esteMensaje = mensaje;
         esteMensaje.setVisible(false);
         PauseTransition espera = new PauseTransition(Duration.millis(1800));
         espera.setOnFinished(e -> {
             if (mensaje != esteMensaje) return;
+            colocarJuntoALaLinea(caja);
             esteMensaje.setVisible(true);
             entra.play();
         });
         espera.play();
+    }
+
+    /**
+     * Pone el recuadro del fallo dentro del mapa, en la primera esquina (abajo a la derecha, abajo a la izquierda,
+     * arriba a la derecha, arriba a la izquierda) que no toca la línea hasta la ★.
+     */
+    private void colocarJuntoALaLinea(VBox caja) {
+        caja.applyCss();
+        double bw = caja.prefWidth(-1), bh = caja.prefHeight(bw), m = 16;
+        javafx.geometry.Bounds b = mapa.localToScene(mapa.getBoundsInLocal());
+        javafx.geometry.Point2D origen = sceneToLocal(b.getMinX(), b.getMinY());
+        double w = b.getWidth(), h = b.getHeight();
+        double[][] esquinas = {{w - bw - m, h - bh - m}, {m, h - bh - m}, {w - bw - m, m}, {m, m}};
+        double[] l = mapa.lineaDelFallo();
+        double[] elegida = esquinas[0];
+        for (double[] c : esquinas) {
+            if (l == null || !tocaLinea(l, c[0] - 12, c[1] - 12, bw + 24, bh + 24)) {
+                elegida = c;
+                break;
+            }
+        }
+        StackPane.setAlignment(caja, Pos.TOP_LEFT);
+        StackPane.setMargin(caja, new Insets(origen.getY() + Math.max(0, elegida[1]), 0, 0, origen.getX() + Math.max(0, elegida[0])));
+    }
+
+    /** Si el segmento {x1, y1, x2, y2} pasa por el rectángulo (se comprueba en 60 puntos del segmento). */
+    private static boolean tocaLinea(double[] l, double x, double y, double ancho, double alto) {
+        for (int i = 0; i <= 60; i++) {
+            double px = l[0] + (l[2] - l[0]) * i / 60, py = l[1] + (l[3] - l[1]) * i / 60;
+            if (px >= x && px <= x + ancho && py >= y && py <= y + alto) return true;
+        }
+        return false;
     }
 
     // ------------------------------------------------------------------ práctica guiada
