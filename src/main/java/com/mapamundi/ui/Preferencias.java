@@ -24,6 +24,8 @@ public final class Preferencias {
     boolean musica = true;
     boolean pantallaCompleta = false;
     boolean daltonico = false;
+    /** Los datos del país en el panel de la partida (se pueden ocultar con un botón). */
+    boolean datosDelPais = true;
     /** Último idioma elegido ("es" / "en"): sale marcado en la pantalla de idioma del arranque. */
     String idioma = "es";
     /** Consejos de la primera partida ya mostrados ("continente", "mapa", "resultado"). */

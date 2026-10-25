@@ -25,6 +25,12 @@ import javafx.scene.text.TextAlignment;
 public final class MapaClasico extends Region {
 
     private static final double LADO_FIGURA = 22;
+    /**
+     * Tamaño mínimo (en píxeles) de la pieza y del país real en el mapa. Los países diminutos (Antigua y Barbuda,
+     * Malta, Granada…) se dibujan ampliados alrededor de su punto de referencia, para que se reconozca su forma
+     * igual que en la silueta que cae. Para acertar sigue contando su lugar real.
+     */
+    private static final double LADO_MINIMO = 40;
 
     private final Canvas canvas = new Canvas();
     private final Atlas atlas;
@@ -77,7 +83,7 @@ public final class MapaClasico extends Region {
         if (resultado && !acierto) {
             // Dónde estaba de verdad.
             gc.setEffect(new DropShadow(10, Pintor.SOL));
-            Pintor.forma(gc, f.anillos(), vueltas, 0, t, Pintor.colorDe(actual), Pintor.BORDE, 1.6);
+            formaVisible(gc, t, f, f.anillos(), vueltas, 0, Pintor.colorDe(actual), 1.6);
             gc.setEffect(null);
         }
         if (guia && partida.fase() == PartidaClasica.Fase.UBICACION) {
@@ -111,15 +117,34 @@ public final class MapaClasico extends Region {
         // En pausa el mapa sigue a la vista: el menú de pausa se muestra encima.
     }
 
+    /**
+     * Dibuja los anillos del país desplazados (du, dv); si en pantalla quedaría más pequeño que {@link #LADO_MINIMO},
+     * lo amplía alrededor de su punto de referencia. Devuelve la ampliación usada (1 = tamaño real).
+     */
+    private static double formaVisible(GraphicsContext gc, Transformacion t, Forma f, java.util.List<com.mapamundi.geo.Anillo> anillos,
+                                       double du, double dv, javafx.scene.paint.Paint relleno, double grosor) {
+        com.mapamundi.geo.Region c = f.cajaNucleo();
+        double lado = Math.max(Math.abs(t.x(c.uMax()) - t.x(c.uMin())), Math.abs(t.y(c.vMax()) - t.y(c.vMin())));
+        double k = lado >= LADO_MINIMO ? 1 : Math.min(40, LADO_MINIMO / Math.max(lado, 0.5));
+        double px = t.x(f.anclaU() + du), py = t.y(f.anclaV() + dv);
+        gc.save();
+        gc.translate(px, py);
+        gc.scale(k, k);
+        gc.translate(-px, -py);
+        Pintor.forma(gc, anillos, du, dv, t, relleno, Pintor.BORDE, grosor / k);
+        gc.restore();
+        return k;
+    }
+
     private void dibujarPieza(GraphicsContext gc, Transformacion t, Pais pais, Forma f, double du, double dv, boolean quieta) {
         double cx = t.x(f.anclaU() + du), cy = t.y(f.anclaV() + dv);
         double arriba;
         gc.setGlobalAlpha(quieta ? 0.6 : 1);
         if (partida.ajustes().modo().muestraForma()) {
             gc.setEffect(new DropShadow(4, 2, 3, Pintor.TINTA.deriveColor(0, 1, 1, 0.45)));
-            Pintor.forma(gc, f.nucleo(), du, dv, t, Pintor.colorDe(pais), Pintor.BORDE, 1.3);
+            double k = formaVisible(gc, t, f, f.nucleo(), du, dv, Pintor.colorDe(pais), 1.3);
             gc.setEffect(null);
-            arriba = Math.min(cy - 10, t.y(f.cajaNucleo().vMin() + dv));
+            arriba = Math.min(cy - 10, cy - (cy - t.y(f.cajaNucleo().vMin() + dv)) * k);
         } else {
             Pintor.figura(gc, pais, cx, cy, LADO_FIGURA, Pintor.TINTA, 2);
             arriba = cy - LADO_FIGURA;

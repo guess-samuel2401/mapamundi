@@ -52,7 +52,7 @@ final class PantallaClasica extends StackPane {
      * despacio, para dar tiempo a pensar, y con una flecha pulsada, algo más rápido.
      */
     private static final double VELOCIDAD_DERIVA = 0.6;
-    private static final double VELOCIDAD_CON_FLECHA = 1.6;
+    private static final double VELOCIDAD_CON_FLECHA = 3.2;
 
     private final PartidaClasica partida;
     private final Contexto ctx;
@@ -343,17 +343,42 @@ final class PantallaClasica extends StackPane {
     /** A la derecha: qué hay que hacer en esta fase y, si se eligió (o en "Solo datos"), la ficha del país. */
     private void armarLateral(boolean enMapa) {
         Pais p = partida.actual();
-        lateral.getChildren().setAll(FichaPais.etiqueta(t(enMapa ? "clasico.lateral.mapa" : "clasico.lateral.caida"), "subtitulo-rojo"));
-        if (partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS) {
-            lateral.getChildren().add(FichaPais.pista(p, partida.ajustes().modo(), false));
-        } else if (partida.ajustes().mostrarDatos()) {
-            ScrollPane datos = new ScrollPane(FichaPais.datos(p, true));
-            datos.setFitToWidth(true);
-            datos.setPrefViewportHeight(300);
-            lateral.getChildren().add(datos);
-        } else {
-            lateral.getChildren().add(FichaPais.pista(p, partida.ajustes().modo(), false));
+        com.mapamundi.juego.Modo modo = partida.ajustes().modo();
+        String quien = switch (modo) {
+            case DATOS -> null;
+            case MAPA_CAPITAL, CAPITAL -> p.capital();
+            default -> p.nombre();
+        };
+        String texto = quien == null ? t(enMapa ? "clasico.pregunta.mapaDatos" : "clasico.pregunta.caidaDatos")
+                : t(enMapa ? "clasico.pregunta.mapa" : "clasico.pregunta.caida", quien);
+        Label pregunta = FichaPais.etiqueta(texto, "pregunta-lateral");
+        pregunta.setWrapText(true);
+        lateral.getChildren().setAll(pregunta);
+        if (modo == com.mapamundi.juego.Modo.DATOS) {
+            lateral.getChildren().add(FichaPais.cifras(p));
+            return;
         }
+        if (practica) return;
+        // Los datos del país, siempre a mano; quien no quiera verlos los oculta (y se recuerda).
+        Preferencias pref = ctx.preferencias();
+        ScrollPane datos = new ScrollPane(FichaPais.datos(p, !modo.porCapital()));
+        datos.setFitToWidth(true);
+        datos.setPrefViewportHeight(250);
+        Button alternar = new Button();
+        alternar.getStyleClass().add("boton-discreto");
+        alternar.setFocusTraversable(false);
+        Runnable aplicar = () -> {
+            datos.setVisible(pref.datosDelPais);
+            datos.setManaged(pref.datosDelPais);
+            alternar.setText(t(pref.datosDelPais ? "clasico.datos.ocultar" : "clasico.datos.ver"));
+        };
+        alternar.setOnAction(e -> {
+            pref.datosDelPais = !pref.datosDelPais;
+            pref.guardar();
+            aplicar.run();
+        });
+        aplicar.run();
+        lateral.getChildren().addAll(alternar, datos);
     }
 
     /** El mensaje de cada intento (FrmGano, FrmPerdio, FrmEscogeMal… del original), encima de todo. */
@@ -370,13 +395,17 @@ final class PantallaClasica extends StackPane {
         caja.getChildren().addAll(titulo, FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
         if (r.tieneDistancia()) caja.getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
         if (r.acierto()) caja.getChildren().add(FichaPais.etiqueta("+" + r.puntos(), "tutorial-puntos"));
+        // «Solo datos del país»: al fallar se ven todos los datos, para aprender cuál era (como en el original).
+        if (!r.acierto() && partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS) {
+            caja.getChildren().add(FichaPais.datos(p, true));
+        }
         if (r.completado() != null && !practica) caja.getChildren().add(FichaPais.etiqueta(t("clasico.completado", r.completado().nombre()), "acierto"));
         if (!r.acierto()) {
             String quedan = partida.terminada() ? t("clasico.sinErrores") : t("clasico.quedanErrores", PartidaClasica.ERRORES_MAX - partida.errores());
             caja.getChildren().add(FichaPais.etiqueta(quedan, "negrita"));
         }
         boolean fin = partida.terminada();
-        String clave = fin ? (practica ? "practica.terminar" : "resultado.verFinal") : r.acierto() ? "resultado.siguiente" : "clasico.otraVez";
+        String clave = fin ? (practica ? "practica.terminar" : "resultado.verFinal") : "clasico.aceptar";
         Button seguir = new Button(t(clave) + " (Enter)");
         seguir.getStyleClass().add("boton-principal");
         seguir.setFocusTraversable(false);
@@ -384,20 +413,31 @@ final class PantallaClasica extends StackPane {
         caja.getChildren().add(seguir);
         mensaje = new StackPane(caja);
         mensaje.setPickOnBounds(false);
-        // En medio de la pantalla, tanto el acierto como el fallo.
-        StackPane.setAlignment(caja, Pos.CENTER);
         getChildren().add(getChildren().indexOf(capaPausa), mensaje);
         TranslateTransition entra = new TranslateTransition(Duration.millis(220), caja);
         entra.setFromY(-30);
         entra.setToY(0);
-        entra.play();
-        if (!fin) {
-            PauseTransition espera = new PauseTransition(Duration.millis(2600));
-            espera.setOnFinished(e -> {
-                if (partida.resultado() == r && partida.fase() == Fase.RESULTADO) partida.siguiente();
-            });
-            espera.play();
+        // Ya no pasa solo al siguiente país: se espera a que el jugador pulse Aceptar (o Enter).
+        boolean marcaElLugar = !r.acierto() && r.tieneDistancia();
+        if (!marcaElLugar) {
+            // En medio de la pantalla.
+            StackPane.setAlignment(caja, Pos.CENTER);
+            entra.play();
+            return;
         }
+        // Al fallar en el mapa: primero se ve dónde estaba el país (la línea y la ★) y, un momento después, el
+        // recuadro aparece a la derecha, sin taparlos.
+        StackPane.setAlignment(caja, Pos.TOP_RIGHT);
+        StackPane.setMargin(caja, new Insets(92, 16, 0, 0));
+        StackPane esteMensaje = mensaje;
+        esteMensaje.setVisible(false);
+        PauseTransition espera = new PauseTransition(Duration.millis(1800));
+        espera.setOnFinished(e -> {
+            if (mensaje != esteMensaje) return;
+            esteMensaje.setVisible(true);
+            entra.play();
+        });
+        espera.play();
     }
 
     // ------------------------------------------------------------------ práctica guiada
@@ -468,7 +508,8 @@ final class PantallaClasica extends StackPane {
             case CAIDA -> teclaCaida(e);
             case UBICACION -> teclaMapa(e);
             case RESULTADO -> {
-                if (k == KeyCode.ENTER || k == KeyCode.SPACE) {
+                // Enter solo cuando ya se ve el recuadro (al fallar en el mapa aparece un momento después).
+                if ((k == KeyCode.ENTER || k == KeyCode.SPACE) && mensaje != null && mensaje.isVisible()) {
                     partida.siguiente();
                     e.consume();
                 }

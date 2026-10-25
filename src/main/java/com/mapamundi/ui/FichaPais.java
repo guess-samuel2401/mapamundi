@@ -26,12 +26,7 @@ public final class FichaPais {
         VBox caja = new VBox(2);
         caja.getStyleClass().add("pista");
         if (modo == Modo.DATOS) {
-            // Como en el juego original: solo cifras. La moneda o el idioma delatarían el país ("Won surcoreano").
-            List<String[]> cifras = new ArrayList<>();
-            cifras.add(new String[]{t("ficha.superficie"), p.superficie()});
-            cifras.add(new String[]{t("ficha.poblacion"), p.poblacion()});
-            cifras.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
-            caja.getChildren().addAll(etiqueta(t("ficha.quePais"), "subtitulo-rojo"), ficha(cifras));
+            caja.getChildren().addAll(etiqueta(t("ficha.quePais"), "subtitulo-rojo"), cifras(p));
             return caja;
         }
         Label tipo = etiqueta(t(modo.porCapital() ? "ficha.capitalDe" : "ficha.pais"), "pista-tipo");
@@ -39,6 +34,18 @@ public final class FichaPais {
         nombre.setWrapText(true);
         caja.getChildren().addAll(tipo, nombre);
         return caja;
+    }
+
+    /**
+     * «Solo datos del país», como en el juego original: solo cifras. La moneda o el idioma delatarían el país
+     * ("Won surcoreano").
+     */
+    static GridPane cifras(Pais p) {
+        List<String[]> filas = new ArrayList<>();
+        filas.add(new String[]{t("ficha.superficie"), p.superficie()});
+        filas.add(new String[]{t("ficha.poblacion"), p.poblacion()});
+        filas.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
+        return ficha(filas);
     }
 
     /** Fecha de la consulta a Wikidata (la pone la ventana al cargar el atlas), para citar la fuente. */

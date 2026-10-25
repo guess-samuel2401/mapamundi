@@ -287,7 +287,8 @@ public final class PartidaClasica {
         Forma f = actual.forma();
         Region base = actual.continente().vista();
         vueltas = base.vueltasPara(f.anclaU());
-        vista = base.union(f.cajaNucleo().desplazada(vueltas).ampliada(0.05));
+        // Con margen alrededor, para que los países del borde (Palaos, Malta…) y su nombre se vean enteros.
+        vista = base.union(f.cajaNucleo().desplazada(vueltas).ampliada(0.05)).ampliada(0.08);
         double u = vista.centroU();
         double v = vista.vMin() + vista.alto() * 0.06;
         despU = u - f.anclaU() - vueltas;

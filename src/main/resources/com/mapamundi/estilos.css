@@ -507,3 +507,5 @@
     -fx-cursor: hand;
 }
 .boton-aprender:hover { -fx-background-color: -tinta, -sol; }
+/* Pregunta del panel lateral de la partida. */
+.pregunta-lateral { -fx-font-family: "Baloo 2 ExtraBold"; -fx-font-size: 24px; -fx-text-fill: -rojo; }
