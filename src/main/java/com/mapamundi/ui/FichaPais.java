@@ -37,14 +37,16 @@ public final class FichaPais {
     }
 
     /**
-     * «Solo datos del país», como en el juego original: solo cifras. La moneda o el idioma delatarían el país
-     * ("Won surcoreano").
+     * «Solo datos del país», primer intento: sin capital, moneda ni idioma, que delatarían el país ("Won
+     * surcoreano", "Coreano").
      */
     static GridPane cifras(Pais p) {
         List<String[]> filas = new ArrayList<>();
         filas.add(new String[]{t("ficha.superficie"), p.superficie()});
         filas.add(new String[]{t("ficha.poblacion"), p.poblacion()});
         filas.add(new String[]{t("ficha.pib"), p.pibPerCapita()});
+        filas.add(new String[]{t("ficha.religion"), p.religion()});
+        filas.add(new String[]{t("ficha.exporta"), p.exporta()});
         return ficha(filas);
     }
 

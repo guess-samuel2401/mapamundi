@@ -149,4 +149,22 @@ class PartidaClasicaTest {
         assertEquals(Fase.FIN, p.fase());
         assertEquals(total * 10, p.puntaje());
     }
+
+    @Test
+    void enSoloDatosElPrimerFalloDaMasDatosYElSegundoRevelaElLugar() {
+        PartidaClasica p = nueva(Modo.DATOS, EnumSet.allOf(Continente.class));
+        Pais pais = p.actual();
+        assertFalse(p.datosCompletos());
+        p.elegirContinente(otro(pais));
+        assertFalse(p.revelaElLugar(), "el primer fallo no dice dónde estaba");
+        assertTrue(p.datosCompletos(), "tras el primer fallo se ven todos los datos");
+        p.siguiente();
+        assertSame(pais, p.actual(), "vuelve a caer el mismo país");
+        p.elegirContinente(otro(pais));
+        assertTrue(p.revelaElLugar(), "el segundo fallo sí lo revela");
+
+        PartidaClasica normal = nueva(Modo.MAPA_PAIS, EnumSet.allOf(Continente.class));
+        normal.elegirContinente(otro(normal.actual()));
+        assertTrue(normal.revelaElLugar(), "en los demás modos se revela al primer fallo");
+    }
 }

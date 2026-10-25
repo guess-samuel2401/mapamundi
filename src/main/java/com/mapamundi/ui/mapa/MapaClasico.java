@@ -80,7 +80,9 @@ public final class MapaClasico extends Region {
 
         Forma f = actual.forma();
         int vueltas = partida.vueltas();
-        if (resultado && !acierto) {
+        // En «Solo datos del país» el primer fallo no revela dónde estaba (ver PartidaClasica.revelaElLugar).
+        boolean revelar = resultado && !acierto && partida.revelaElLugar();
+        if (revelar) {
             // Dónde estaba de verdad.
             gc.setEffect(new DropShadow(10, Pintor.SOL));
             formaVisible(gc, t, f, f.anillos(), vueltas, 0, Pintor.colorDe(actual), 1.6);
@@ -97,7 +99,7 @@ public final class MapaClasico extends Region {
             gc.setLineDashes();
         }
         if (!acierto) dibujarPieza(gc, t, actual, f, vueltas + partida.despU(), partida.despV(), resultado);
-        if (resultado && !acierto && partida.resultado().tieneDistancia()) {
+        if (revelar && partida.resultado().tieneDistancia()) {
             double rx = t.x(f.anclaU() + vueltas), ry = t.y(f.anclaV());
             double gx = t.x(f.anclaU() + vueltas + partida.despU()), gy = t.y(f.anclaV() + partida.despV());
             gc.setStroke(Pintor.ROJO);

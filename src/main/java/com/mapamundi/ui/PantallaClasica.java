@@ -355,7 +355,8 @@ final class PantallaClasica extends StackPane {
         pregunta.setWrapText(true);
         lateral.getChildren().setAll(pregunta);
         if (modo == com.mapamundi.juego.Modo.DATOS) {
-            lateral.getChildren().add(FichaPais.cifras(p));
+            // Tras el primer fallo con este país, todos sus datos (menos nombre y capital).
+            lateral.getChildren().add(partida.datosCompletos() ? FichaPais.datos(p, false) : FichaPais.cifras(p));
             return;
         }
         if (practica) return;
@@ -392,12 +393,20 @@ final class PantallaClasica extends StackPane {
         caja.setMaxSize(330, USE_PREF_SIZE);
         Label titulo = FichaPais.etiqueta((r.acierto() ? "😃 " : "😞 ") + r.motivo().titulo(), r.acierto() ? "acierto" : "fallo");
         titulo.setWrapText(true);
-        caja.getChildren().addAll(titulo, FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
-        if (r.tieneDistancia()) caja.getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
+        caja.getChildren().add(titulo);
+        // En «Solo datos del país», el primer fallo no dice qué país era.
+        if (r.acierto() || partida.revelaElLugar()) caja.getChildren().add(FichaPais.etiqueta(p.nombre(), "titulo-mapa-mediano"));
+        if (r.tieneDistancia() && partida.revelaElLugar()) caja.getChildren().add(FichaPais.etiqueta(t("resultado.distancia", Textos.entero(Math.round(r.distanciaKm()))), "negrita"));
         if (r.acierto()) caja.getChildren().add(FichaPais.etiqueta("+" + r.puntos(), "tutorial-puntos"));
         // «Solo datos del país»: al fallar se ven todos los datos, para aprender cuál era (como en el original).
         if (!r.acierto() && partida.ajustes().modo() == com.mapamundi.juego.Modo.DATOS) {
-            caja.getChildren().add(FichaPais.datos(p, true));
+            if (partida.revelaElLugar()) caja.getChildren().add(FichaPais.datos(p, true));
+            else {
+                // Primer fallo: no se dice cuál era; en el próximo intento habrá más datos.
+                Label mas = FichaPais.etiqueta(t("clasico.masDatos"), "negrita");
+                mas.setWrapText(true);
+                caja.getChildren().add(mas);
+            }
         }
         if (r.completado() != null && !practica) caja.getChildren().add(FichaPais.etiqueta(t("clasico.completado", r.completado().nombre()), "acierto"));
         if (!r.acierto()) {
@@ -418,7 +427,7 @@ final class PantallaClasica extends StackPane {
         entra.setFromY(-30);
         entra.setToY(0);
         // Ya no pasa solo al siguiente país: se espera a que el jugador pulse Aceptar (o Enter).
-        boolean marcaElLugar = !r.acierto() && r.tieneDistancia();
+        boolean marcaElLugar = !r.acierto() && r.tieneDistancia() && partida.revelaElLugar();
         if (!marcaElLugar) {
             // En medio de la pantalla.
             StackPane.setAlignment(caja, Pos.CENTER);

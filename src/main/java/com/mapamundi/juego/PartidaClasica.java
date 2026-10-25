@@ -101,6 +101,8 @@ public final class PartidaClasica {
     private Pais actual;
     private Fase fase = Fase.CAIDA;
     private int errores;
+    /** Fallos con el país actual: vuelve a cero con cada país nuevo. */
+    private int fallosEnEstePais;
     private int puntaje;
     private int caida;
     private int reloj;
@@ -261,6 +263,7 @@ public final class PartidaClasica {
 
     private void fallar(Resultado r, Sonido sonido) {
         errores++;
+        fallosEnEstePais++;
         resultado = r;
         fase = Fase.RESULTADO;
         sonar(errores >= ERRORES_MAX ? Sonido.FIN_PARTIDA : sonido);
@@ -273,6 +276,7 @@ public final class PartidaClasica {
                 .filter(p -> !ubicados.contains(p) && !completos.contains(p.continente())).toList());
         Collections.shuffle(pendientes, azar);
         actual = pendientes.isEmpty() ? todos.getFirst() : pendientes.getFirst();
+        fallosEnEstePais = 0;
         reiniciarCaida();
     }
 
@@ -316,6 +320,21 @@ public final class PartidaClasica {
     public Pais actual() { return actual; }
     public Fase fase() { return fase; }
     public int errores() { return errores; }
+    public int fallosEnEstePais() { return fallosEnEstePais; }
+
+    /**
+     * Si al fallar se muestra dónde estaba el país. En «Solo datos del país» el primer fallo con un país no lo
+     * revela: el mismo país vuelve a caer con todos sus datos ({@link #datosCompletos}); al segundo fallo, sí.
+     * En los demás modos se revela siempre.
+     */
+    public boolean revelaElLugar() {
+        return ajustes.modo() != Modo.DATOS || fallosEnEstePais >= 2;
+    }
+
+    /** En «Solo datos del país», tras el primer fallo con un país se ven todos sus datos (menos nombre y capital). */
+    public boolean datosCompletos() {
+        return ajustes.modo() == Modo.DATOS && fallosEnEstePais >= 1;
+    }
     public int puntaje() { return puntaje; }
     /** Cuánto ha caído el país, de 0 (arriba) a 1 (abajo). */
     public double caida() { return (double) caida / PASOS_CAIDA; }
