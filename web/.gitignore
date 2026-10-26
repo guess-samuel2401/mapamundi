@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# Se copian desde src/main/resources con «npm run recursos».
+public/recursos/
+*.tsbuildinfo

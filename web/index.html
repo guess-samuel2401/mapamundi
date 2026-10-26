@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#3a2f66" />
+    <meta name="description" content="Mapamundi: reconoce el continente y ubica cada país en el mapa antes de que se acabe el tiempo." />
+    <link rel="icon" type="image/png" href="./recursos/icono.png" />
+    <title>Mapamundi</title>
+    <style>
+      /* Mientras cargan los datos del mapa (unos 850 KB). */
+      #raiz:empty::after {
+        content: 'Mapamundi';
+        display: grid;
+        place-items: center;
+        height: 100%;
+        background: #3a2f66;
+        color: #ff8f6b;
+        font: 800 48px system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="raiz"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
