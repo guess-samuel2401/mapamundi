@@ -2,13 +2,21 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#3a2f66" />
     <meta name="description" content="Mapamundi: reconoce el continente y ubica cada país en el mapa antes de que se acabe el tiempo." />
-    <link rel="icon" type="image/png" href="./recursos/icono.png" />
+    <!-- Se puede instalar en el teléfono («Añadir a pantalla de inicio») y jugar a pantalla completa. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mapamundi" />
+    <link rel="apple-touch-icon" href="./iconos/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="./iconos/icono-192.png" />
     <title>Mapamundi</title>
     <style>
       /* Mientras cargan los datos del mapa (unos 850 KB). */
+      html, body { margin: 0; height: 100%; background: #3a2f66; }
       #raiz:empty::after {
         content: 'Mapamundi';
         display: grid;

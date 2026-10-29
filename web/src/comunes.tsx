@@ -5,6 +5,7 @@ import { CONTINENTES, nombreContinente, type Atlas, type Continente, type Pais }
 import { dibujarCirculo, dibujarContinente, dibujarSilueta } from './pintor'
 import type { Region } from './geo'
 import { leerRecords } from './preferencias'
+import { admitePantallaCompleta, alternarPantallaCompleta } from './movil'
 
 /** El tamaño de un elemento, que se actualiza al cambiar (girar el teléfono, cambiar la ventana). */
 export function useTamano<T extends HTMLElement>(): [React.RefObject<T | null>, { w: number; h: number }] {
@@ -54,6 +55,11 @@ export function Cabecera({ volver, musica, onMusica }: { volver?: () => void; mu
         <button className="boton-fantasma icono" onClick={onMusica} title={t('ajustes.musica')} aria-label={t('ajustes.musica')}>
           {musica ? '🎵' : '🔇'}
         </button>
+        {admitePantallaCompleta() && (
+          <button className="boton-fantasma icono" onClick={() => void alternarPantallaCompleta()} title={t('web.pantallaCompleta')} aria-label={t('web.pantallaCompleta')}>
+            ⛶
+          </button>
+        )}
       </div>
       {records && <Records onCerrar={() => setRecords(false)} />}
     </header>

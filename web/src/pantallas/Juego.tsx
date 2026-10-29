@@ -67,6 +67,15 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
     }
   }, [partida, sonidos])
 
+  // Si el jugador sale de la aplicación (otra app, una llamada, pantalla apagada), la partida se pausa sola.
+  useEffect(() => {
+    const oculta = () => {
+      if (document.hidden && !partida.pausa && partida.fase !== 'RESULTADO' && partida.fase !== 'FIN') partida.alternarPausa()
+    }
+    document.addEventListener('visibilitychange', oculta)
+    return () => document.removeEventListener('visibilitychange', oculta)
+  }, [partida])
+
   const r = partida.resultado
   const fase = partida.fase
   // Al fallar en el mapa (y si se revela el lugar) primero se ve la línea hasta la ★ y, un momento después, el recuadro.

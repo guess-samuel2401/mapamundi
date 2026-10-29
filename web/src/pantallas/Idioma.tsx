@@ -45,7 +45,7 @@ export function PantallaIdioma({ inicial, daltonico, onDaltonico, onElegir }: Pr
         {tarjeta('es', 'ES', 'Español', 'Jugar en español', 1)}
         {tarjeta('en', 'EN', 'English', 'Play in English', 2)}
       </div>
-      <p className="ayuda-clara">← → · Enter · 1 / 2</p>
+      <p className="ayuda-clara solo-teclado">← → · Enter · 1 / 2</p>
       <button className={`interruptor-daltonico${daltonico ? ' activo' : ''}`} onClick={() => onDaltonico(!daltonico)}>
         {daltonico ? '✓' : '◐'} Modo daltónico · Colour-blind mode
       </button>

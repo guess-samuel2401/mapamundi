@@ -23,6 +23,25 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
 - **Pantalla final** sencilla, récords guardados en el navegador, música y efectos con botón para quitarlos.
 - En un teléfono en vertical pide girarlo: el juego es en horizontal.
 
+## En el teléfono
+
+- **Pantalla completa en horizontal:**
+  - En Android, al elegir el idioma la página pasa a pantalla completa y fija la orientación horizontal.
+  - En cualquier momento se puede poner o quitar con el botón ⛶ de la cabecera.
+  - En iPhone, Safari no lo permite; se juega en la ventana del navegador o instalando la app (ver abajo).
+- **Se instala como una app** («Añadir a pantalla de inicio» / «Instalar aplicación»):
+  - tiene ícono propio y se abre a pantalla completa en horizontal;
+  - **funciona sin conexión**: el service worker (`public/sw.js`) guarda el programa, los datos de los países, los sonidos, la música y las tipografías (unos 5 MB).
+  - Al publicar una versión nueva hay que subir `VERSION` en `sw.js`.
+- **Sonido con Web Audio:** se desbloquea con el primer toque del jugador, como exigen iPhone y Android. La música y los efectos se callan al salir de la app.
+- **Botón Atrás de Android:** vuelve a la pantalla anterior en vez de cerrar la página; durante la partida, la pausa.
+- La partida también **se pausa sola** si el jugador sale de la app (otra aplicación, una llamada, pantalla apagada).
+- **Diseño para pantallas pequeñas:**
+  - probado en 568×320 (iPhone SE en horizontal), 640×360 y 844×390;
+  - usa la altura real de la pantalla (`dvh`) y respeta la muesca (`safe-area`);
+  - sin zoom con doble toque, sin rebote al deslizar y sin menú al mantener el dedo;
+  - en pantallas táctiles se ocultan las ayudas de teclado.
+
 ## Una sola fuente de datos
 
 Los países (fronteras y fichas), los textos en español e inglés, los sonidos, la música y las tipografías **no

@@ -1,12 +1,13 @@
 // La aplicación: cada vez que se abre, el idioma; la primera vez, una partida de práctica; después, con qué
 // continentes se juega y con qué dificultad, y a jugar (como Ventana.java de la versión sencilla de Windows).
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usarIdioma, t, type Idioma } from './i18n'
 import { nombreModo, type Atlas, type Continente, type Modo } from './modelo'
 import { PartidaClasica } from './partida'
 import { usarDaltonico } from './pintor'
 import { cargarPreferencias, guardarPreferencias, type Preferencias } from './preferencias'
 import { Sonidos } from './sonidos'
+import { pantallaCompletaHorizontal } from './movil'
 import { zona as nombreZona } from './comunes'
 import { PantallaIdioma } from './pantallas/Idioma'
 import { PantallaContinentes } from './pantallas/Continentes'
@@ -42,6 +43,17 @@ export function App({ atlas, base }: { atlas: Atlas; base: string }) {
     sonidos.aplicar()
   }, [prefs, sonidos])
 
+  // El audio del teléfono se desbloquea con el primer toque (o tecla) del jugador, y se reanuda con cada uno.
+  useEffect(() => {
+    const desbloquear = () => sonidos.desbloquear()
+    window.addEventListener('pointerdown', desbloquear)
+    window.addEventListener('keydown', desbloquear)
+    return () => {
+      window.removeEventListener('pointerdown', desbloquear)
+      window.removeEventListener('keydown', desbloquear)
+    }
+  }, [sonidos])
+
   const alternarMusica = useCallback(() => setPrefs((p) => ({ ...p, musica: !p.musica })), [])
 
   const empezar = useCallback(
@@ -76,7 +88,10 @@ export function App({ atlas, base }: { atlas: Atlas; base: string }) {
       usarIdioma(idioma)
       document.title = 'Mapamundi'
       setPrefs((p) => ({ ...p, idioma }))
-      // El primer toque del jugador: desde aquí el navegador deja sonar la música.
+      // El primer toque del jugador: desde aquí el navegador deja sonar la música y, en el teléfono, poner
+      // la pantalla completa en horizontal.
+      sonidos.desbloquear()
+      void pantallaCompletaHorizontal()
       sonidos.musica('menu')
       if (!prefs.practicaHecha) practicar()
       else irAContinentes()
@@ -109,6 +124,27 @@ export function App({ atlas, base }: { atlas: Atlas; base: string }) {
     },
     [practica, sonidos, irAContinentes],
   )
+
+  // El botón Atrás del teléfono (y del navegador): en vez de salir de la página, vuelve a la pantalla anterior;
+  // durante la partida, la pausa. Cada pantalla deja una entrada en el historial para poder volver de ella.
+  const actual = useRef({ pantalla, partida, irAContinentes })
+  actual.current = { pantalla, partida, irAContinentes }
+  useEffect(() => {
+    history.pushState({ pantalla }, '')
+  }, [pantalla])
+  useEffect(() => {
+    const atras = () => {
+      const { pantalla: p, partida: j, irAContinentes: volver } = actual.current
+      if (p === 'juego') {
+        if (j && !j.pausa && j.fase !== 'RESULTADO') j.alternarPausa()
+        history.pushState({ pantalla: p }, '')
+      } else if (p === 'retos' || p === 'fin') volver()
+      else if (p === 'continentes') setPantalla('idioma')
+      else history.pushState({ pantalla: p }, '')
+    }
+    window.addEventListener('popstate', atras)
+    return () => window.removeEventListener('popstate', atras)
+  }, [])
 
   let contenido
   switch (pantalla) {

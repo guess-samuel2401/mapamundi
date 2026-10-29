@@ -26,19 +26,27 @@
 }
 
 * { box-sizing: border-box; }
-html, body, #raiz { height: 100%; margin: 0; }
+/* dvh: la altura que de verdad se ve en el teléfono, sin la barra del navegador (100% como respaldo). */
+html, body { height: 100%; margin: 0; }
+#raiz { height: 100%; height: 100dvh; margin: 0; }
+html { overscroll-behavior: none; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   background: var(--fondo);
   color: var(--tinta);
   font-family: Nunito, system-ui, sans-serif;
   font-size: 14px;
   overflow: hidden;
+  overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  /* Pantallas con muesca o esquinas redondeadas (sobre todo en horizontal). */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
-button { font-family: inherit; cursor: pointer; color: inherit; }
+canvas { touch-action: none; }
+button { font-family: inherit; cursor: pointer; color: inherit; touch-action: manipulation; }
 button:disabled { cursor: default; }
 input { font-family: inherit; }
 
@@ -77,7 +85,7 @@ input { font-family: inherit; }
   background: var(--sol);
 }
 .boton-secundario { background: var(--coral); }
-.boton-principal:hover:not(:disabled) { background: #ffe27a; }
+@media (hover: hover) { .boton-principal:hover:not(:disabled) { background: #ffe27a; } }
 .boton-principal:active:not(:disabled), .boton-secundario:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
 .boton-principal:disabled { opacity: 0.45; }
 .boton-fantasma {
@@ -88,7 +96,7 @@ input { font-family: inherit; }
   font-weight: 800; font-size: 13px;
   padding: 7px 14px;
 }
-.boton-fantasma:hover { border-color: var(--sol); color: var(--sol); }
+@media (hover: hover) { .boton-fantasma:hover { border-color: var(--sol); color: var(--sol); } }
 .boton-fantasma.icono { font-size: 16px; padding: 5px 12px; }
 .boton-discreto { background: none; border: none; color: var(--tinta-suave); font-weight: 800; text-decoration: underline; padding: 4px 0; font-size: 13px; text-align: left; }
 .numero-tecla {
@@ -96,7 +104,8 @@ input { font-family: inherit; }
   background: rgba(29, 43, 79, 0.85); color: white;
   font-weight: 800; font-size: 11px; border-radius: 6px; padding: 1px 6px;
 }
-@media (pointer: coarse) { .numero-tecla { display: none; } }
+/* Ayudas de teclado: en pantallas táctiles no tienen sentido. */
+@media (pointer: coarse) { .numero-tecla, .solo-teclado { display: none; } }
 
 /* ------------------------------------------------------------- pantallas */
 .pantalla { height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; }
@@ -115,7 +124,7 @@ input { font-family: inherit; }
   padding: 12px;
   transition: transform 0.12s;
 }
-.tarjeta:hover { transform: scale(1.03); }
+@media (hover: hover) { .tarjeta:hover { transform: scale(1.03); } }
 .tarjeta.seleccionada { border-color: var(--sol); background: var(--sol-claro); box-shadow: 0 6px 0 var(--tinta), 0 0 24px rgba(255, 210, 63, 0.55); }
 
 /* Idioma */
@@ -193,8 +202,9 @@ input { font-family: inherit; }
 
 .cuerpo-juego { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 12px; }
 .centro-juego { flex: 1; min-width: 0; position: relative; display: flex; }
-.lateral { width: clamp(220px, 27vw, 320px); display: flex; flex-direction: column; gap: 10px; min-height: 0; }
-.panel-lateral { padding: 12px 14px; flex: 0 1 auto; min-height: 0; overflow: auto; }
+.lateral { width: clamp(220px, 27vw, 320px); display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+/* La pregunta y el globo de la práctica se encogen (y se desplazan); la cruceta y «Soltar» siempre se ven. */
+.panel-lateral { padding: 12px 14px; flex: 0 1 auto; min-height: 56px; overflow: auto; }
 .pregunta-lateral { font-family: 'Baloo 2'; font-weight: 800; color: var(--rojo); font-size: clamp(18px, 2.4vw, 24px); margin: 0 0 6px; line-height: 1.15; }
 
 .vista-caida { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
@@ -250,7 +260,7 @@ input { font-family: inherit; }
 .ficha dd { margin: 0; }
 .ficha-fuente { font-size: 10.5px; color: var(--tinta-suave); margin: 6px 0 0; }
 
-.practica-globo { border-color: var(--sol); border-width: 3px; text-align: center; padding: 10px 14px; }
+.practica-globo { border-color: var(--sol); border-width: 3px; text-align: center; padding: 10px 14px; flex: 0 1 auto; min-height: 64px; overflow: auto; }
 .practica-paso { font-family: 'Baloo 2'; font-weight: 800; color: var(--coral); }
 .practica-texto { font-weight: 800; font-size: 15px; margin: 4px 0; }
 
@@ -313,4 +323,40 @@ input { font-family: inherit; }
   .tarjeta-fin { padding: 12px 20px; gap: 4px; }
   .fin-dibujo { font-size: 36px; }
   .fin-puntaje { font-size: 44px; }
+}
+
+/* Teléfonos pequeños en horizontal (iPhone SE, Android de 360 px de alto o menos). */
+@media (max-height: 380px) {
+  .hud-fila { gap: 8px; }
+  .titulo-hud { font-size: 15px; }
+  .hud-puntaje { font-size: 15px; }
+  .barra-tiempo { height: 11px; }
+  .barra-texto { font-size: 9px; top: -1px; }
+  .cuerpo-juego { padding: 5px; gap: 6px; }
+  .lateral { gap: 6px; }
+  .panel-lateral { padding: 6px 9px; border-width: 2px; }
+  .pregunta-lateral { font-size: 16px; margin-bottom: 2px; }
+  .practica-globo { padding: 5px 8px; border-width: 2px; }
+  .practica-paso { font-size: 12px; }
+  .practica-texto { font-size: 12px; margin: 2px 0; }
+  .cruceta { grid-template-columns: repeat(3, 34px); grid-template-rows: repeat(3, 34px); gap: 2px; }
+  .flecha { font-size: 14px; border-radius: 9px; box-shadow: 0 2px 0 var(--tinta); }
+  .boton-soltar { padding: 8px 10px; font-size: 14px; }
+  .vista-caida { gap: 6px; }
+  .fila-continentes { gap: 5px; }
+  .tarjeta-continente { border-width: 3px; box-shadow: 0 3px 0 var(--tinta); }
+  .flecha-practica { font-size: 32px; top: -40px; }
+  .mensaje { gap: 3px; padding: 8px 12px; }
+  .mensaje.junto-a-la-linea { width: min(220px, 52%); }
+  .mensaje .negrita { font-size: 12px; }
+  .mensaje .titulo-mediano { font-size: 19px; }
+  .mensaje h2 { font-size: 17px; }
+  .puntos-mensaje { font-size: 22px; }
+  .rejilla-continentes { gap: 6px; }
+  .tarjeta-eleccion .minimapa { aspect-ratio: 1.6 / 1; }
+  .casilla { width: 22px; height: 22px; font-size: 13px; }
+  .fila-retos { gap: 6px; }
+  .tarjeta-reto { padding: 18px 4px 6px; gap: 3px; }
+  .tarjeta-reto .eleccion-nombre { font-size: 13px; }
+  .caja-pausa { padding: 10px 14px; gap: 6px; }
 }
