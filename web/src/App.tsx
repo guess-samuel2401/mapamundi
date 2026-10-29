@@ -7,7 +7,7 @@ import { PartidaClasica } from './partida'
 import { usarDaltonico } from './pintor'
 import { cargarPreferencias, guardarPreferencias, type Preferencias } from './preferencias'
 import { Sonidos } from './sonidos'
-import { pantallaCompletaHorizontal } from './movil'
+import { pantallaCompletaEnElTelefono } from './movil'
 import { zona as nombreZona } from './comunes'
 import { PantallaIdioma } from './pantallas/Idioma'
 import { PantallaContinentes } from './pantallas/Continentes'
@@ -89,9 +89,9 @@ export function App({ atlas, base }: { atlas: Atlas; base: string }) {
       document.title = 'Mapamundi'
       setPrefs((p) => ({ ...p, idioma }))
       // El primer toque del jugador: desde aquí el navegador deja sonar la música y, en el teléfono, poner
-      // la pantalla completa en horizontal.
+      // la pantalla completa.
       sonidos.desbloquear()
-      void pantallaCompletaHorizontal()
+      void pantallaCompletaEnElTelefono()
       sonidos.musica('menu')
       if (!prefs.practicaHecha) practicar()
       else irAContinentes()
@@ -214,11 +214,6 @@ export function App({ atlas, base }: { atlas: Atlas; base: string }) {
           {aviso}
         </div>
       )}
-      <div className="girar">
-        <div className="girar-icono">📱↻</div>
-        <p className="titulo-claro">{t('web.girar')}</p>
-        <p className="ayuda-clara">{t('web.girar.detalle')}</p>
-      </div>
     </>
   )
 }

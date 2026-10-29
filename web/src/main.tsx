@@ -4,10 +4,14 @@ import { App } from './App'
 import { cargarTextos, usarIdioma } from './i18n'
 import { Atlas } from './modelo'
 import { cargarPreferencias } from './preferencias'
+import { escucharInstalacion } from './movil'
 import './estilos.css'
 
 /** Los recursos compartidos con la versión de Windows (ver scripts/copiar-recursos.mjs). */
 const BASE = `${import.meta.env.BASE_URL}recursos/`
+
+// Chrome avisa enseguida de que se puede instalar: se guarda para el botón «Instalar».
+escucharInstalacion()
 
 // En el teléfono, mantener el dedo sobre el mapa o un botón no abre el menú del navegador.
 window.addEventListener('contextmenu', (e) => e.preventDefault())

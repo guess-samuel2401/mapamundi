@@ -13,7 +13,18 @@ export interface Preferencias {
 }
 
 const CLAVE = 'mapamundi-sencillo.preferencias'
-const PORDEFECTO: Preferencias = { idioma: 'es', musica: true, efectos: true, daltonico: false, datosDelPais: true, practicaHecha: false }
+/** La primera vez, viene marcado el idioma del teléfono (español si está en español; si no, inglés). */
+const idiomaDelTelefono = (): Idioma =>
+  typeof navigator !== 'undefined' && !(navigator.languages?.[0] ?? navigator.language ?? 'es').toLowerCase().startsWith('es') ? 'en' : 'es'
+
+const PORDEFECTO: Preferencias = {
+  idioma: idiomaDelTelefono(),
+  musica: true,
+  efectos: true,
+  daltonico: false,
+  datosDelPais: true,
+  practicaHecha: false,
+}
 
 export function cargarPreferencias(): Preferencias {
   try {

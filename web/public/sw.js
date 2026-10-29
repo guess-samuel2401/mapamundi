@@ -3,12 +3,12 @@
 // - Lo demás (programa, datos de los países, sonidos, música, tipografías e íconos) se sirve desde lo guardado
 //   y, si falta, se descarga y se guarda.
 // Al publicar una versión nueva conviene subir VERSION, para que se borre lo guardado de la anterior.
-const VERSION = 'mapamundi-v2'
+const VERSION = 'mapamundi-v3'
 
 const SONIDOS = ['tic', 'continente_correcto', 'continente_error', 'ubicado', 'mal_ubicado', 'fin_tiempo', 'fin_partida', 'nivel_superado', 'logro']
 const FUENTES = ['Baloo2-Bold', 'Baloo2-ExtraBold', 'Nunito-Regular', 'Nunito-SemiBold', 'Nunito-Bold', 'Nunito-ExtraBold']
 
-/** Todo lo que hace falta para jugar sin conexión (unos 5 MB, la mayor parte la música). */
+/** Todo lo que hace falta para jugar sin conexión (unos 2 MB). */
 const ESENCIALES = [
   './',
   './index.html',
@@ -16,8 +16,8 @@ const ESENCIALES = [
   './recursos/paises.json',
   './recursos/textos_es.properties',
   './recursos/textos_en.properties',
-  './recursos/musica/menu.wav',
-  './recursos/musica/juego.wav',
+  './recursos/musica/menu.mp3',
+  './recursos/musica/juego.mp3',
   './iconos/icono-192.png',
   './iconos/icono-512.png',
   ...SONIDOS.map((s) => `./recursos/sonidos/${s}.wav`),

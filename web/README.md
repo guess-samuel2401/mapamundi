@@ -21,23 +21,33 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
   pieza va más rápido) y el botón **«Soltar»**, en la columna derecha para no tapar el mapa. También funciona con
   teclado (flechas, Enter, 1–5, F5/P/Esc).
 - **Pantalla final** sencilla, récords guardados en el navegador, música y efectos con botón para quitarlos.
-- En un teléfono en vertical pide girarlo: el juego es en horizontal.
+- Se juega **en horizontal o en vertical**: en vertical, el mapa va arriba y la pregunta, los datos y la cruceta, debajo.
 
 ## En el teléfono
 
-- **Pantalla completa en horizontal:**
-  - En Android, al elegir el idioma la página pasa a pantalla completa y fija la orientación horizontal.
+- **Pantalla completa:**
+  - En Android, al elegir el idioma la página pasa a pantalla completa.
   - En cualquier momento se puede poner o quitar con el botón ⛶ de la cabecera.
-  - En iPhone, Safari no lo permite; se juega en la ventana del navegador o instalando la app (ver abajo).
-- **Se instala como una app** («Añadir a pantalla de inicio» / «Instalar aplicación»):
-  - tiene ícono propio y se abre a pantalla completa en horizontal;
-  - **funciona sin conexión**: el service worker (`public/sw.js`) guarda el programa, los datos de los países, los sonidos, la música y las tipografías (unos 5 MB).
+  - En iPhone, Safari no lo permite; se juega en la ventana del navegador o instalando la app.
+- **Horizontal o vertical:** el jugador elige; se puede girar el teléfono en plena partida.
+- **Se instala como una app:**
+  - Botón **📲 Instalar** en la cabecera: en Android y Chrome abre la instalación; en iPhone muestra los pasos de Safari («Compartir» → «Añadir a pantalla de inicio»). No aparece si ya está instalada.
+  - Tiene ícono propio y se abre a pantalla completa.
+  - **Funciona sin conexión**: el service worker (`public/sw.js`) guarda el programa, los datos de los países, los sonidos, la música y las tipografías (unos 2 MB).
   - Al publicar una versión nueva hay que subir `VERSION` en `sw.js`.
-- **Sonido con Web Audio:** se desbloquea con el primer toque del jugador, como exigen iPhone y Android. La música y los efectos se callan al salir de la app.
+- **Abierto desde WhatsApp, Facebook, Instagram…:** esas apps usan su propio navegador, donde fallan el sonido, la pantalla completa y la instalación. El juego lo detecta y avisa que conviene abrirlo en el navegador; en Android, con un botón «Abrir en Chrome».
+- **Sonido con Web Audio:**
+  - se desbloquea con el primer toque del jugador, como exigen iPhone y Android;
+  - la música y los efectos se callan al salir de la app;
+  - la música se convierte a **MP3** al compilar (0,6 MB en lugar de 3,4 MB del WAV de Windows).
+- **Vibración** corta al acertar y al fallar (Android; con los efectos activados).
+- **La pantalla no se apaga** durante la partida (Screen Wake Lock).
+- **Idioma del teléfono** preseleccionado la primera vez.
 - **Botón Atrás de Android:** vuelve a la pantalla anterior en vez de cerrar la página; durante la partida, la pausa.
 - La partida también **se pausa sola** si el jugador sale de la app (otra aplicación, una llamada, pantalla apagada).
+- **Teléfonos antiguos:** el programa se compila para navegadores de 2019-2020 en adelante (iPhone con iOS 13, Android con Chrome 80), sin funciones que solo existen en los más nuevos.
 - **Diseño para pantallas pequeñas:**
-  - probado en 568×320 (iPhone SE en horizontal), 640×360 y 844×390;
+  - probado en vertical (390×844) y en horizontal (568×320, 640×360 y 844×390);
   - usa la altura real de la pantalla (`dvh`) y respeta la muesca (`safe-area`);
   - sin zoom con doble toque, sin rebote al deslizar y sin menú al mantener el dedo;
   - en pantallas táctiles se ocultan las ayudas de teclado.

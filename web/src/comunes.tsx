@@ -5,7 +5,7 @@ import { CONTINENTES, nombreContinente, type Atlas, type Continente, type Pais }
 import { dibujarCirculo, dibujarContinente, dibujarSilueta } from './pintor'
 import type { Region } from './geo'
 import { leerRecords } from './preferencias'
-import { admitePantallaCompleta, alternarPantallaCompleta } from './movil'
+import { admitePantallaCompleta, alCambiarInstalacion, alternarPantallaCompleta, instalacionDirecta, instalar, puedeInstalar } from './movil'
 
 /** El tamaño de un elemento, que se actualiza al cambiar (girar el teléfono, cambiar la ventana). */
 export function useTamano<T extends HTMLElement>(): [React.RefObject<T | null>, { w: number; h: number }] {
@@ -38,6 +38,10 @@ export function Logotipo({ grande }: { grande?: boolean }) {
 /** Arriba: el logotipo (y «Volver»), y a la derecha récords y música. */
 export function Cabecera({ volver, musica, onMusica }: { volver?: () => void; musica: boolean; onMusica: () => void }) {
   const [records, setRecords] = useState(false)
+  const [guiaInstalar, setGuiaInstalar] = useState(false)
+  // «Instalar» aparece o desaparece según lo que diga el navegador.
+  const [, refrescar] = useState(0)
+  useEffect(() => alCambiarInstalacion(() => refrescar((n) => n + 1)), [])
   return (
     <header className="cabecera">
       <div className="cabecera-izquierda">
@@ -49,6 +53,11 @@ export function Cabecera({ volver, musica, onMusica }: { volver?: () => void; mu
         )}
       </div>
       <div className="cabecera-derecha">
+        {puedeInstalar() && (
+          <button className="boton-fantasma" onClick={() => (instalacionDirecta() ? void instalar() : setGuiaInstalar(true))}>
+            📲 {t('web.instalar')}
+          </button>
+        )}
         <button className="boton-fantasma" onClick={() => setRecords(true)}>
           🏆 {t('menu.records')}
         </button>
@@ -62,6 +71,16 @@ export function Cabecera({ volver, musica, onMusica }: { volver?: () => void; mu
         )}
       </div>
       {records && <Records onCerrar={() => setRecords(false)} />}
+      {guiaInstalar && (
+        // En iPhone/iPad no hay botón de instalar: se hace desde el menú Compartir de Safari.
+        <Dialogo titulo={t('web.instalar.titulo')} onCerrar={() => setGuiaInstalar(false)}>
+          <ol className="pasos-instalar">
+            <li>{t('web.instalar.paso1')}</li>
+            <li>{t('web.instalar.paso2')}</li>
+            <li>{t('web.instalar.paso3')}</li>
+          </ol>
+        </Dialogo>
+      )}
     </header>
   )
 }

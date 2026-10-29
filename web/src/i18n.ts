@@ -1,5 +1,5 @@
 // Textos en español e inglés: los mismos .properties que la versión de Windows (copiados a public/recursos),
-// más unas pocas claves propias de la versión web (controles táctiles, girar el teléfono…).
+// más unas pocas claves propias de la versión web (controles táctiles, instalar…).
 
 export type Idioma = 'es' | 'en'
 
@@ -10,8 +10,6 @@ let idioma: Idioma = 'es'
 const PROPIAS: Record<Idioma, Record<string, string>> = {
   es: {
     'web.soltar': 'Soltar',
-    'web.girar': 'Gira el teléfono para jugar',
-    'web.girar.detalle': 'Mapamundi se juega con la pantalla en horizontal.',
     'web.cargando': 'Cargando el mapa…',
     'web.ayuda.caida': 'Toca el continente donde está el país antes de que llegue abajo.',
     'web.ayuda.mapa': 'La pieza se mueve sola. Guíala con las flechas y pulsa Soltar cuando esté sobre su lugar.',
@@ -20,11 +18,14 @@ const PROPIAS: Record<Idioma, Record<string, string>> = {
     'web.sinRecords': 'Aún no hay récords. ¡Juega una partida y sé el primero!',
     'web.cerrar': 'Cerrar',
     'web.pantallaCompleta': 'Pantalla completa',
+    'web.instalar': 'Instalar',
+    'web.instalar.titulo': 'Instalar Mapamundi en tu iPhone',
+    'web.instalar.paso1': 'En Safari, toca el botón Compartir (el cuadrado con una flecha hacia arriba).',
+    'web.instalar.paso2': 'Busca y elige «Añadir a pantalla de inicio».',
+    'web.instalar.paso3': 'Toca «Añadir». Mapamundi aparecerá con su ícono, se abrirá a pantalla completa y funcionará también sin conexión.',
   },
   en: {
     'web.soltar': 'Drop',
-    'web.girar': 'Turn your phone to play',
-    'web.girar.detalle': 'Mapamundi is played in landscape.',
     'web.cargando': 'Loading the map…',
     'web.ayuda.caida': 'Tap the continent the country is in before it reaches the bottom.',
     'web.ayuda.mapa': 'The piece moves by itself. Steer it with the arrows and press Drop when it is over its place.',
@@ -33,6 +34,11 @@ const PROPIAS: Record<Idioma, Record<string, string>> = {
     'web.sinRecords': 'No records yet. Play a game and be the first!',
     'web.cerrar': 'Close',
     'web.pantallaCompleta': 'Full screen',
+    'web.instalar': 'Install',
+    'web.instalar.titulo': 'Install Mapamundi on your iPhone',
+    'web.instalar.paso1': 'In Safari, tap the Share button (the square with an arrow pointing up).',
+    'web.instalar.paso2': 'Find and choose "Add to Home Screen".',
+    'web.instalar.paso3': 'Tap "Add". Mapamundi will appear with its icon, open full screen and work offline too.',
   },
 }
 
@@ -78,7 +84,7 @@ export function ingles(): boolean {
 export function t(clave: string, ...args: (string | number)[]): string {
   let texto = diccionarios[idioma][clave] ?? diccionarios.es[clave] ?? `¡${clave}!`
   args.forEach((a, i) => {
-    texto = texto.replaceAll(`{${i}}`, String(a))
+    texto = texto.split(`{${i}}`).join(String(a))
   })
   return texto
 }
@@ -87,5 +93,5 @@ export function t(clave: string, ...args: (string | number)[]): string {
 export function entero(n: number): string {
   // Como Java: en español también se agrupan los miles de 4 cifras (1.234), cosa que es-ES de Intl no hace.
   const ingles = Math.round(n).toLocaleString('en-US')
-  return idioma === 'en' ? ingles : ingles.replaceAll(',', '.')
+  return idioma === 'en' ? ingles : ingles.split(',').join('.')
 }

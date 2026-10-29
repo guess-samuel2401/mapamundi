@@ -152,6 +152,21 @@ export function figura(gc: CanvasRenderingContext2D, p: Pais, cx: number, cy: nu
   }
 }
 
+/**
+ * Rectángulo con esquinas redondeadas (como gc.roundRect, que no existe en iPhone con iOS 15 o anterior ni en
+ * Chrome anterior a 2022).
+ */
+export function rectanguloRedondeado(gc: CanvasRenderingContext2D, x: number, y: number, ancho: number, alto: number, radio: number): void {
+  const r = Math.min(radio, ancho / 2, alto / 2)
+  gc.beginPath()
+  gc.moveTo(x + r, y)
+  gc.arcTo(x + ancho, y, x + ancho, y + alto, r)
+  gc.arcTo(x + ancho, y + alto, x, y + alto, r)
+  gc.arcTo(x, y + alto, x, y, r)
+  gc.arcTo(x, y, x + ancho, y, r)
+  gc.closePath()
+}
+
 /** Prepara un canvas para dibujar a la resolución real de la pantalla (nítido en móviles). */
 export function preparar(canvas: HTMLCanvasElement, ancho: number, alto: number): CanvasRenderingContext2D {
   const dpr = Math.min(window.devicePixelRatio || 1, 3)

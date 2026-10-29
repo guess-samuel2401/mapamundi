@@ -100,7 +100,7 @@ export class Sonidos {
   private empezarMusica(m: Musica): void {
     if (!this.ctx) return
     const ctx = this.ctx
-    void this.cargar(`musica/${m}.wav`).then((buffer) => {
+    void this.cargar(`musica/${m}.mp3`).then((buffer) => {
       // Si mientras cargaba cambió la música o se quitó, no se empieza.
       if (!buffer || this.sonando !== m || !this.musicaActiva || this.fuenteMusica) return
       const fuente = ctx.createBufferSource()

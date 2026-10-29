@@ -7,9 +7,10 @@ import { Transformacion, type Anillo, type Forma } from '../geo'
 import { entero, t } from '../i18n'
 import { CONTINENTES, VISTAS, muestraForma, nombreContinente, nombreModo, porCapital, type Atlas, type Continente, type Pais } from '../modelo'
 import { ERRORES_MAX, PartidaClasica, RITMO, type Direccion } from '../partida'
-import { COLOR, colorDe, figura, forma as pintarForma, mapa as pintarMapa, preparar, type Relleno } from '../pintor'
+import { COLOR, colorDe, figura, forma as pintarForma, mapa as pintarMapa, preparar, rectanguloRedondeado, type Relleno } from '../pintor'
 import type { Preferencias } from '../preferencias'
 import type { Sonidos } from '../sonidos'
+import { mantenerPantallaEncendida, vibrar } from '../movil'
 
 /** A la deriva la pieza va más despacio que en el original; con una flecha pulsada, bastante más rápido. */
 const VELOCIDAD_DERIVA = 0.6
@@ -45,7 +46,14 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
   const alTerminar = useRef(onFin)
   alTerminar.current = onFin
   useEffect(() => {
-    partida.alSonar = (s) => sonidos.reproducir(s)
+    partida.alSonar = (s) => {
+      sonidos.reproducir(s)
+      // En el teléfono, además, una vibración corta al acertar y al fallar (si los efectos están activados).
+      if (!sonidos.efectosActivos) return
+      if (s === 'UBICADO' || s === 'CONTINENTE_CORRECTO' || s === 'NIVEL_SUPERADO') vibrar(35)
+      else if (s === 'MAL_UBICADO' || s === 'CONTINENTE_EQUIVOCADO' || s === 'FIN_TIEMPO') vibrar([70, 50, 70])
+      else if (s === 'FIN_PARTIDA') vibrar(300)
+    }
     partida.alCambiar = () => {
       if (partida.fase === 'FIN') alTerminar.current(partida)
       else refrescar()
@@ -66,6 +74,9 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
       partida.alSonar = () => {}
     }
   }, [partida, sonidos])
+
+  // La pantalla no se apaga mientras dura la partida.
+  useEffect(() => mantenerPantallaEncendida(), [])
 
   // Si el jugador sale de la aplicación (otra app, una llamada, pantalla apagada), la partida se pausa sola.
   useEffect(() => {
@@ -454,8 +465,7 @@ function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: 
   const ancho = gc.measureText(rotulo).width + 16
   const y = Math.max(4, arriba - 30)
   gc.fillStyle = 'rgba(29, 43, 79, 0.9)'
-  gc.beginPath()
-  gc.roundRect(cx - ancho / 2, y, ancho, 23, 10)
+  rectanguloRedondeado(gc, cx - ancho / 2, y, ancho, 23, 10)
   gc.fill()
   gc.fillStyle = 'white'
   gc.textAlign = 'center'

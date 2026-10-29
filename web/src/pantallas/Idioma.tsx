@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Logotipo } from '../comunes'
 import type { Idioma } from '../i18n'
+import { enlaceChrome, esAndroid, navegadorInterno } from '../movil'
 
 interface Props {
   inicial: Idioma
@@ -12,6 +13,7 @@ interface Props {
 
 export function PantallaIdioma({ inicial, daltonico, onDaltonico, onElegir }: Props) {
   const [marcado, setMarcado] = useState<Idioma>(inicial)
+  const [avisoInterno, setAvisoInterno] = useState(navegadorInterno)
 
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
@@ -39,6 +41,23 @@ export function PantallaIdioma({ inicial, daltonico, onDaltonico, onElegir }: Pr
 
   return (
     <main className="pantalla pantalla-centrada">
+      {avisoInterno && (
+        // Abierto desde WhatsApp, Facebook…: ahí fallan el sonido, la pantalla completa y la instalación.
+        <div className="aviso-navegador">
+          <span>
+            Para jugar mejor, ábrelo en tu navegador · For the best experience, open it in your browser
+            {!esAndroid() && <small> (··· → «Abrir en Safari / Open in Safari»)</small>}
+          </span>
+          {esAndroid() && (
+            <a className="boton-principal" href={enlaceChrome()}>
+              Abrir en Chrome
+            </a>
+          )}
+          <button className="boton-discreto" onClick={() => setAvisoInterno(false)} aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
+      )}
       <Logotipo grande />
       <h1 className="titulo-claro">Elige tu idioma · Choose your language</h1>
       <div className="fila-tarjetas">
