@@ -17,11 +17,19 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
   - hay 5 errores;
   - las mismas reglas de «Solo datos del país».
   - Al fallar, primero se ven la línea y la ★ y luego un recuadro compacto en la esquina libre del mapa.
-- **El país que cae** tiene el tamaño que tendrá en el mapa del continente (los diminutos, un poco ampliados).
+- **El país que cae** tiene exactamente el tamaño que tendrá en el mapa del continente (los diminutos, ampliados
+  igual que en el mapa).
+- **El mapa del continente:** solo ese continente en blanco; el resto del mundo, en gris. Si la tierra del
+  continente quedaría debajo de los controles, el mapa se acomoda (el continente sube o se corre a la derecha) y
+  deja ese rincón al mar; en América caen en el Pacífico.
+- **Islas diminutas** (Tonga, Maldivas, Cabo Verde, San Cristóbal y Nieves…): se dibujan algo más grandes que a
+  escala, hasta 18 px, pero sin taparse con la tierra vecina (las Antillas Menores crecen poco).
+- **Al fallar**, una línea y una flecha roja que apunta justo al país (sin tapar los pequeños).
+- **Sin pregunta en pantalla:** debajo del mapa solo está «Ver datos del país»; con los datos ocultos, el mapa es
+  más grande.
 - **Controles táctiles:** tocar el continente; en el mapa, una **cruceta** (mientras se mantiene una flecha, la
-  pieza va más rápido) y el botón **«Soltar»**, semitransparentes sobre el mapa, abajo a la izquierda (en América
-  quedan en el Pacífico), para que el mapa use todo el ancho. También funciona con teclado (flechas, Enter, 1–5,
-  F5/P/Esc).
+  pieza va más rápido) y el botón **«Soltar»**, semitransparentes sobre el mapa, abajo a la izquierda. También
+  funciona con teclado (flechas, Enter, 1–5, F5/P/Esc).
 - **Pantalla final** sencilla, récords guardados en el navegador, música y efectos con botón para quitarlos.
 - Se juega **en horizontal o en vertical**: en vertical, el mapa va arriba y la pregunta, los datos y la cruceta, debajo.
 

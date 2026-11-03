@@ -96,6 +96,60 @@ export class Atlas {
     readonly datosActualizados: string,
   ) {}
 
+  private islasCalculadas: Set<Pais> | null = null
+
+  /**
+   * Los países sin frontera terrestre (San Cristóbal y Nieves, Santa Lucía, Japón…): los que no comparten ningún
+   * vértice de su contorno con otro país.
+   */
+  get islas(): Set<Pais> {
+    if (!this.islasCalculadas) {
+      const clave = (u: number, v: number) => `${Math.round(u * 1e7)},${Math.round(v * 1e7)}`
+      const duenos = new Map<string, Pais | null>()
+      for (const p of this.paises)
+        for (const a of p.forma.anillos)
+          for (let i = 0; i < a.puntos; i++) {
+            const k = clave(a.u[i], a.v[i])
+            const d = duenos.get(k)
+            if (d === undefined) duenos.set(k, p)
+            else if (d !== p) duenos.set(k, null) // vértice compartido: frontera
+          }
+      this.islasCalculadas = new Set(
+        this.paises.filter((p) => p.forma.anillos.every((a) => {
+          for (let i = 0; i < a.puntos; i++) if (duenos.get(clave(a.u[i], a.v[i])) === null) return false
+          return true
+        })),
+      )
+    }
+    return this.islasCalculadas
+  }
+
+  private readonly separaciones = new Map<Pais, number>()
+
+  /**
+   * Distancia (en unidades Mercator) desde el centro de una isla hasta la tierra ajena más cercana: hasta dónde
+   * se puede ampliar sin taparse con sus vecinas (las Antillas Menores están a un paso unas de otras).
+   */
+  separacion(isla: Pais): number {
+    let d = this.separaciones.get(isla)
+    if (d === undefined) {
+      const u = isla.forma.anclaU, v = isla.forma.anclaV
+      d = Infinity
+      const otras = [...this.paises.filter((p) => p !== isla).map((p) => p.forma), ...this.otrasTierras]
+      for (const f of otras)
+        for (const a of f.anillos) {
+          const c = a.caja
+          for (const vueltas of [-1, 0, 1]) {
+            const du = Math.max(0, c.uMin + vueltas - u, u - c.uMax - vueltas), dv = Math.max(0, c.vMin - v, v - c.vMax)
+            if (Math.hypot(du, dv) >= d) continue
+            for (let i = 0; i < a.puntos; i++) d = Math.min(d, Math.hypot(a.u[i] + vueltas - u, a.v[i] - v))
+          }
+        }
+      this.separaciones.set(isla, d)
+    }
+    return d
+  }
+
   static desdeJson(json: { paises: PaisJson[]; otrasTierras: number[][][]; datosActualizados: string }): Atlas {
     return new Atlas(
       json.paises.map((p) => new Pais(p)),

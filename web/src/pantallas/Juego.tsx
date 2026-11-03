@@ -1,9 +1,9 @@
 // La partida (PantallaClasica + MapaClasico de Windows): arriba el panel con puntaje, errores y la barra de
-// tiempo; en el centro, el país que cae sobre los cinco continentes o el mapa del continente; a la derecha, la
-// pregunta y los datos del país. Una cruceta y el botón «Soltar», sobre el mapa, guían la pieza.
+// tiempo; en el centro, el país que cae sobre los cinco continentes o el mapa del continente; a la derecha (o
+// debajo), los datos del país. Una cruceta y el botón «Soltar», sobre el mapa, guían la pieza.
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { Cifras, FichaDatos, MiniMapa, Pieza, useTamano, zona } from '../comunes'
-import { Transformacion, type Anillo, type Forma } from '../geo'
+import { Transformacion, type Anillo, type Forma, type Region } from '../geo'
 import { entero, t } from '../i18n'
 import { CONTINENTES, VISTAS, muestraForma, nombreContinente, nombreModo, porCapital, type Atlas, type Continente, type Pais } from '../modelo'
 import { ERRORES_MAX, PartidaClasica, RITMO, vistaDelMapa, type Direccion } from '../partida'
@@ -18,9 +18,18 @@ const VELOCIDAD_CON_FLECHA = 3.2
 const VELOCIDAD_CTRL = RITMO.movimiento / 30
 /** Tamaño mínimo de la pieza en el mapa: solo los microestados, que serían un punto, se amplían hasta esto. */
 const LADO_MINIMO = 12
+/**
+ * Las islas diminutas (Tonga, Maldivas, Cabo Verde…) se amplían algo más, en el mapa y en la pieza; las que tienen
+ * tierra muy cerca (las Antillas Menores), solo hasta donde no se tapan con ella.
+ */
+const LADO_MINIMO_ISLA = 18
 const LADO_CIRCULO = 22
-/** Al caer, la silueta tiene el tamaño del mapa, pero las de los países diminutos se amplían hasta esto. */
-const LADO_MINIMO_CAIDA = 22
+/** Separación de la cruceta y «Soltar» respecto del borde del mapa (como .controles-mapa en estilos.css). */
+const MARGEN_CONTROLES = 10
+/** Lado con que se ve una isla en el mapa, a esta escala (píxeles por unidad Mercator). */
+const ladoIsla = (atlas: Atlas, p: Pais, escala: number): number => Math.min(LADO_MINIMO_ISLA, 0.9 * atlas.separacion(p) * escala)
+/** Lado mínimo de la pieza (y del país al revelarlo): las islas, como en el mapa, pero nunca menos de LADO_MINIMO. */
+const ladoMinimo = (atlas: Atlas, p: Pais, escala: number): number => (atlas.islas.has(p) ? Math.max(LADO_MINIMO, ladoIsla(atlas, p, escala)) : LADO_MINIMO)
 const TECLAS_DIRECCION: Record<string, Direccion> = { ArrowUp: 'ARRIBA', ArrowDown: 'ABAJO', ArrowLeft: 'IZQUIERDA', ArrowRight: 'DERECHA' }
 const tactil = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
 
@@ -42,6 +51,11 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
   const [seleccion, setSeleccion] = useState(0)
   const mapaRef = useRef<{ linea: number[] | null }>({ linea: null })
   const [mensajeVisible, setMensajeVisible] = useState(false)
+  // La cruceta siempre está en la página (invisible fuera del mapa) para medir el rincón que ocupa.
+  const controles = useRef<HTMLDivElement>(null)
+  const hueco = useCallback((): Hueco => ({ w: controles.current?.offsetWidth ?? 0, h: controles.current?.offsetHeight ?? 0 }), [])
+  // Una vez medida la cruceta, se vuelve a dibujar el país que cae con su tamaño en el mapa.
+  useLayoutEffect(() => refrescar(), [])
 
   // ------------------------------------------------------------------ relojes y avisos de la partida
   // En una referencia, para que los relojes no se reinicien si la pantalla de arriba pasa otra función.
@@ -184,42 +198,41 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
       <div className="cuerpo-juego">
         <div className="centro-juego">
           {enMapa ? (
-            <MapaJuego atlas={atlas} partida={partida} guia={practica} ref={mapaRef} />
+            <MapaJuego atlas={atlas} partida={partida} guia={practica} hueco={hueco} ref={mapaRef} />
           ) : (
-            <VistaCaida atlas={atlas} partida={partida} seleccion={seleccion} practica={practica} onElegir={elegir} />
+            <VistaCaida atlas={atlas} partida={partida} seleccion={seleccion} practica={practica} hueco={hueco} onElegir={elegir} />
           )}
           {fase === 'RESULTADO' && r && mensajeVisible && (
             <Mensaje partida={partida} practica={practica} junto={marcaElLugar} linea={mapaRef.current.linea} />
           )}
-          {/* La cruceta y «Soltar», sobre el mapa (abajo a la izquierda, en el mar): así el mapa ocupa todo el ancho. */}
-          {fase === 'UBICACION' && !partida.pausa && (
-            <div className="controles-mapa">
-              <div className="cruceta">
-                {(['ARRIBA', 'IZQUIERDA', 'DERECHA', 'ABAJO'] as Direccion[]).map((d) => (
-                  <button
-                    key={d}
-                    className={`flecha flecha-${d.toLowerCase()}`}
-                    aria-label={d}
-                    onPointerDown={(e) => {
-                      e.preventDefault()
-                      pulsarFlecha(d)
-                    }}
-                    onPointerUp={soltarFlecha}
-                    onPointerLeave={soltarFlecha}
-                    onPointerCancel={soltarFlecha}
-                  >
-                    {{ ARRIBA: '▲', IZQUIERDA: '◀', DERECHA: '▶', ABAJO: '▼' }[d]}
-                  </button>
-                ))}
-              </div>
-              <button className="boton-principal boton-soltar" onClick={() => partida.confirmar()}>
-                {t('web.soltar')}
-              </button>
+          {/* La cruceta y «Soltar», sobre el mapa (abajo a la izquierda, en el mar): así el mapa ocupa todo el ancho.
+              Fuera del mapa quedan invisibles, pero en su sitio, para medir el rincón que ocupan. */}
+          <div className={`controles-mapa${fase === 'UBICACION' && !partida.pausa ? '' : ' invisible'}`} ref={controles} aria-hidden={fase !== 'UBICACION' || partida.pausa}>
+            <div className="cruceta">
+              {(['ARRIBA', 'IZQUIERDA', 'DERECHA', 'ABAJO'] as Direccion[]).map((d) => (
+                <button
+                  key={d}
+                  className={`flecha flecha-${d.toLowerCase()}`}
+                  aria-label={d}
+                  onPointerDown={(e) => {
+                    e.preventDefault()
+                    pulsarFlecha(d)
+                  }}
+                  onPointerUp={soltarFlecha}
+                  onPointerLeave={soltarFlecha}
+                  onPointerCancel={soltarFlecha}
+                >
+                  {{ ARRIBA: '▲', IZQUIERDA: '◀', DERECHA: '▶', ABAJO: '▼' }[d]}
+                </button>
+              ))}
             </div>
-          )}
+            <button className="boton-principal boton-soltar" onClick={() => partida.confirmar()}>
+              {t('web.soltar')}
+            </button>
+          </div>
         </div>
         <aside className="lateral">
-          <Lateral atlas={atlas} partida={partida} prefs={prefs} practica={practica} enMapa={enMapa} onPrefs={onPrefs} />
+          <Lateral atlas={atlas} partida={partida} prefs={prefs} practica={practica} onPrefs={onPrefs} />
           {practica && fase !== 'RESULTADO' && <GuiaPractica partida={partida} onSaltar={onSalir} />}
         </aside>
       </div>
@@ -284,7 +297,7 @@ function Hud({ partida, prefs, onPrefs, progreso, enMapa }: { partida: PartidaCl
 
 // ====================================================================== la caída
 
-function VistaCaida({ atlas, partida, seleccion, practica, onElegir }: { atlas: Atlas; partida: PartidaClasica; seleccion: number; practica: boolean; onElegir: (c: Continente) => void }) {
+function VistaCaida({ atlas, partida, seleccion, practica, hueco, onElegir }: { atlas: Atlas; partida: PartidaClasica; seleccion: number; practica: boolean; hueco: () => Hueco; onElegir: (c: Continente) => void }) {
   const [cielo, tam] = useTamano<HTMLDivElement>()
   const [vista, tamVista] = useTamano<HTMLDivElement>()
   const p = partida.actual
@@ -293,12 +306,13 @@ function VistaCaida({ atlas, partida, seleccion, practica, onElegir }: { atlas: 
   let altoPieza = Math.min(110, Math.max(50, tam.h * 0.42))
   let anchoPieza = altoPieza * 1.35
   if (muestraForma(modo) && tamVista.w > 1) {
-    // La silueta cae del tamaño que tendrá en el mapa del continente (que ocupa este mismo espacio): los países
-    // grandes, grandes, y los pequeños, pequeños; solo los diminutos se amplían hasta LADO_MINIMO_CAIDA.
+    // La silueta cae exactamente del tamaño que tendrá en el mapa del continente (que ocupa este mismo espacio,
+    // menos su borde): los países grandes, grandes, y los pequeños, pequeños, ampliados igual que en el mapa.
     const caja = p.forma.cajaNucleo
-    const escala = Transformacion.ajustada(vistaDelMapa(p), tamVista.w, tamVista.h).escala
+    const escala = encuadre(atlas, p.continente, vistaDelMapa(p), tamVista.w - 6, tamVista.h - 6, hueco()).escala
     const lado = Math.max(caja.ancho, caja.alto) * escala
-    const k = Math.min(lado < LADO_MINIMO_CAIDA ? LADO_MINIMO_CAIDA / lado : 1, (anchoPieza - 12) / (caja.ancho * escala), (altoPieza - 12) / (caja.alto * escala))
+    const minimo = ladoMinimo(atlas, p, escala)
+    const k = Math.min(lado < minimo ? Math.min(40, minimo / Math.max(lado, 0.5)) : 1, (anchoPieza - 12) / (caja.ancho * escala), (altoPieza - 12) / (caja.alto * escala))
     anchoPieza = caja.ancho * escala * k + 12
     altoPieza = caja.alto * escala * k + 12
   }
@@ -341,11 +355,80 @@ interface MapaRef {
   linea: number[] | null
 }
 
+/** El rincón (abajo a la izquierda) que ocupan la cruceta y «Soltar», en píxeles. */
+interface Hueco {
+  w: number
+  h: number
+}
+
+const encuadres = new Map<string, Transformacion>()
+
 /**
- * El mapa del continente: los países ya ubicados en color y la pieza, que se mueve sola. El fondo se dibuja una
- * vez (y al cambiar de tamaño o de país ubicado); la pieza, en cada cuadro.
+ * Dónde se dibuja el mapa del continente: lo más grande posible, salvo que la tierra del continente quede debajo
+ * de la cruceta y «Soltar». Entonces el continente sube (o se corre a la derecha) y deja ese rincón al mar, como
+ * el Pacífico en América. Lo usan el mapa y el país que cae, para que tenga el mismo tamaño.
  */
-const MapaJuego = ({ atlas, partida, guia, ref }: { atlas: Atlas; partida: PartidaClasica; guia: boolean; ref: React.RefObject<MapaRef> }) => {
+function encuadre(atlas: Atlas, continente: Continente, vista: Region, w: number, h: number, hueco: Hueco): Transformacion {
+  const clave = `${continente},${vista.uMin},${vista.vMin},${vista.uMax},${vista.vMax},${w},${h},${hueco.w},${hueco.h}`
+  let t = encuadres.get(clave)
+  if (!t) {
+    t = elegirEncuadre(atlas, continente, vista, w, h, hueco)
+    encuadres.set(clave, t)
+  }
+  return t
+}
+
+function elegirEncuadre(atlas: Atlas, continente: Continente, vista: Region, w: number, h: number, hueco: Hueco): Transformacion {
+  const entero = Transformacion.ajustada(vista, w, h)
+  if (hueco.w < 1 || hueco.h < 1 || w < 2 || h < 2) return entero
+  const rw = hueco.w + 2 * MARGEN_CONTROLES, rh = hueco.h + 2 * MARGEN_CONTROLES
+  const arriba = metida(vista, w, h - rh, w, h, 0)
+  const derecha = metida(vista, w - rw, h, w, h, rw)
+  const libres = [entero, arriba, derecha].filter((t) => t.escala > 0 && !tapaTierra(atlas, continente, t, rw, rh))
+  if (libres.length > 0) return libres.reduce((a, b) => (b.escala > a.escala ? b : a))
+  return arriba.escala >= derecha.escala ? arriba : derecha
+}
+
+/** La vista, lo más grande posible dentro del rectángulo (x0, 0)–(x0 + aw, ah) de un lienzo de w × h. */
+function metida(vista: Region, aw: number, ah: number, w: number, h: number, x0: number): Transformacion {
+  const escala = Math.max(0, Math.min(aw / vista.ancho, ah / vista.alto))
+  if (escala === 0) return new Transformacion(vista.centroU, vista.centroV, 0, w, h)
+  return new Transformacion(vista.centroU - (x0 + aw / 2 - w / 2) / escala, vista.centroV - (ah / 2 - h / 2) / escala, escala, w, h)
+}
+
+/**
+ * Si algún país del continente queda en el rincón de abajo a la izquierda de rw × rh píxeles. Las islitas de los
+ * países continentales (Galápagos, Canarias, Hawái) no cuentan; los países isla (Cabo Verde), sí.
+ */
+function tapaTierra(atlas: Atlas, continente: Continente, t: Transformacion, rw: number, rh: number): boolean {
+  const y0 = t.alto - rh
+  const visible = t.visible()
+  for (const p of atlas.paises) {
+    if (p.continente !== continente) continue
+    const f = p.forma
+    const du = visible.vueltasPara(f.anclaU)
+    const isla = atlas.islas.has(p)
+    for (const a of f.anillos) {
+      const c = a.caja
+      if (t.x(c.uMin + du) > rw || t.x(c.uMax + du) < 0 || t.y(c.vMax) < y0 || t.y(c.vMin) > t.alto) continue
+      if (!isla && Math.max(c.ancho, c.alto) * t.escala < 10) continue
+      for (let i = 0; i < a.puntos; i++) {
+        const x = t.x(a.u[i] + du), y = t.y(a.v[i])
+        if (x >= 0 && x <= rw && y >= y0 && y <= t.alto) return true
+      }
+    }
+    // Un país grande puede cubrir todo el rincón sin que su borde pase por él.
+    if (f.contiene(t.u(rw / 2) - du, t.v(y0 + rh / 2))) return true
+  }
+  return false
+}
+
+/**
+ * El mapa del continente: solo ese continente en blanco (los ya ubicados, en color) y el resto del mundo en gris;
+ * encima, la pieza, que se mueve sola. El fondo se dibuja una vez (y al cambiar de tamaño o de país ubicado); la
+ * pieza, en cada cuadro.
+ */
+const MapaJuego = ({ atlas, partida, guia, hueco, ref }: { atlas: Atlas; partida: PartidaClasica; guia: boolean; hueco: () => Hueco; ref: React.RefObject<MapaRef> }) => {
   const [caja, tam] = useTamano<HTMLDivElement>()
   const canvas = useRef<HTMLCanvasElement>(null)
   const fondo = useRef<{ clave: string; lienzo: HTMLCanvasElement } | null>(null)
@@ -359,22 +442,29 @@ const MapaJuego = ({ atlas, partida, guia, ref }: { atlas: Atlas; partida: Parti
       cuadro = requestAnimationFrame(dibujar)
       const vista = partida.vista
       if (!vista) return
-      const t = Transformacion.ajustada(vista, tam.w, tam.h)
-      // Fondo: mar, países (los ubicados en color) y fronteras.
-      const clave = `${vista.uMin},${vista.vMin},${tam.w},${tam.h},${partida.ubicados.size}`
+      const continente = partida.actual.continente
+      const t = encuadre(atlas, continente, vista, tam.w, tam.h, hueco())
+      // Fondo: mar, países (los del continente en blanco o, si ya están ubicados, en color) y fronteras.
+      const clave = `${continente},${t.centroU},${t.centroV},${t.escala},${tam.w},${tam.h},${partida.ubicados.size}`
       if (fondo.current?.clave !== clave) {
         const lienzo = document.createElement('canvas')
         const g = preparar(lienzo, tam.w, tam.h)
-        pintarMapa(g, t, atlas, (p) => (partida.ubicados.has(p) ? colorDe(p, g) : null), 0.9)
+        const relleno = (p: Pais) => (p.continente !== continente ? COLOR.RESTO_DEL_MUNDO : partida.ubicados.has(p) ? colorDe(p, g) : COLOR.TIERRA)
+        pintarMapa(g, t, atlas, relleno, 0.9)
+        // Las islas diminutas del continente, un poco ampliadas para que no sean un punto.
+        const visible = t.visible()
+        for (const p of atlas.islas) {
+          if (p.continente === continente) formaVisible(g, t, p.forma, p.forma.nucleo, visible.vueltasPara(p.forma.anclaU), 0, relleno(p), 0.9, ladoIsla(atlas, p, t.escala))
+        }
         fondo.current = { clave, lienzo }
       }
       gc.clearRect(0, 0, tam.w, tam.h)
       gc.drawImage(fondo.current.lienzo, 0, 0, tam.w, tam.h)
-      ref.current.linea = dibujarEncima(gc, t, partida, guia)
+      ref.current.linea = dibujarEncima(gc, t, atlas, partida, guia)
     }
     dibujar()
     return () => cancelAnimationFrame(cuadro)
-  }, [atlas, partida, guia, tam.w, tam.h, ref])
+  }, [atlas, partida, guia, hueco, tam.w, tam.h, ref])
 
   return (
     <div className="mapa-juego" ref={caja}>
@@ -383,23 +473,26 @@ const MapaJuego = ({ atlas, partida, guia, ref }: { atlas: Atlas; partida: Parti
   )
 }
 
-/** La pieza, el anillo de la práctica y, al fallar, el país real con la línea hasta la ★. Devuelve la línea. */
-function dibujarEncima(gc: CanvasRenderingContext2D, t: Transformacion, partida: PartidaClasica, guia: boolean): number[] | null {
+/** La pieza, el anillo de la práctica y, al fallar, el país real con la línea y la flecha que lo señala. Devuelve la línea. */
+function dibujarEncima(gc: CanvasRenderingContext2D, t: Transformacion, atlas: Atlas, partida: PartidaClasica, guia: boolean): number[] | null {
   const actual = partida.actual
   const f = actual.forma
   const v = partida.vueltas
   const r = partida.resultado
   const resultado = partida.fase === 'RESULTADO'
   const acierto = resultado && !!r?.acierto
+  const minimo = ladoMinimo(atlas, actual, t.escala)
   // En «Solo datos del país» el primer fallo no revela dónde estaba.
   const revelar = resultado && !acierto && partida.revelaElLugar
+  let ladoReal = 0
   if (revelar) {
     gc.shadowColor = COLOR.SOL
     gc.shadowBlur = 10
-    formaVisible(gc, t, f, f.anillos, v, 0, colorDe(actual, gc), 1.6)
+    const k = formaVisible(gc, t, f, f.anillos, v, 0, colorDe(actual, gc), 1.6, minimo)
     gc.shadowBlur = 0
+    ladoReal = Math.max(t.x(f.cajaNucleo.uMax) - t.x(f.cajaNucleo.uMin), t.y(f.cajaNucleo.vMax) - t.y(f.cajaNucleo.vMin)) * k
   }
-  if (acierto) formaVisible(gc, t, f, f.nucleo, v, 0, colorDe(actual, gc), 1.4)
+  if (acierto) formaVisible(gc, t, f, f.nucleo, v, 0, colorDe(actual, gc), 1.4, minimo)
   if (guia && partida.fase === 'UBICACION') {
     const gx = t.x(f.anclaU + v), gy = t.y(f.anclaV)
     const radio = 26 + 6 * Math.sin(performance.now() / 160)
@@ -411,36 +504,60 @@ function dibujarEncima(gc: CanvasRenderingContext2D, t: Transformacion, partida:
     gc.stroke()
     gc.setLineDash([])
   }
-  if (!acierto) dibujarPieza(gc, t, partida, actual, f, v + partida.despU, partida.despV, resultado)
+  if (!acierto) dibujarPieza(gc, t, partida, actual, f, v + partida.despU, partida.despV, resultado, minimo)
   if (revelar && r && r.distanciaKm >= 0) {
     const rx = t.x(f.anclaU + v), ry = t.y(f.anclaV)
     const gx = t.x(f.anclaU + v + partida.despU), gy = t.y(f.anclaV + partida.despV)
+    // La flecha llega hasta el borde de los países pequeños (para no taparlos) y al centro de los grandes.
+    let dx = rx - gx, dy = ry - gy
+    let largo = Math.hypot(dx, dy)
+    if (largo < 40) {
+      // Si la pieza quedó casi encima, la flecha baja desde arriba.
+      dx = 0
+      dy = 1
+      largo = 1
+    }
+    dx /= largo
+    dy /= largo
+    const separacion = ladoReal < 40 ? ladoReal / 2 + 3 : 0
+    const px = rx - dx * separacion, py = ry - dy * separacion
+    const desde = Math.hypot(rx - gx, ry - gy) < 40 ? [px, py - 46] : [gx, gy]
     gc.strokeStyle = COLOR.ROJO
     gc.lineWidth = 2.5
     gc.setLineDash([8, 6])
     gc.beginPath()
-    gc.moveTo(gx, gy)
-    gc.lineTo(rx, ry)
+    gc.moveTo(desde[0], desde[1])
+    gc.lineTo(px - dx * 14, py - dy * 14)
     gc.stroke()
     gc.setLineDash([])
-    gc.font = 'bold 28px "Segoe UI Symbol", sans-serif'
-    gc.textAlign = 'center'
-    gc.textBaseline = 'middle'
-    gc.fillStyle = COLOR.SOL
-    gc.strokeStyle = COLOR.TINTA
-    gc.lineWidth = 1.5
-    gc.fillText('★', rx, ry)
-    gc.strokeText('★', rx, ry)
-    return [gx, gy, rx, ry]
+    flecha(gc, px, py, dx, dy)
+    return [desde[0], desde[1], px, py]
   }
   return null
 }
 
-/** Dibuja los anillos desplazados; si quedarían más pequeños que LADO_MINIMO, los amplía alrededor de su referencia. */
-function formaVisible(gc: CanvasRenderingContext2D, t: Transformacion, f: Forma, anillos: Anillo[], du: number, dv: number, relleno: Relleno, grosor: number): number {
+/** Punta de flecha roja con la punta en (x, y), apuntando en la dirección (dx, dy) (de largo 1). */
+function flecha(gc: CanvasRenderingContext2D, x: number, y: number, dx: number, dy: number): void {
+  const largo = 18, ancho = 9
+  const bx = x - dx * largo, by = y - dy * largo
+  gc.beginPath()
+  gc.moveTo(x, y)
+  gc.lineTo(bx - dy * ancho, by + dx * ancho)
+  gc.lineTo(bx + dy * ancho, by - dx * ancho)
+  gc.closePath()
+  gc.fillStyle = COLOR.ROJO
+  gc.fill()
+  gc.strokeStyle = COLOR.TINTA
+  gc.lineWidth = 1.5
+  gc.lineJoin = 'round'
+  gc.stroke()
+}
+
+/** Dibuja los anillos desplazados; si quedarían más pequeños que minimo, los amplía alrededor de su referencia. */
+function formaVisible(gc: CanvasRenderingContext2D, t: Transformacion, f: Forma, anillos: Anillo[], du: number, dv: number, relleno: Relleno, grosor: number, minimo: number): number {
   const c = f.cajaNucleo
   const lado = Math.max(Math.abs(t.x(c.uMax) - t.x(c.uMin)), Math.abs(t.y(c.vMax) - t.y(c.vMin)))
-  const k = lado >= LADO_MINIMO ? 1 : Math.min(40, LADO_MINIMO / Math.max(lado, 0.5))
+  const k = lado >= minimo ? 1 : Math.min(40, minimo / Math.max(lado, 0.5))
   const px = t.x(f.anclaU + du), py = t.y(f.anclaV + dv)
   gc.save()
   gc.translate(px, py)
@@ -451,7 +568,7 @@ function formaVisible(gc: CanvasRenderingContext2D, t: Transformacion, f: Forma,
   return k
 }
 
-function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: PartidaClasica, pais: Pais, f: Forma, du: number, dv: number, quieta: boolean): void {
+function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: PartidaClasica, pais: Pais, f: Forma, du: number, dv: number, quieta: boolean, minimo: number): void {
   const cx = t.x(f.anclaU + du), cy = t.y(f.anclaV + dv)
   const modo = partida.ajustes.modo
   let arriba: number
@@ -461,7 +578,7 @@ function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: 
     gc.shadowBlur = 4
     gc.shadowOffsetX = 2
     gc.shadowOffsetY = 3
-    const k = formaVisible(gc, t, f, f.nucleo, du, dv, colorDe(pais, gc), 1.3)
+    const k = formaVisible(gc, t, f, f.nucleo, du, dv, colorDe(pais, gc), 1.3, minimo)
     gc.shadowBlur = 0
     gc.shadowOffsetX = 0
     gc.shadowOffsetY = 0
@@ -488,11 +605,13 @@ function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: 
 
 // ====================================================================== panel lateral
 
-function Lateral({ atlas, partida, prefs, practica, enMapa, onPrefs }: { atlas: Atlas; partida: PartidaClasica; prefs: Preferencias; practica: boolean; enMapa: boolean; onPrefs: (p: Preferencias) => void }) {
+/**
+ * Debajo del mapa (o a su derecha), sin pregunta: el jugador entiende solo qué hacer. Solo «Ver datos del país»
+ * (o los datos, en «Solo datos del país»); con los datos ocultos, el panel es pequeño y el mapa más grande.
+ */
+function Lateral({ atlas, partida, prefs, practica, onPrefs }: { atlas: Atlas; partida: PartidaClasica; prefs: Preferencias; practica: boolean; onPrefs: (p: Preferencias) => void }) {
   const p = partida.actual
   const modo = partida.ajustes.modo
-  const quien = modo === 'DATOS' ? null : porCapital(modo) ? p.capital : p.nombre
-  const pregunta = quien === null ? t(enMapa ? 'clasico.pregunta.mapaDatos' : 'clasico.pregunta.caidaDatos') : t(enMapa ? 'clasico.pregunta.mapa' : 'clasico.pregunta.caida', quien)
   const r = partida.resultado
   let contenido = null
   if (modo === 'DATOS') {
@@ -508,12 +627,8 @@ function Lateral({ atlas, partida, prefs, practica, enMapa, onPrefs }: { atlas: 
       </>
     )
   }
-  return (
-    <div className="panel panel-lateral">
-      <h2 className="pregunta-lateral">{pregunta}</h2>
-      {contenido}
-    </div>
-  )
+  // En la práctica, el globo de la guía ya lo explica todo.
+  return contenido && <div className="panel panel-lateral">{contenido}</div>
 }
 
 function GuiaPractica({ partida, onSaltar }: { partida: PartidaClasica; onSaltar: () => void }) {
