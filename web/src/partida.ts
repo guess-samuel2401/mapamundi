@@ -23,6 +23,16 @@ export const RITMO = { caida: 450, movimiento: 130, reloj: 150 }
 /** Margen de acierto: vale soltar la pieza dentro del país o a menos de esto de su lugar. */
 export const MARGEN_KM = 250
 
+/**
+ * El mapa del continente donde se ubica el país, con margen alrededor para que los países del borde (Palaos,
+ * Malta…) y su nombre se vean enteros.
+ */
+export function vistaDelMapa(p: Pais): Region {
+  const f = p.forma
+  const base = VISTAS[p.continente]
+  return base.union(f.cajaNucleo.desplazada(base.vueltasPara(f.anclaU)).ampliada(0.05)).ampliada(0.08)
+}
+
 export type Fase = 'CAIDA' | 'UBICACION' | 'RESULTADO' | 'FIN'
 export type Direccion = 'ARRIBA' | 'IZQUIERDA' | 'ABAJO' | 'DERECHA'
 export type Motivo = 'UBICADO' | 'LEJOS' | 'TIEMPO_CAIDA' | 'CONTINENTE_EQUIVOCADO' | 'TIEMPO_MAPA'
@@ -264,10 +274,8 @@ export class PartidaClasica {
   /** El mapa del continente, con margen; la pieza empieza arriba y en el centro, bajando. */
   private prepararMapa(): void {
     const f = this.actual.forma
-    const base = VISTAS[this.actual.continente]
-    this.vueltas = base.vueltasPara(f.anclaU)
-    // Con margen alrededor, para que los países del borde (Palaos, Malta…) y su nombre se vean enteros.
-    this.vista = base.union(f.cajaNucleo.desplazada(this.vueltas).ampliada(0.05)).ampliada(0.08)
+    this.vueltas = VISTAS[this.actual.continente].vueltasPara(f.anclaU)
+    this.vista = vistaDelMapa(this.actual)
     this.despU = this.vista.centroU - f.anclaU - this.vueltas
     this.despV = this.vista.vMin + this.vista.alto * 0.06 - f.anclaV
     this.direccion = 'ABAJO'

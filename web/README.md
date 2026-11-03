@@ -17,9 +17,11 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
   - hay 5 errores;
   - las mismas reglas de «Solo datos del país».
   - Al fallar, primero se ven la línea y la ★ y luego un recuadro compacto en la esquina libre del mapa.
+- **El país que cae** tiene el tamaño que tendrá en el mapa del continente (los diminutos, un poco ampliados).
 - **Controles táctiles:** tocar el continente; en el mapa, una **cruceta** (mientras se mantiene una flecha, la
-  pieza va más rápido) y el botón **«Soltar»**, en la columna derecha para no tapar el mapa. También funciona con
-  teclado (flechas, Enter, 1–5, F5/P/Esc).
+  pieza va más rápido) y el botón **«Soltar»**, semitransparentes sobre el mapa, abajo a la izquierda (en América
+  quedan en el Pacífico), para que el mapa use todo el ancho. También funciona con teclado (flechas, Enter, 1–5,
+  F5/P/Esc).
 - **Pantalla final** sencilla, récords guardados en el navegador, música y efectos con botón para quitarlos.
 - Se juega **en horizontal o en vertical**: en vertical, el mapa va arriba y la pregunta, los datos y la cruceta, debajo.
 
@@ -38,6 +40,8 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
 - **Abierto desde WhatsApp, Facebook, Instagram…:** esas apps usan su propio navegador, donde fallan el sonido, la pantalla completa y la instalación. El juego lo detecta y avisa que conviene abrirlo en el navegador; en Android, con un botón «Abrir en Chrome».
 - **Sonido con Web Audio:**
   - se desbloquea con el primer toque del jugador, como exigen iPhone y Android;
+  - en iPhone suena aunque el interruptor de silencio esté puesto (`navigator.audioSession` en iOS 16.4 o más
+    nuevo; en los anteriores, un `<audio>` mudo en bucle);
   - la música y los efectos se callan al salir de la app;
   - la música se convierte a **MP3** al compilar (0,6 MB en lugar de 3,4 MB del WAV de Windows).
 - **Vibración** corta al acertar y al fallar (Android; con los efectos activados).

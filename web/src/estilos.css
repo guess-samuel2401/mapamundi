@@ -203,7 +203,7 @@ input { font-family: inherit; }
 .cuerpo-juego { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 12px; }
 .centro-juego { flex: 1; min-width: 0; position: relative; display: flex; }
 .lateral { width: clamp(220px, 27vw, 320px); display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
-/* La pregunta y el globo de la práctica se encogen (y se desplazan); la cruceta y «Soltar» siempre se ven. */
+/* La pregunta y el globo de la práctica se encogen (y se desplazan) si no caben. */
 .panel-lateral { padding: 12px 14px; flex: 0 1 auto; min-height: 56px; overflow: auto; }
 .pregunta-lateral { font-family: 'Baloo 2'; font-weight: 800; color: var(--rojo); font-size: clamp(18px, 2.4vw, 24px); margin: 0 0 6px; line-height: 1.15; }
 
@@ -231,10 +231,13 @@ input { font-family: inherit; }
 
 .mapa-juego { flex: 1; min-width: 0; border-radius: 16px; overflow: hidden; border: 3px solid var(--tinta); background: var(--mar); }
 .mapa-juego canvas { display: block; }
-.controles-mapa { margin-top: auto; flex: none; display: flex; align-items: center; justify-content: center; gap: 12px; }
+/* Sobre el mapa, abajo a la izquierda (en América cae en el Pacífico), con «Soltar» debajo de la cruceta para no
+   tapar tierra a la derecha; semitransparentes para ver la pieza debajo. */
+.controles-mapa { position: absolute; left: 10px; bottom: 10px; z-index: 5; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.controles-mapa > * { pointer-events: auto; }
 .cruceta { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 4px; }
 .flecha {
-  background: rgba(255, 247, 236, 0.88); border: 3px solid var(--tinta); border-radius: 12px; box-shadow: 0 3px 0 var(--tinta);
+  background: rgba(255, 247, 236, 0.6); border: 3px solid var(--tinta); border-radius: 12px; box-shadow: 0 3px 0 var(--tinta);
   font-size: 20px; touch-action: none;
 }
 .flecha:active { background: var(--sol); transform: translateY(2px); }
@@ -242,7 +245,7 @@ input { font-family: inherit; }
 .flecha-izquierda { grid-column: 1; grid-row: 2; }
 .flecha-derecha { grid-column: 3; grid-row: 2; }
 .flecha-abajo { grid-column: 2; grid-row: 3; }
-.boton-soltar { font-size: 20px; padding: 14px 26px; }
+.boton-soltar { font-size: 18px; padding: 8px 10px; opacity: 0.92; }
 @media (pointer: fine) { .cruceta { grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); } }
 
 .mensaje { position: absolute; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; width: min(320px, 90%); }
@@ -311,7 +314,7 @@ input { font-family: inherit; }
   .tarjeta-continente-nombre { font-size: 12px; }
   .cruceta { grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap: 3px; }
   .flecha { font-size: 16px; border-width: 2px; }
-  .boton-soltar { padding: 10px 14px; font-size: 16px; }
+  .boton-soltar { padding: 5px 10px; font-size: 15px; }
   .tarjeta-fin { padding: 12px 20px; gap: 4px; }
   .fin-dibujo { font-size: 36px; }
   .fin-puntaje { font-size: 44px; }
@@ -333,7 +336,7 @@ input { font-family: inherit; }
   .practica-texto { font-size: 12px; margin: 2px 0; }
   .cruceta { grid-template-columns: repeat(3, 34px); grid-template-rows: repeat(3, 34px); gap: 2px; }
   .flecha { font-size: 14px; border-radius: 9px; box-shadow: 0 2px 0 var(--tinta); }
-  .boton-soltar { padding: 8px 10px; font-size: 14px; }
+  .boton-soltar { padding: 3px 8px; font-size: 14px; }
   .vista-caida { gap: 6px; }
   .fila-continentes { gap: 5px; }
   .tarjeta-continente { border-width: 3px; box-shadow: 0 3px 0 var(--tinta); }
@@ -399,12 +402,10 @@ input { font-family: inherit; }
   .boton-hud { padding: 2px 8px; flex: none; }
   .cuerpo-juego { flex-direction: column; padding: 8px; gap: 8px; }
   .centro-juego { flex: 1 1 56%; min-height: 0; }
-  .lateral { width: 100%; flex: 0 1 auto; max-height: 44%; flex-direction: row; flex-wrap: wrap; align-content: flex-start; gap: 8px; }
-  .panel-lateral { flex: 1 1 170px; min-width: 0; max-height: 100%; }
-  .practica-globo { flex: 1 1 100%; order: -1; min-height: 0; }
-  .controles-mapa { margin: 0; flex-direction: column; gap: 6px; align-self: center; }
+  .lateral { width: 100%; flex: 0 1 auto; max-height: 40%; gap: 8px; }
+  .practica-globo { order: -1; min-height: 0; }
   .cruceta { grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); }
-  .boton-soltar { padding: 8px 18px; font-size: 16px; }
+  .boton-soltar { padding: 6px 10px; font-size: 16px; }
   .fila-continentes { gap: 6px; }
   .tarjeta-continente-nombre { font-size: 11px; }
   .mensaje.junto-a-la-linea { width: min(240px, 72%); }

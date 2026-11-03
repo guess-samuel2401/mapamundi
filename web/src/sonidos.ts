@@ -4,6 +4,7 @@
 // navegadores de teléfono solo dejan sonar algo después de un toque del jugador, y Web Audio queda desbloqueado
 // para toda la partida con ese primer toque (ver desbloquear()). Además, los efectos cortos suenan sin retraso.
 import type { Sonido } from './partida'
+import { esIOS } from './movil'
 
 const ARCHIVOS: Record<Sonido, string> = {
   TIC: 'tic',
@@ -23,11 +24,36 @@ const VOLUMEN_EFECTOS = 0.8
 
 type ContextoAudio = AudioContext
 
+/** Medio segundo de silencio en WAV (8 kHz, 8 bits), creado aquí para no descargar nada. */
+function silencio(): string {
+  const n = 4000
+  const d = new DataView(new ArrayBuffer(44 + n))
+  const texto = (o: number, s: string) => {
+    for (let i = 0; i < s.length; i++) d.setUint8(o + i, s.charCodeAt(i))
+  }
+  texto(0, 'RIFF')
+  d.setUint32(4, 36 + n, true)
+  texto(8, 'WAVEfmt ')
+  d.setUint32(16, 16, true)
+  d.setUint16(20, 1, true) // PCM
+  d.setUint16(22, 1, true) // mono
+  d.setUint32(24, 8000, true)
+  d.setUint32(28, 8000, true)
+  d.setUint16(32, 1, true)
+  d.setUint16(34, 8, true)
+  texto(36, 'data')
+  d.setUint32(40, n, true)
+  for (let i = 0; i < n; i++) d.setUint8(44 + i, 128)
+  return URL.createObjectURL(new Blob([d.buffer], { type: 'audio/wav' }))
+}
+
 export class Sonidos {
   private ctx: ContextoAudio | null = null
   private readonly buffers = new Map<string, Promise<AudioBuffer | null>>()
   private fuenteMusica: AudioBufferSourceNode | null = null
   private sonando: Musica | null = null
+  /** iPhone anterior a iOS 16.4: el <audio> mudo que hace sonar el juego con el interruptor de silencio puesto. */
+  private mudo: HTMLAudioElement | null = null
   musicaActiva = true
   efectosActivos = true
 
@@ -35,6 +61,8 @@ export class Sonidos {
     if (typeof document === 'undefined') return
     // Al salir del juego (otra aplicación, llamada, pantalla apagada) se calla; al volver, sigue.
     document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.mudo?.pause()
+      else void this.mudo?.play().catch(() => {})
       if (!this.ctx) return
       if (document.hidden) void this.ctx.suspend()
       else void this.ctx.resume()
@@ -46,6 +74,7 @@ export class Sonidos {
    * todo lo demás, también desde los relojes del juego.
    */
   desbloquear(): void {
+    this.ignorarModoSilencio()
     if (!this.ctx) {
       const Clase = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
       if (!Clase) return
@@ -55,6 +84,27 @@ export class Sonidos {
     }
     if (this.ctx.state === 'suspended' && !document.hidden) void this.ctx.resume()
     if (this.sonando && this.musicaActiva && !this.fuenteMusica) this.empezarMusica(this.sonando)
+  }
+
+  /**
+   * En iPhone, Web Audio obedece al interruptor de silencio del costado (como los sonidos de las teclas), y con
+   * él activado el juego no se oye. Como en las apps de juegos, debe sonar igual: Safari 16.4 o más nuevo lo
+   * permite pidiendo audio de «reproducción»; en los anteriores, un <audio> mudo en bucle pone la página en ese
+   * modo.
+   */
+  private ignorarModoSilencio(): void {
+    const sesion = (navigator as unknown as { audioSession?: { type: string } }).audioSession
+    if (sesion) {
+      sesion.type = 'playback'
+      return
+    }
+    if (!esIOS()) return
+    if (!this.mudo) {
+      this.mudo = new Audio(silencio())
+      this.mudo.loop = true
+      this.mudo.setAttribute('playsinline', '')
+    }
+    if (this.mudo.paused && !document.hidden) void this.mudo.play().catch(() => {})
   }
 
   private cargar(ruta: string): Promise<AudioBuffer | null> {

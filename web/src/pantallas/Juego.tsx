@@ -1,12 +1,12 @@
 // La partida (PantallaClasica + MapaClasico de Windows): arriba el panel con puntaje, errores y la barra de
 // tiempo; en el centro, el país que cae sobre los cinco continentes o el mapa del continente; a la derecha, la
-// pregunta y los datos del país. En pantallas táctiles, una cruceta y el botón «Soltar» guían la pieza.
+// pregunta y los datos del país. Una cruceta y el botón «Soltar», sobre el mapa, guían la pieza.
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { Cifras, FichaDatos, MiniMapa, Pieza, useTamano, zona } from '../comunes'
 import { Transformacion, type Anillo, type Forma } from '../geo'
 import { entero, t } from '../i18n'
 import { CONTINENTES, VISTAS, muestraForma, nombreContinente, nombreModo, porCapital, type Atlas, type Continente, type Pais } from '../modelo'
-import { ERRORES_MAX, PartidaClasica, RITMO, type Direccion } from '../partida'
+import { ERRORES_MAX, PartidaClasica, RITMO, vistaDelMapa, type Direccion } from '../partida'
 import { COLOR, colorDe, figura, forma as pintarForma, mapa as pintarMapa, preparar, rectanguloRedondeado, type Relleno } from '../pintor'
 import type { Preferencias } from '../preferencias'
 import type { Sonidos } from '../sonidos'
@@ -19,6 +19,8 @@ const VELOCIDAD_CTRL = RITMO.movimiento / 30
 /** Tamaño mínimo de la pieza en el mapa: solo los microestados, que serían un punto, se amplían hasta esto. */
 const LADO_MINIMO = 12
 const LADO_CIRCULO = 22
+/** Al caer, la silueta tiene el tamaño del mapa, pero las de los países diminutos se amplían hasta esto. */
+const LADO_MINIMO_CAIDA = 22
 const TECLAS_DIRECCION: Record<string, Direccion> = { ArrowUp: 'ARRIBA', ArrowDown: 'ABAJO', ArrowLeft: 'IZQUIERDA', ArrowRight: 'DERECHA' }
 const tactil = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
 
@@ -189,11 +191,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
           {fase === 'RESULTADO' && r && mensajeVisible && (
             <Mensaje partida={partida} practica={practica} junto={marcaElLugar} linea={mapaRef.current.linea} />
           )}
-        </div>
-        <aside className="lateral">
-          <Lateral atlas={atlas} partida={partida} prefs={prefs} practica={practica} enMapa={enMapa} onPrefs={onPrefs} />
-          {practica && fase !== 'RESULTADO' && <GuiaPractica partida={partida} onSaltar={onSalir} />}
-          {/* La cruceta y «Soltar», debajo del panel: así nunca tapan el mapa. */}
+          {/* La cruceta y «Soltar», sobre el mapa (abajo a la izquierda, en el mar): así el mapa ocupa todo el ancho. */}
           {fase === 'UBICACION' && !partida.pausa && (
             <div className="controles-mapa">
               <div className="cruceta">
@@ -219,6 +217,10 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
               </button>
             </div>
           )}
+        </div>
+        <aside className="lateral">
+          <Lateral atlas={atlas} partida={partida} prefs={prefs} practica={practica} enMapa={enMapa} onPrefs={onPrefs} />
+          {practica && fase !== 'RESULTADO' && <GuiaPractica partida={partida} onSaltar={onSalir} />}
         </aside>
       </div>
       {partida.pausa && (
@@ -269,7 +271,7 @@ function Hud({ partida, prefs, onPrefs, progreso, enMapa }: { partida: PartidaCl
           {sonido ? '🔊' : '🔇'}
         </button>
         <button className="boton-hud" onClick={() => partida.alternarPausa()}>
-          ⏸ F5
+          {tactil ? '⏸' : '⏸ F5'}
         </button>
       </div>
       <div className="barra-tiempo">
@@ -284,15 +286,26 @@ function Hud({ partida, prefs, onPrefs, progreso, enMapa }: { partida: PartidaCl
 
 function VistaCaida({ atlas, partida, seleccion, practica, onElegir }: { atlas: Atlas; partida: PartidaClasica; seleccion: number; practica: boolean; onElegir: (c: Continente) => void }) {
   const [cielo, tam] = useTamano<HTMLDivElement>()
+  const [vista, tamVista] = useTamano<HTMLDivElement>()
   const p = partida.actual
   const modo = partida.ajustes.modo
   const rotulo = modo === 'DATOS' ? null : porCapital(modo) ? p.capital : p.nombre
-  const altoPieza = Math.min(110, Math.max(50, tam.h * 0.42))
-  const anchoPieza = altoPieza * 1.35
+  let altoPieza = Math.min(110, Math.max(50, tam.h * 0.42))
+  let anchoPieza = altoPieza * 1.35
+  if (muestraForma(modo) && tamVista.w > 1) {
+    // La silueta cae del tamaño que tendrá en el mapa del continente (que ocupa este mismo espacio): los países
+    // grandes, grandes, y los pequeños, pequeños; solo los diminutos se amplían hasta LADO_MINIMO_CAIDA.
+    const caja = p.forma.cajaNucleo
+    const escala = Transformacion.ajustada(vistaDelMapa(p), tamVista.w, tamVista.h).escala
+    const lado = Math.max(caja.ancho, caja.alto) * escala
+    const k = Math.min(lado < LADO_MINIMO_CAIDA ? LADO_MINIMO_CAIDA / lado : 1, (anchoPieza - 12) / (caja.ancho * escala), (altoPieza - 12) / (caja.alto * escala))
+    anchoPieza = caja.ancho * escala * k + 12
+    altoPieza = caja.alto * escala * k + 12
+  }
   const top = 8 + partida.caida * Math.max(0, tam.h - altoPieza - 40)
   const resaltadores = useRef(CONTINENTES.map((c) => (x: Pais) => x.continente === c))
   return (
-    <div className="vista-caida">
+    <div className="vista-caida" ref={vista}>
       <div className="cielo" ref={cielo}>
         <div className="pieza-cayendo" style={{ top }}>
           {rotulo && <span className="rotulo-caida">{rotulo}</span>}
