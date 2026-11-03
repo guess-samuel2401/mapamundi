@@ -3,7 +3,7 @@
 // - Lo demás (programa, datos de los países, sonidos, música, tipografías e íconos) se sirve desde lo guardado
 //   y, si falta, se descarga y se guarda.
 // Al publicar una versión nueva conviene subir VERSION, para que se borre lo guardado de la anterior.
-const VERSION = 'mapamundi-v3'
+const VERSION = 'mapamundi-v4'
 
 const SONIDOS = ['tic', 'continente_correcto', 'continente_error', 'ubicado', 'mal_ubicado', 'fin_tiempo', 'fin_partida', 'nivel_superado', 'logro']
 const FUENTES = ['Baloo2-Bold', 'Baloo2-ExtraBold', 'Nunito-Regular', 'Nunito-SemiBold', 'Nunito-Bold', 'Nunito-ExtraBold']
