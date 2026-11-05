@@ -15,6 +15,7 @@ const ARCHIVOS: Record<Sonido, string> = {
   FIN_TIEMPO: 'fin_tiempo',
   FIN_PARTIDA: 'fin_partida',
   NIVEL_SUPERADO: 'nivel_superado',
+  GANO: 'gano',
 }
 
 export type Musica = 'menu' | 'juego'

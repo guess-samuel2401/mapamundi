@@ -36,7 +36,7 @@ export function vistaDelMapa(p: Pais): Region {
 export type Fase = 'CAIDA' | 'UBICACION' | 'RESULTADO' | 'FIN'
 export type Direccion = 'ARRIBA' | 'IZQUIERDA' | 'ABAJO' | 'DERECHA'
 export type Motivo = 'UBICADO' | 'LEJOS' | 'TIEMPO_CAIDA' | 'CONTINENTE_EQUIVOCADO' | 'TIEMPO_MAPA'
-export type Sonido = 'TIC' | 'CONTINENTE_CORRECTO' | 'CONTINENTE_EQUIVOCADO' | 'UBICADO' | 'MAL_UBICADO' | 'FIN_TIEMPO' | 'FIN_PARTIDA' | 'NIVEL_SUPERADO'
+export type Sonido = 'TIC' | 'CONTINENTE_CORRECTO' | 'CONTINENTE_EQUIVOCADO' | 'UBICADO' | 'MAL_UBICADO' | 'FIN_TIEMPO' | 'FIN_PARTIDA' | 'NIVEL_SUPERADO' | 'GANO'
 
 const PASOS: Record<Direccion, [number, number]> = { ARRIBA: [0, -1], IZQUIERDA: [-1, 0], ABAJO: [0, 1], DERECHA: [1, 0] }
 const OPUESTA: Record<Direccion, Direccion> = { ARRIBA: 'ABAJO', ABAJO: 'ARRIBA', IZQUIERDA: 'DERECHA', DERECHA: 'IZQUIERDA' }
@@ -170,12 +170,16 @@ export class PartidaClasica {
     }
   }
 
-  /** Soltar la pieza: vale si su centro cae dentro del país o a menos de MARGEN_KM. */
-  confirmar(): void {
+  /**
+   * Soltar la pieza: vale si su centro cae dentro del país, a menos de MARGEN_KM o, en la pantalla, prácticamente
+   * encima de él: a menos de `tolerancia` (en unidades Mercator; la pantalla la calcula según el zoom del mapa).
+   * Así cuentan las islas y los países pequeños, como Bahamas, que en el mapa de América son un punto.
+   */
+  confirmar(tolerancia = 0): void {
     if (this.fase !== 'UBICACION' || this.pausa) return
     const f = this.actual.forma
     const km = this.distanciaKm()
-    const acierto = f.contiene(f.anclaU + this.despU, f.anclaV + this.despV) || km <= MARGEN_KM
+    const acierto = f.contiene(f.anclaU + this.despU, f.anclaV + this.despV) || km <= MARGEN_KM || Math.hypot(this.despU, this.despV) <= tolerancia
     if (!acierto) {
       this.fallar({ acierto: false, motivo: 'LEJOS', distanciaKm: km, puntos: 0, completado: null }, 'MAL_UBICADO')
       return
@@ -192,7 +196,7 @@ export class PartidaClasica {
     this.ganada = [...this.enJuego].every((x) => this.completos.has(x))
     this.resultado = { acierto: true, motivo: 'UBICADO', distanciaKm: km, puntos, completado }
     this.fase = 'RESULTADO'
-    this.sonar(this.ganada || completado ? 'NIVEL_SUPERADO' : 'UBICADO')
+    this.sonar(this.ganada ? 'GANO' : completado ? 'NIVEL_SUPERADO' : 'UBICADO')
     this.cambio()
   }
 

@@ -105,6 +105,16 @@ describe('partida clásica', () => {
     expect(p.resultado!.distanciaKm).toBeGreaterThan(MARGEN_KM)
   })
 
+  it('soltar lejos en km, pero encima del país en la pantalla (dentro de la tolerancia), es un acierto', () => {
+    const p = nueva('MAPA_PAIS', ['AMERICA'])
+    p.elegirContinente(p.actual.continente)
+    p.despU = 0.08
+    p.despV = 0.08
+    p.confirmar(0.12)
+    expect(p.resultado?.acierto).toBe(true)
+    expect(p.resultado!.distanciaKm).toBeGreaterThan(MARGEN_KM)
+  })
+
   it('la pieza rebota en los bordes y nunca sale del mapa', () => {
     const p = nueva()
     p.elegirContinente(p.actual.continente)

@@ -3,7 +3,8 @@
 // debajo), los datos del país. Una cruceta y el botón «Soltar», sobre el mapa, guían la pieza.
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { Cifras, FichaDatos, MiniMapa, Pieza, useTamano, zona } from '../comunes'
-import { Transformacion, type Anillo, type Forma, type Region } from '../geo'
+import { Transformacion, type Anillo, type Forma } from '../geo'
+import { encuadre, type Hueco } from '../encuadre'
 import { entero, t } from '../i18n'
 import { CONTINENTES, VISTAS, muestraForma, nombreContinente, nombreModo, porCapital, type Atlas, type Continente, type Pais } from '../modelo'
 import { ERRORES_MAX, PartidaClasica, RITMO, vistaDelMapa, type Direccion } from '../partida'
@@ -24,9 +25,9 @@ const LADO_MINIMO = 12
  */
 const LADO_MINIMO_ISLA = 18
 const LADO_CIRCULO = 22
-/** Separación de la cruceta y «Soltar» respecto del borde del mapa (como .controles-mapa en estilos.css). */
-const MARGEN_CONTROLES = 10
 /** Lado con que se ve una isla en el mapa, a esta escala (píxeles por unidad Mercator). */
+/** Al soltar, cuenta como acierto si el centro de la pieza queda a menos de esto del país (en la pantalla). */
+const TOLERANCIA_PX = 12
 const ladoIsla = (atlas: Atlas, p: Pais, escala: number): number => Math.min(LADO_MINIMO_ISLA, 0.9 * atlas.separacion(p) * escala)
 /** Lado mínimo de la pieza (y del país al revelarlo): las islas, como en el mapa, pero nunca menos de LADO_MINIMO. */
 const ladoMinimo = (atlas: Atlas, p: Pais, escala: number): number => (atlas.islas.has(p) ? Math.max(LADO_MINIMO, ladoIsla(atlas, p, escala)) : LADO_MINIMO)
@@ -49,7 +50,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
   const [, refrescar] = useReducer((n: number) => n + 1, 0)
   const velocidad = useRef(VELOCIDAD_DERIVA)
   const [seleccion, setSeleccion] = useState(0)
-  const mapaRef = useRef<{ linea: number[] | null }>({ linea: null })
+  const mapaRef = useRef<MapaRef>({ linea: null, escala: 0 })
   const [mensajeVisible, setMensajeVisible] = useState(false)
   // La cruceta siempre está en la página (invisible fuera del mapa) para medir el rincón que ocupa.
   const controles = useRef<HTMLDivElement>(null)
@@ -66,7 +67,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
       sonidos.reproducir(s)
       // En el teléfono, además, una vibración corta al acertar y al fallar (si los efectos están activados).
       if (!sonidos.efectosActivos) return
-      if (s === 'UBICADO' || s === 'CONTINENTE_CORRECTO' || s === 'NIVEL_SUPERADO') vibrar(35)
+      if (s === 'UBICADO' || s === 'CONTINENTE_CORRECTO' || s === 'NIVEL_SUPERADO' || s === 'GANO') vibrar(35)
       else if (s === 'MAL_UBICADO' || s === 'CONTINENTE_EQUIVOCADO' || s === 'FIN_TIEMPO') vibrar([70, 50, 70])
       else if (s === 'FIN_PARTIDA') vibrar(300)
     }
@@ -122,6 +123,11 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
   }, [fase, r, marcaElLugar])
 
   // ------------------------------------------------------------------ teclado
+  // Soltar la pieza: también vale si en la pantalla quedó prácticamente encima del país.
+  const soltar = useCallback(() => {
+    const escala = mapaRef.current.escala
+    partida.confirmar(escala > 0 ? TOLERANCIA_PX / escala : 0)
+  }, [partida])
   const elegir = useCallback((c: Continente) => partida.elegirContinente(c), [partida])
   const primeraElegible = useCallback(
     (desde: number, paso: number) => {
@@ -155,7 +161,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
         if (d) {
           velocidad.current = e.ctrlKey ? VELOCIDAD_CTRL : VELOCIDAD_CON_FLECHA
           partida.cambiarDireccion(d)
-        } else if (e.key === 'Enter' || e.key === ' ') partida.confirmar()
+        } else if (e.key === 'Enter' || e.key === ' ') soltar()
         else return
         e.preventDefault()
       } else if (partida.fase === 'RESULTADO' && (e.key === 'Enter' || e.key === ' ') && mensajeVisible) {
@@ -172,7 +178,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
       window.removeEventListener('keydown', abajo)
       window.removeEventListener('keyup', arriba)
     }
-  }, [partida, seleccion, elegir, primeraElegible, mensajeVisible])
+  }, [partida, seleccion, elegir, primeraElegible, mensajeVisible, soltar])
 
   // Al empezar cada caída, la selección del teclado va al primer continente que se puede elegir.
   useEffect(() => {
@@ -226,7 +232,7 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
                 </button>
               ))}
             </div>
-            <button className="boton-principal boton-soltar" onClick={() => partida.confirmar()}>
+            <button className="boton-principal boton-soltar" onClick={soltar}>
               {t('web.soltar')}
             </button>
           </div>
@@ -353,74 +359,8 @@ function VistaCaida({ atlas, partida, seleccion, practica, hueco, onElegir }: { 
 
 interface MapaRef {
   linea: number[] | null
-}
-
-/** El rincón (abajo a la izquierda) que ocupan la cruceta y «Soltar», en píxeles. */
-interface Hueco {
-  w: number
-  h: number
-}
-
-const encuadres = new Map<string, Transformacion>()
-
-/**
- * Dónde se dibuja el mapa del continente: lo más grande posible, salvo que la tierra del continente quede debajo
- * de la cruceta y «Soltar». Entonces el continente sube (o se corre a la derecha) y deja ese rincón al mar, como
- * el Pacífico en América. Lo usan el mapa y el país que cae, para que tenga el mismo tamaño.
- */
-function encuadre(atlas: Atlas, continente: Continente, vista: Region, w: number, h: number, hueco: Hueco): Transformacion {
-  const clave = `${continente},${vista.uMin},${vista.vMin},${vista.uMax},${vista.vMax},${w},${h},${hueco.w},${hueco.h}`
-  let t = encuadres.get(clave)
-  if (!t) {
-    t = elegirEncuadre(atlas, continente, vista, w, h, hueco)
-    encuadres.set(clave, t)
-  }
-  return t
-}
-
-function elegirEncuadre(atlas: Atlas, continente: Continente, vista: Region, w: number, h: number, hueco: Hueco): Transformacion {
-  const entero = Transformacion.ajustada(vista, w, h)
-  if (hueco.w < 1 || hueco.h < 1 || w < 2 || h < 2) return entero
-  const rw = hueco.w + 2 * MARGEN_CONTROLES, rh = hueco.h + 2 * MARGEN_CONTROLES
-  const arriba = metida(vista, w, h - rh, w, h, 0)
-  const derecha = metida(vista, w - rw, h, w, h, rw)
-  const libres = [entero, arriba, derecha].filter((t) => t.escala > 0 && !tapaTierra(atlas, continente, t, rw, rh))
-  if (libres.length > 0) return libres.reduce((a, b) => (b.escala > a.escala ? b : a))
-  return arriba.escala >= derecha.escala ? arriba : derecha
-}
-
-/** La vista, lo más grande posible dentro del rectángulo (x0, 0)–(x0 + aw, ah) de un lienzo de w × h. */
-function metida(vista: Region, aw: number, ah: number, w: number, h: number, x0: number): Transformacion {
-  const escala = Math.max(0, Math.min(aw / vista.ancho, ah / vista.alto))
-  if (escala === 0) return new Transformacion(vista.centroU, vista.centroV, 0, w, h)
-  return new Transformacion(vista.centroU - (x0 + aw / 2 - w / 2) / escala, vista.centroV - (ah / 2 - h / 2) / escala, escala, w, h)
-}
-
-/**
- * Si algún país del continente queda en el rincón de abajo a la izquierda de rw × rh píxeles. Las islitas de los
- * países continentales (Galápagos, Canarias, Hawái) no cuentan; los países isla (Cabo Verde), sí.
- */
-function tapaTierra(atlas: Atlas, continente: Continente, t: Transformacion, rw: number, rh: number): boolean {
-  const y0 = t.alto - rh
-  const visible = t.visible()
-  for (const p of atlas.paises) {
-    if (p.continente !== continente) continue
-    const f = p.forma
-    const du = visible.vueltasPara(f.anclaU)
-    const isla = atlas.islas.has(p)
-    for (const a of f.anillos) {
-      const c = a.caja
-      if (t.x(c.uMin + du) > rw || t.x(c.uMax + du) < 0 || t.y(c.vMax) < y0 || t.y(c.vMin) > t.alto) continue
-      if (!isla && Math.max(c.ancho, c.alto) * t.escala < 10) continue
-      for (let i = 0; i < a.puntos; i++) {
-        const x = t.x(a.u[i] + du), y = t.y(a.v[i])
-        if (x >= 0 && x <= rw && y >= y0 && y <= t.alto) return true
-      }
-    }
-    // Un país grande puede cubrir todo el rincón sin que su borde pase por él.
-    if (f.contiene(t.u(rw / 2) - du, t.v(y0 + rh / 2))) return true
-  }
-  return false
+  /** Escala del mapa que se ve (píxeles por unidad Mercator), para la tolerancia al soltar. */
+  escala: number
 }
 
 /**
@@ -460,6 +400,7 @@ const MapaJuego = ({ atlas, partida, guia, hueco, ref }: { atlas: Atlas; partida
       }
       gc.clearRect(0, 0, tam.w, tam.h)
       gc.drawImage(fondo.current.lienzo, 0, 0, tam.w, tam.h)
+      ref.current.escala = t.escala
       ref.current.linea = dibujarEncima(gc, t, atlas, partida, guia)
     }
     dibujar()
@@ -536,6 +477,22 @@ function dibujarEncima(gc: CanvasRenderingContext2D, t: Transformacion, atlas: A
   return null
 }
 
+/** La mira en la bolita: un punto en el centro (la referencia exacta) y cuatro rayitas, como en un fusil. */
+function mira(gc: CanvasRenderingContext2D, x: number, y: number, radio: number): void {
+  gc.strokeStyle = COLOR.TINTA
+  gc.lineWidth = 1.5
+  gc.beginPath()
+  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    gc.moveTo(x + dx * radio * 0.4, y + dy * radio * 0.4)
+    gc.lineTo(x + dx * radio * 0.8, y + dy * radio * 0.8)
+  }
+  gc.stroke()
+  gc.fillStyle = COLOR.TINTA
+  gc.beginPath()
+  gc.arc(x, y, 2, 0, Math.PI * 2)
+  gc.fill()
+}
+
 /** Punta de flecha roja con la punta en (x, y), apuntando en la dirección (dx, dy) (de largo 1). */
 function flecha(gc: CanvasRenderingContext2D, x: number, y: number, dx: number, dy: number): void {
   const largo = 18, ancho = 9
@@ -585,6 +542,7 @@ function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: 
     arriba = Math.min(cy - 10, cy - (cy - t.y(f.cajaNucleo.vMin + dv)) * k)
   } else {
     figura(gc, pais, cx, cy, LADO_CIRCULO, COLOR.TINTA, 2)
+    mira(gc, cx, cy, LADO_CIRCULO / 2)
     arriba = cy - LADO_CIRCULO
   }
   gc.globalAlpha = 1

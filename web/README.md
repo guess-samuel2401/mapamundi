@@ -19,12 +19,20 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
   - Al fallar, primero se ven la línea y la ★ y luego un recuadro compacto en la esquina libre del mapa.
 - **El país que cae** tiene exactamente el tamaño que tendrá en el mapa del continente (los diminutos, ampliados
   igual que en el mapa).
-- **El mapa del continente:** solo ese continente en blanco; el resto del mundo, en gris. Si la tierra del
-  continente quedaría debajo de los controles, el mapa se acomoda (el continente sube o se corre a la derecha) y
-  deja ese rincón al mar; en América caen en el Pacífico.
+- **El mapa del continente:** solo ese continente en blanco; el resto del mundo, en gris. Se dibuja lo más grande
+  posible con el rincón de los controles en el mar (`src/encuadre.ts`): si la tierra quedaría debajo, el
+  continente se corre lo justo hacia la derecha o hacia arriba antes que achicarse (en América caen en el
+  Pacífico; en África, en el Atlántico sur). `src/encuadre.test.ts` lo comprueba con los cinco continentes en
+  tamaños de teléfono.
 - **Islas diminutas** (Tonga, Maldivas, Cabo Verde, San Cristóbal y Nieves…): se dibujan algo más grandes que a
   escala, hasta 18 px, pero sin taparse con la tierra vecina (las Antillas Menores crecen poco).
 - **Al fallar**, una línea y una flecha roja que apunta justo al país (sin tapar los pequeños).
+- **Acierto:** la pieza cuenta si su centro cae dentro del país, a menos de 250 km o, en la pantalla, a menos de
+  12 píxeles de él (las islas y los países pequeños, como Bahamas, que en el mapa son un punto).
+- **La bolita** (en los retos sin la forma del país) tiene una mira en el centro: el punto exacto que cuenta.
+- **Sonidos del Mapamundi original (2000):** «FiguraCorrecta» al acertar, «Perdio» al fallar, «EscogeMal» al
+  equivocar el continente, «FinTiempo», «PerdioTresErrores», «FiguraCompleta» al completar un continente y «Gano»
+  al completarlos todos (convertidos a WAV de 16 bits en `src/main/resources`, compartidos con Windows).
 - **Sin pregunta en pantalla:** debajo del mapa solo está «Ver datos del país»; con los datos ocultos, el mapa es
   más grande.
 - **Controles táctiles:** tocar el continente; en el mapa, una **cruceta** (mientras se mantiene una flecha, la

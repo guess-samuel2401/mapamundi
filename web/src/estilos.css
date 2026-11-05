@@ -232,8 +232,9 @@ input { font-family: inherit; }
 .mapa-juego { flex: 1; min-width: 0; border-radius: 16px; overflow: hidden; border: 3px solid var(--tinta); background: var(--mar); }
 .mapa-juego canvas { display: block; }
 /* Sobre el mapa, abajo a la izquierda (en América cae en el Pacífico), con «Soltar» debajo de la cruceta para no
-   tapar tierra a la derecha; semitransparentes para ver la pieza debajo. */
-.controles-mapa { position: absolute; left: 10px; bottom: 10px; z-index: 5; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+   tapar tierra a la derecha (y bien separado de la flecha ▼, para no apretarlo sin querer); semitransparentes para
+   ver la pieza debajo. */
+.controles-mapa { position: absolute; left: 10px; bottom: 10px; z-index: 5; display: flex; flex-direction: column; gap: 18px; pointer-events: none; }
 .controles-mapa > * { pointer-events: auto; }
 /* Fuera del mapa siguen en su sitio, invisibles, para medir el rincón que el continente debe dejar libre. */
 .controles-mapa.invisible { visibility: hidden; }
