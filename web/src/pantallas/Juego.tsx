@@ -17,8 +17,11 @@ import { mantenerPantallaEncendida, vibrar } from '../movil'
 const VELOCIDAD_DERIVA = 0.6
 const VELOCIDAD_CON_FLECHA = 3.2
 const VELOCIDAD_CTRL = RITMO.movimiento / 30
-/** Tamaño mínimo de la pieza en el mapa: solo los microestados, que serían un punto, se amplían hasta esto. */
-const LADO_MINIMO = 12
+/**
+ * Tamaño mínimo de la pieza en el mapa. La pieza tiene el tamaño del país en el mapa (Ruanda, Lesoto o Yibuti,
+ * pequeños como allí); solo los microestados, que serían un punto invisible, se amplían hasta esto.
+ */
+const LADO_MINIMO = 6
 /**
  * Las islas diminutas (Tonga, Maldivas, Cabo Verde…) se amplían algo más, en el mapa y en la pieza; las que tienen
  * tierra muy cerca (las Antillas Menores), solo hasta donde no se tapan con ella.
@@ -29,7 +32,7 @@ const LADO_CIRCULO = 22
 /** Al soltar, cuenta como acierto si el centro de la pieza queda a menos de esto del país (en la pantalla). */
 const TOLERANCIA_PX = 12
 const ladoIsla = (atlas: Atlas, p: Pais, escala: number): number => Math.min(LADO_MINIMO_ISLA, 0.9 * atlas.separacion(p) * escala)
-/** Lado mínimo de la pieza (y del país al revelarlo): las islas, como en el mapa, pero nunca menos de LADO_MINIMO. */
+/** Lado mínimo de la pieza (y del país al revelarlo): las islas, como se ven en el mapa; nunca menos de LADO_MINIMO. */
 const ladoMinimo = (atlas: Atlas, p: Pais, escala: number): number => (atlas.islas.has(p) ? Math.max(LADO_MINIMO, ladoIsla(atlas, p, escala)) : LADO_MINIMO)
 const TECLAS_DIRECCION: Record<string, Direccion> = { ArrowUp: 'ARRIBA', ArrowDown: 'ABAJO', ArrowLeft: 'IZQUIERDA', ArrowRight: 'DERECHA' }
 const tactil = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
@@ -93,7 +96,8 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
   }, [partida, sonidos])
 
   // Al acertar o fallar se calla la música, para que se oiga bien el sonido del resultado; con «Aceptar», vuelve.
-  useEffect(() => sonidos.callarMusica(partida.fase === 'RESULTADO'))
+  // En la pausa también se calla: así se nota que el juego se detuvo; al continuar, vuelve.
+  useEffect(() => sonidos.callarMusica(partida.fase === 'RESULTADO' || partida.pausa))
   useEffect(() => () => sonidos.callarMusica(false), [sonidos])
 
   // La pantalla no se apaga mientras dura la partida.
@@ -481,19 +485,11 @@ function dibujarEncima(gc: CanvasRenderingContext2D, t: Transformacion, atlas: A
   return null
 }
 
-/** La mira en la bolita: un punto en el centro (la referencia exacta) y cuatro rayitas, como en un fusil. */
-function mira(gc: CanvasRenderingContext2D, x: number, y: number, radio: number): void {
-  gc.strokeStyle = COLOR.TINTA
-  gc.lineWidth = 1.5
-  gc.beginPath()
-  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-    gc.moveTo(x + dx * radio * 0.4, y + dy * radio * 0.4)
-    gc.lineTo(x + dx * radio * 0.8, y + dy * radio * 0.8)
-  }
-  gc.stroke()
+/** El punto en el centro de la bolita: la referencia exacta que cuenta al soltar. */
+function punto(gc: CanvasRenderingContext2D, x: number, y: number): void {
   gc.fillStyle = COLOR.TINTA
   gc.beginPath()
-  gc.arc(x, y, 2, 0, Math.PI * 2)
+  gc.arc(x, y, 2.5, 0, Math.PI * 2)
   gc.fill()
 }
 
@@ -545,8 +541,17 @@ function dibujarPieza(gc: CanvasRenderingContext2D, t: Transformacion, partida: 
     gc.shadowOffsetY = 0
     arriba = Math.min(cy - 10, cy - (cy - t.y(f.cajaNucleo.vMin + dv)) * k)
   } else {
-    figura(gc, pais, cx, cy, LADO_CIRCULO, COLOR.TINTA, 2)
-    mira(gc, cx, cy, LADO_CIRCULO / 2)
+    // La bolita es translúcida, para ver el mapa y las fronteras debajo; el borde y el punto del centro, enteros.
+    const alfa = gc.globalAlpha
+    gc.globalAlpha = alfa * 0.45
+    figura(gc, pais, cx, cy, LADO_CIRCULO, null, 0)
+    gc.globalAlpha = alfa
+    gc.strokeStyle = COLOR.TINTA
+    gc.lineWidth = 2
+    gc.beginPath()
+    gc.arc(cx, cy, LADO_CIRCULO / 2, 0, Math.PI * 2)
+    gc.stroke()
+    punto(gc, cx, cy)
     arriba = cy - LADO_CIRCULO
   }
   gc.globalAlpha = 1

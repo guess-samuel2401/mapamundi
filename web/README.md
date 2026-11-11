@@ -29,12 +29,16 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
 - **Al fallar**, una línea y una flecha roja que apunta justo al país (sin tapar los pequeños).
 - **Acierto:** la pieza cuenta si su centro cae dentro del país, a menos de 250 km o, en la pantalla, a menos de
   12 píxeles de él (las islas y los países pequeños, como Bahamas, que en el mapa son un punto).
-- **La bolita** (en los retos sin la forma del país) tiene una mira en el centro: el punto exacto que cuenta.
+- **La bolita** (en los retos sin la forma del país) es translúcida, para ver el mapa debajo, y tiene un punto en
+  el centro: el punto exacto que cuenta.
+- **Los países pequeños** (Ruanda, Lesoto, Yibuti…) se mueven con el mismo tamaño que tienen en el mapa; solo los
+  microestados, que serían un punto invisible, se amplían a 6 píxeles.
 - **Sonidos del Mapamundi original (2000):** «FiguraCorrecta» al acertar, «Perdio» al fallar, «EscogeMal» al
   equivocar el continente, «FinTiempo», «PerdioTresErrores», «FiguraCompleta» al completar un continente y «Gano»
-  al completarlos todos (convertidos a WAV de 16 bits en `src/main/resources`, compartidos con Windows).
+  al completarlos todos (convertidos a WAV de 16 bits en `src/main/resources`, compartidos con Windows). Los que
+  sonaban bajos («Perdio», «FinTiempo», «FiguraCompleta», «EscogeMal») van con el volumen subido.
 - **Al acertar o fallar, la música se calla** para que se oiga solo el sonido del resultado; con «Aceptar», vuelve
-  suave y sigue la partida.
+  suave y sigue la partida. **En la pausa** también se calla.
 - **Sin pregunta en pantalla:** debajo del mapa solo está «Ver datos del país»; con los datos ocultos, el mapa es
   más grande.
 - **Controles táctiles:** tocar el continente; en el mapa, una **cruceta** (mientras se mantiene una flecha, la

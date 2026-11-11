@@ -21,7 +21,8 @@ const ARCHIVOS: Record<Sonido, string> = {
 export type Musica = 'menu' | 'juego'
 
 const VOLUMEN_MUSICA = 0.4
-const VOLUMEN_EFECTOS = 0.8
+/** Los efectos, a todo volumen (los originales más bajos ya vienen subidos); el tic del reloj, a la mitad. */
+const VOLUMEN_EFECTOS = 1
 
 type ContextoAudio = AudioContext
 
