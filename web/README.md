@@ -33,6 +33,8 @@ como app de Android/iPhone con [Capacitor](https://capacitorjs.com/) sin reescri
 - **Sonidos del Mapamundi original (2000):** «FiguraCorrecta» al acertar, «Perdio» al fallar, «EscogeMal» al
   equivocar el continente, «FinTiempo», «PerdioTresErrores», «FiguraCompleta» al completar un continente y «Gano»
   al completarlos todos (convertidos a WAV de 16 bits en `src/main/resources`, compartidos con Windows).
+- **Al acertar o fallar, la música se calla** para que se oiga solo el sonido del resultado; con «Aceptar», vuelve
+  suave y sigue la partida.
 - **Sin pregunta en pantalla:** debajo del mapa solo está «Ver datos del país»; con los datos ocultos, el mapa es
   más grande.
 - **Controles táctiles:** tocar el continente; en el mapa, una **cruceta** (mientras se mantiene una flecha, la

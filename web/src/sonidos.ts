@@ -52,6 +52,9 @@ export class Sonidos {
   private ctx: ContextoAudio | null = null
   private readonly buffers = new Map<string, Promise<AudioBuffer | null>>()
   private fuenteMusica: AudioBufferSourceNode | null = null
+  private volumenMusica: GainNode | null = null
+  /** Mientras se ve si el jugador acertó o falló, la música se calla (ver callarMusica()). */
+  private callada = false
   private sonando: Musica | null = null
   /** iPhone anterior a iOS 16.4: el <audio> mudo que hace sonar el juego con el interruptor de silencio puesto. */
   private mudo: HTMLAudioElement | null = null
@@ -142,6 +145,21 @@ export class Sonidos {
     if (this.musicaActiva) this.empezarMusica(m)
   }
 
+  /**
+   * Calla la música un momento (mientras se ve si el jugador acertó o falló, para que se oiga bien el sonido del
+   * resultado) o la devuelve, suave. La música sigue corriendo en silencio y vuelve donde va.
+   */
+  callarMusica(callar: boolean): void {
+    if (this.callada === callar) return
+    this.callada = callar
+    const ctx = this.ctx, volumen = this.volumenMusica
+    if (!ctx || !volumen) return
+    const ahora = ctx.currentTime
+    volumen.gain.cancelScheduledValues(ahora)
+    volumen.gain.setValueAtTime(volumen.gain.value, ahora)
+    volumen.gain.linearRampToValueAtTime(callar ? 0 : VOLUMEN_MUSICA, ahora + (callar ? 0.25 : 0.9))
+  }
+
   /** Aplica musicaActiva (tras pulsar el botón de música). */
   aplicar(): void {
     if (!this.musicaActiva) this.pararMusica()
@@ -159,10 +177,11 @@ export class Sonidos {
       fuente.loop = true
       const volumen = ctx.createGain()
       volumen.gain.setValueAtTime(0, ctx.currentTime)
-      volumen.gain.linearRampToValueAtTime(VOLUMEN_MUSICA, ctx.currentTime + 0.9)
+      volumen.gain.linearRampToValueAtTime(this.callada ? 0 : VOLUMEN_MUSICA, ctx.currentTime + 0.9)
       fuente.connect(volumen).connect(ctx.destination)
       fuente.start()
       this.fuenteMusica = fuente
+      this.volumenMusica = volumen
     })
   }
 
@@ -174,5 +193,6 @@ export class Sonidos {
       // Ya estaba parada.
     }
     this.fuenteMusica = null
+    this.volumenMusica = null
   }
 }

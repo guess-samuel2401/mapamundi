@@ -92,6 +92,10 @@ export function PantallaJuego({ atlas, partida, prefs, sonidos, practica, onPref
     }
   }, [partida, sonidos])
 
+  // Al acertar o fallar se calla la música, para que se oiga bien el sonido del resultado; con «Aceptar», vuelve.
+  useEffect(() => sonidos.callarMusica(partida.fase === 'RESULTADO'))
+  useEffect(() => () => sonidos.callarMusica(false), [sonidos])
+
   // La pantalla no se apaga mientras dura la partida.
   useEffect(() => mantenerPantallaEncendida(), [])
 
